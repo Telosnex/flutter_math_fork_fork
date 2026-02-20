@@ -312,6 +312,45 @@ class RenderLine extends RenderBox
   List<double>? alignColWidth;
 
   @override
+  double? computeDryBaseline(
+      covariant BoxConstraints constraints, TextBaseline baseline) {
+    var maxAbove = 0.0;
+    var maxBelow = 0.0;
+    var child = firstChild;
+    final relativeChildren = <RenderBox>[];
+
+    // First pass: fixed-size children.
+    while (child != null) {
+      final childParentData = child.parentData as LineParentData;
+      if (childParentData.customCrossSize != null) {
+        relativeChildren.add(child);
+      } else if (!childParentData.alignerOrSpacer) {
+        final childSize = child.getDryLayout(infiniteConstraint);
+        final childBaseline =
+            child.getDryBaseline(infiniteConstraint, textBaseline) ?? 0.0;
+        maxAbove = math.max(maxAbove, childBaseline);
+        maxBelow = math.max(maxBelow, childSize.height - childBaseline);
+      }
+      child = childParentData.nextSibling;
+    }
+
+    // Second pass: custom-cross-size children.
+    for (final child in relativeChildren) {
+      final childParentData = child.parentData as LineParentData;
+      final childConstraints =
+          childParentData.customCrossSize!(maxAbove, maxBelow);
+      final childSize = child.getDryLayout(childConstraints);
+      final childBaseline =
+          child.getDryBaseline(childConstraints, textBaseline) ?? 0.0;
+      maxAbove = math.max(maxAbove, childBaseline);
+      maxBelow = math.max(maxBelow, childSize.height - childBaseline);
+    }
+
+    maxAbove = math.max(maxAbove, minHeight);
+    return maxAbove;
+  }
+
+  @override
   Size computeDryLayout(BoxConstraints constraints) =>
       _computeLayout(constraints);
 

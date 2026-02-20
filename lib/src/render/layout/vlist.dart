@@ -341,6 +341,75 @@ class RenderRelativeWidthColumn extends RenderBox
   }
 
   @override
+  double? computeDryBaseline(
+      covariant BoxConstraints constraints, TextBaseline baseline) {
+    // Replicate the layout passes of _computeLayout (dry) to compute the
+    // y-position of the baselineReferenceWidgetIndex child, then add its
+    // own dry baseline.
+
+    // First pass: fixed-size children — determine cross-axis extent.
+    var rightMost = 0.0;
+    var leftMost = 0.0;
+    var child = firstChild;
+    final relativeChildren = <RenderBox>[];
+    final sizes = <RenderBox, Size>{};
+
+    while (child != null) {
+      final childParentData = child.parentData as VListParentData;
+      if (childParentData.customCrossSize != null) {
+        relativeChildren.add(child);
+      } else {
+        final innerConstraints = BoxConstraints(maxWidth: constraints.maxWidth);
+        final childSize = child.getDryLayout(innerConstraints);
+        sizes[child] = childSize;
+        final width = childSize.width;
+        final right = getRightMost(crossAxisAlignment, width);
+        leftMost = math.min(leftMost, right - width);
+        rightMost = math.max(rightMost, right);
+      }
+      child = childParentData.nextSibling;
+    }
+
+    final fixedChildrenCrossSize = rightMost - leftMost;
+
+    // Second pass: custom-sized children.
+    for (final child in relativeChildren) {
+      final childParentData = child.parentData as VListParentData;
+      final childConstraints =
+          childParentData.customCrossSize!(fixedChildrenCrossSize);
+      final childSize = child.getDryLayout(childConstraints);
+      sizes[child] = childSize;
+    }
+
+    // Third pass: walk children to find the reference child's baseline.
+    var index = 0;
+    var childMainPosition = 0.0;
+    child = firstChild;
+    while (child != null) {
+      if (index == baselineReferenceWidgetIndex) {
+        final childParentData = child.parentData as VListParentData;
+        final childConstraints = childParentData.customCrossSize != null
+            ? childParentData.customCrossSize!(fixedChildrenCrossSize)
+            : BoxConstraints(maxWidth: constraints.maxWidth);
+        final childBaseline =
+            child.getDryBaseline(childConstraints, textBaseline);
+        if (childBaseline != null) {
+          return childMainPosition + childBaseline;
+        }
+        return null;
+      }
+
+      final childParentData = child.parentData as VListParentData;
+      final childSize = sizes[child] ?? Size.zero;
+      childMainPosition += childSize.height + childParentData.trailingMargin;
+      child = childParentData.nextSibling;
+      index++;
+    }
+
+    return null;
+  }
+
+  @override
   Size computeDryLayout(BoxConstraints constraints) =>
       _computeLayout(constraints);
 

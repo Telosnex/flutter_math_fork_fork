@@ -6,8 +6,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../ast/nodes/matrix.dart';
 import '../constants.dart';
-import '../utils/render_box_offset.dart';
 import '../utils/render_box_layout.dart';
+import '../utils/render_box_offset.dart';
 import 'line.dart';
 
 class EqnArrayParentData extends ContainerBoxParentData<RenderBox> {}
@@ -114,6 +114,12 @@ class RenderEqnArray extends RenderBox
   List<double> hlinePos = [];
 
   double width = 0.0;
+
+  @override
+  double? computeDryBaseline(
+      covariant BoxConstraints constraints, TextBaseline baseline) => null;
+    // RenderEqnArray does not report a baseline
+    // (computeDistanceToActualBaseline is not overridden).
 
   @override
   Size computeDryLayout(BoxConstraints constraints) =>

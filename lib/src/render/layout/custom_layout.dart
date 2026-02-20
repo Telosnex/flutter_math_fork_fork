@@ -198,6 +198,45 @@ class RenderCustomLayout<T> extends RenderBox
       delegate.computeDistanceToActualBaseline(baseline, childrenTable);
 
   @override
+  double? computeDryBaseline(
+      covariant BoxConstraints constraints, TextBaseline baseline) {
+    final table = childrenTable;
+    if (table.isEmpty) return null;
+
+    if (delegate is IntrinsicLayoutDelegate<T>) {
+      final d = delegate as IntrinsicLayoutDelegate<T>;
+
+      // Get dry sizes and dry baselines for all children.
+      final sizeMap = <T, Size>{};
+      final baselineMap = <T, double?>{};
+      for (final entry in table.entries) {
+        sizeMap[entry.key] =
+            entry.value.getDryLayout(infiniteConstraint);
+        baselineMap[entry.key] =
+            entry.value.getDryBaseline(infiniteConstraint, baseline);
+      }
+
+      // Compute vertical layout using correct dry baselines (not 0).
+      final vconf = d.performVerticalIntrinsicLayout(
+        childrenHeights:
+            sizeMap.map((k, v) => MapEntry(k, v.height)),
+        childrenBaselines:
+            baselineMap.map((k, v) => MapEntry(k, v ?? 0.0)),
+      );
+
+      // Return offset + baseline of the first child that has a baseline.
+      for (final entry in table.entries) {
+        final childBaseline = baselineMap[entry.key];
+        if (childBaseline != null) {
+          return (vconf.offsetTable[entry.key] ?? 0.0) + childBaseline;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  @override
   void performLayout() {
     this.size = _computeLayout(constraints, dry: false);
   }
