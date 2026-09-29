@@ -5,7 +5,7 @@ homepage: https://github.com/simpleclub-extended/flutter_math_fork
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.0.0'
+  flutter: '>=3.47.0'
 
 dependencies:
   flutter:
@@ -17,6 +17,8 @@ dependencies:
   collection: ^1.17.0
   tuple: ^2.0.1
 
+  cupertino_ui: ^1.1.1
+  material_ui: ^1.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

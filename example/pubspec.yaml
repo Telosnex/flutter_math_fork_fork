@@ -20,6 +20,7 @@ dependencies:
   flutter_tex: ^4.0.3+4
   google_fonts: ^4.0.4
 
+  material_ui: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
