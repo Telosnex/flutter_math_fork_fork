@@ -4,6 +4,12 @@ EncodeResult _symbolEncoder(GreenNode node) {
   final symbolNode = node as SymbolNode;
   final symbol = symbolNode.symbol;
   final mode = symbolNode.mode;
+  if (mode == Mode.math && symbol.length > 1 && symbol.endsWith('\u0338')) {
+    return TexCommandEncodeResult(
+      command: '\\not',
+      args: [symbolNode.withSymbol(symbol.substring(0, symbol.length - 1))],
+    );
+  }
   final encodeAsBaseSymbol = _baseSymbolEncoder(
     symbol,
     mode,

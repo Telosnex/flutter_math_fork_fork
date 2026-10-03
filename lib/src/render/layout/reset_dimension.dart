@@ -122,6 +122,11 @@ class RenderResetDimension extends RenderShiftedBox {
       layoutHeight ?? super.computeDistanceToActualBaseline(baseline);
 
   @override
+  double? computeDryBaseline(
+          BoxConstraints constraints, TextBaseline baseline) =>
+      layoutHeight ?? child?.getDryBaseline(constraints, baseline);
+
+  @override
   Size computeDryLayout(BoxConstraints constraints) =>
       _computeLayout(constraints);
 
@@ -137,8 +142,9 @@ class RenderResetDimension extends RenderShiftedBox {
     final child = this.child!;
     final childSize = child.getLayoutSize(constraints, dry: dry);
 
-    final childHeight =
-        dry ? 0.0 : child.getDistanceToBaseline(TextBaseline.alphabetic)!;
+    final childHeight = dry
+        ? (child.getDryBaseline(constraints, TextBaseline.alphabetic) ?? 0.0)
+        : child.getDistanceToBaseline(TextBaseline.alphabetic)!;
     final childDepth = childSize.height - childHeight;
     final childWidth = childSize.width;
 

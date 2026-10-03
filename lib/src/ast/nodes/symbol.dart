@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../render/symbols/make_composite.dart';
 import '../../render/symbols/make_symbol.dart';
 import '../../utils/unicode_literal.dart';
 import '../options.dart';
@@ -47,6 +48,11 @@ class SymbolNode extends LeafNode {
   @override
   BuildResult buildWidget(
       MathOptions options, List<BuildResult?> childBuildResults) {
+    if (mode == Mode.math && symbol.length > 1 && symbol.endsWith('\u0338')) {
+      final base = withSymbol(symbol.substring(0, symbol.length - 1))
+          .buildWidget(options, const []);
+      return makeNegatedSymbol(base, options);
+    }
     final expanded = symbol.runes.expand((code) {
       final ch = String.fromCharCode(code);
       return unicodeSymbols[ch]?.split('') ?? [ch];
@@ -145,6 +151,13 @@ AtomType getDefaultAtomTypeForSymbol(
   bool variantForm = false,
   required Mode mode,
 }) {
+  if (mode == Mode.math && symbol.length > 1 && symbol.endsWith('\u0338')) {
+    return getDefaultAtomTypeForSymbol(
+      symbol.substring(0, symbol.length - 1),
+      variantForm: variantForm,
+      mode: mode,
+    );
+  }
   var symbolRenderConfig = symbolRenderConfigs[symbol];
   if (variantForm) {
     symbolRenderConfig = symbolRenderConfig?.variantForm;

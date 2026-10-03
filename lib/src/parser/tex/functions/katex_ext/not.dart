@@ -52,15 +52,20 @@ const _notRemap = {
   '\u2203': '\u2204'
 };
 GreenNode _notHandler(TexParser parser, FunctionContext context) {
-  final base = parser.parseArgNode(mode: null, optional: false)!;
+  var base = parser.parseArgNode(mode: null, optional: false)!;
+  while (base is EquationRowNode && base.children.length == 1) {
+    base = base.children.single;
+  }
   final node = assertNodeType<SymbolNode>(base);
   final remappedSymbol = _notRemap[node.symbol];
-  if (node.mode != Mode.math ||
-      node.variantForm == true ||
-      remappedSymbol == null) {
+  if (node.mode != Mode.math) {
     throw ParseException('\\not has to be followed by a combinable character');
   }
   return node.withSymbol(
-    remappedSymbol,
+    // Keep existing precomposed negations. Otherwise retain the base symbol
+    // and add the Unicode slash overlay, rendered separately from the base.
+    !node.variantForm && remappedSymbol != null
+        ? remappedSymbol
+        : '${node.symbol}\u0338',
   );
 }
