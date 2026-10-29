@@ -34,11 +34,11 @@ Entry format:
 
 | Metric | Value | Date |
 |--------|-------|------|
-| Workplan step | 16 in progress: Lexer, Namespace, MacroExpander done; next: Parser | 2026-10-29 |
+| Workplan step | 16: parser core done (Lexer, Namespace, MacroExpander, Parser); next: def.ts | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | VM 433 pass / 2 skip | 2026-10-29 |
+| `flutter test` | VM 458 pass / 4 skip | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
-| Parse divergences | 364 (307 `not-ported`, 57 `trust`) | 2026-10-29 |
+| Parse divergences | 352 (295 `not-ported`, 57 `trust`) | 2026-10-29 |
 | Render failures | 5 of 994 accepted cases | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
@@ -202,3 +202,44 @@ Entry format:
   constraint failures (`\binom` in scripts, `\left\{\rule..\right.`),
   missing font metrics for nested `\textit\textbf` in `\text`.
 - Next: the Parser port, as planned.
+
+## 2026-10-29 — step 16 — Parser and defineFunction
+- Done: `e73cc45`. Parser.ts and defineFunction.ts headers are
+  `@ v0.19.1`. New: `test/parser_test.dart`,
+  `test/katex_conformance/function_flags_test.dart`.
+- Arguments: macro arguments through `scanArgument`, parsed to EOF
+  (#2085). Dart handlers pull their arguments, and some fetch a token
+  first, so each argument reader gives a fetched token back to the gullet
+  (`_returnFetchedToken`). KaTeX handlers get their arguments before they
+  run and need no such step.
+- Flags: `allowedInArgument` replaces `greediness` (#2134). `generate` now
+  also writes `test/katex_conformance/functions.json` and the Dart file
+  `lib/src/parser/tex/katex_function_flags.dart`. `functions` applies
+  those flags to every name that KaTeX defines (D9). Side effects:
+  `\rule`, `\sout` and `\underline` work in text; text accents work in
+  math with a `mathVsTextAccents` strict report; the TeX encoder no
+  longer picks a text accent (`\=`) for a math accent (`\overline`).
+- `\relax`: a function that returns `InternalNode`; the parser drops
+  it. The MacroExpander divergence from the previous entry is closed.
+- Numbers: divergences 364 → 352.
+  Fixed: alpha colors (3), `\sout`/`\rule` in text (5), `\kern2\relax em`,
+  `\mathop \int`, `\frac\bar\bar`, a `\displaystyle` array. No golden
+  changed.
+- Found: the port first added 4 divergences. `a\\ [b]` and `\\ [c]` in
+  arrays: KaTeX reads a `\\` size only if `[` follows at once (cr.ts
+  checks `gullet.future()` before `parseSizeGroup`, which skips spaces).
+  `\'echec` in math: KaTeX reports it through `strict`. Both fixed.
+- Found (pre-existing bug, fixed): Dart operator nodes take the next
+  atom as their operand (`\sin x`). A `\\` became the operand of `\sin`
+  and failed at build time. `parseOperand` now skips line breaks, infix
+  commands and `\relax`.
+- Found: `katex_spec_test.dart` had `#fA6f` as a bad color. KaTeX v0.19.1
+  accepts it (#4090) and uses `#fA6f1`. Updated.
+- Dart divergence (kept): unknown color names are an error. KaTeX passes
+  any name to CSS. No corpus case has one.
+- Remaining `not-ported` causes, most first: `\def` 28, `\smash` 27,
+  starred environments 17, `\gdef` 15, `\mathllap` 11, strict unicode 10,
+  `\@binrel` 9, `\mathreflectbox` 8, `\pmb` 7, `\mapsfrom` 7, `\let` 6.
+- Next: `src/functions/def.ts` (`\def`, `\gdef`, `\edef`, `\xdef`,
+  `\let`, `\global`, `\long`, `\futurelet`: about 56 cases). Then
+  `lap.ts`/`smash.ts`, then `src/macros.ts`.
