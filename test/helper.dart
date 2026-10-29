@@ -51,8 +51,10 @@ void testTexToMatchGoldenFile(
     );
     await tester.pumpAndSettle();
     if (_compareGoldens) {
-      await expectLater(find.byKey(key),
-          matchesGoldenFile(location ?? 'golden/${description.hashCode}.png'));
+      await expectLater(
+        find.byKey(key),
+        matchesGoldenFile(location ?? 'golden/${description.hashCode}.png'),
+      );
     }
   }, skip: skip);
 }
@@ -95,8 +97,11 @@ void testTexToRender(
 /// Compared in memory, on every platform but the web (no toImage there in
 /// tests). This used goldens under golden/temp/, which were stale.
 void testTexToRenderLike(
-    String description, String expression1, String expression2,
-    [TexParserSettings settings = strictSettings]) {
+  String description,
+  String expression1,
+  String expression2, [
+  TexParserSettings settings = strictSettings,
+]) {
   testWidgets(description, (WidgetTester tester) async {
     Future<(int, int, Uint8List)> render(String expression) async {
       final key = GlobalKey();
@@ -135,8 +140,11 @@ void testTexToRenderLike(
 
     final first = await render(expression1);
     final second = await render(expression2);
-    expect((second.$1, second.$2), (first.$1, first.$2),
-        reason: 'image sizes of $expression2 and $expression1');
+    expect(
+      (second.$1, second.$2),
+      (first.$1, first.$2),
+      reason: 'image sizes of $expression2 and $expression1',
+    );
     expect(second.$3, first.$3, reason: '$expression2 renders as $expression1');
   }, skip: kIsWeb);
 }
@@ -144,9 +152,10 @@ void testTexToRenderLike(
 const strictSettings = TexParserSettings(strict: Strict.error);
 const nonstrictSettings = TexParserSettings(strict: Strict.ignore);
 
-EquationRowNode getParsed(String expr,
-        [TexParserSettings settings = const TexParserSettings()]) =>
-    TexParser(expr, settings).parse();
+EquationRowNode getParsed(
+  String expr, [
+  TexParserSettings settings = const TexParserSettings(),
+]) => TexParser(expr, settings).parse();
 
 String prettyPrintJson(Map<String, Object> a) =>
     JsonEncoder.withIndent('| ').convert(a);
@@ -164,13 +173,21 @@ class _ToParse extends Matcher {
       description.add('a TeX string can be parsed with default settings');
 
   @override
-  Description describeMismatch(dynamic item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+  Description describeMismatch(
+    dynamic item,
+    Description mismatchDescription,
+    Map matchState,
+    bool verbose,
+  ) {
     try {
       if (item is String) {
         TexParser(item, settings).parse();
-        return super
-            .describeMismatch(item, mismatchDescription, matchState, verbose);
+        return super.describeMismatch(
+          item,
+          mismatchDescription,
+          matchState,
+          verbose,
+        );
       }
       return mismatchDescription.add('input is not a string');
     } on ParseException catch (e) {
@@ -209,20 +226,32 @@ class _ToNotParse extends Matcher {
       description.add('a TeX string with parse errors');
 
   @override
-  Description describeMismatch(dynamic item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+  Description describeMismatch(
+    dynamic item,
+    Description mismatchDescription,
+    Map matchState,
+    bool verbose,
+  ) {
     try {
       if (item is String) {
         // ignore: unused_local_variable
         final res = TexParser(item, settings).parse();
-        return super
-            .describeMismatch(item, mismatchDescription, matchState, verbose);
+        return super.describeMismatch(
+          item,
+          mismatchDescription,
+          matchState,
+          verbose,
+        );
         // return mismatchDescription.add(prettyPrintJson(res.toJson()));
       }
       return mismatchDescription.add('input is not a string');
     } on ParseException catch (_) {
-      return super
-          .describeMismatch(item, mismatchDescription, matchState, verbose);
+      return super.describeMismatch(
+        item,
+        mismatchDescription,
+        matchState,
+        verbose,
+      );
     }
   }
 
@@ -250,26 +279,30 @@ class _ToBuild extends Matcher {
   final MathOptions options;
   final TexParserSettings settings;
 
-  _ToBuild({
-    MathOptions? options,
-    this.settings = nonstrictSettings,
-  }) : this.options = options ?? MathOptions.displayOptions;
+  _ToBuild({MathOptions? options, this.settings = nonstrictSettings})
+    : this.options = options ?? MathOptions.displayOptions;
 
   @override
   Description describe(Description description) =>
       description.add('a TeX string can be built into widgets');
 
   @override
-  Description describeMismatch(dynamic item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+  Description describeMismatch(
+    dynamic item,
+    Description mismatchDescription,
+    Map matchState,
+    bool verbose,
+  ) {
     try {
       if (item is String) {
-        final ast = SyntaxTree(
-          greenRoot: TexParser(item, settings).parse(),
-        );
+        final ast = SyntaxTree(greenRoot: TexParser(item, settings).parse());
         ast.buildWidget(options);
-        return super
-            .describeMismatch(item, mismatchDescription, matchState, verbose);
+        return super.describeMismatch(
+          item,
+          mismatchDescription,
+          matchState,
+          verbose,
+        );
       }
       return mismatchDescription.add('input is not a string');
     } on ParseException catch (e) {
@@ -283,9 +316,7 @@ class _ToBuild extends Matcher {
   bool matches(dynamic item, Map matchState) {
     try {
       if (item is String) {
-        final ast = SyntaxTree(
-          greenRoot: TexParser(item, settings).parse(),
-        );
+        final ast = SyntaxTree(greenRoot: TexParser(item, settings).parse());
         ast.buildWidget(options);
         return true;
       }
