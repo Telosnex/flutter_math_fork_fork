@@ -1,5 +1,5 @@
 # ADR 001 — Modernize the package and sync the parser with KaTeX
-Status: DRAFT
+Status: ACCEPTED (2026-10-29)
 
 ## 1. Problem
 
@@ -144,30 +144,31 @@ I1: For each corpus case that the divergence file does not list, the Dart
     parser and KaTeX give the same result (accepted or rejected).
     If violated: a parser change made Dart differ from KaTeX, and nobody
     knows.
-    Pinned by: test/katex_conformance/conformance_test.dart (planned)
+    Pinned by: test/katex_conformance/conformance_test.dart
 
 I2: Each case in the divergence file still diverges.
     If violated: the list overstates the gap, and fixed cases can regress
     with no test failure.
-    Pinned by: test/katex_conformance/conformance_test.dart (planned)
+    Pinned by: test/katex_conformance/conformance_test.dart
 
 I3: Each corpus case that the Dart parser accepts builds and lays out in a
-    Math.tex widget with no exception.
+    Math.tex widget with no exception, except for the cases in
+    render_failures.json.
     If violated: the app shows a Flutter error box in place of math.
-    Pinned by: test/katex_conformance/render_test.dart (planned)
+    Pinned by: test/katex_conformance/render_test.dart
 
 I4: Two runs of the sync tool at the same pin give byte-identical files.
     If violated: regenerated files show false changes that hide real ones.
-    Pinned by: workplan step 9 (manual, needs Node)
+    Pinned by: manual check, needs Node (run generate two times, cmp)
 
 I5: Code that uses the API in R4 compiles and renders.
     If violated: cmark-gfm-widget does not build.
-    Pinned by: test/api_surface_test.dart (planned)
+    Pinned by: test/api_surface_test.dart
 
 I6: flutter analyze reports zero issues.
     If violated: deprecated APIs accumulate until a Flutter release removes
     them.
-    Pinned by: CI (planned)
+    Pinned by: .github/workflows/ci.yml
 ```
 
 ## 5. Formats & names
@@ -178,54 +179,69 @@ Paths:
 |------|---------|
 | `tool/katex_sync/katex_version` | One line: a KaTeX tag, for example `v0.19.1`. |
 | `tool/katex_sync/katex_sync.dart` | The sync tool. Commands: `generate --katex <checkout>`, `status --katex <checkout>`. |
-| `tool/katex_sync/record_parse_calls.js` | Jest setup file. The only JavaScript in the repo. |
+| `tool/katex_sync/record_parse_calls.js` | Jest setup file. The only JavaScript in the repo. `generate` copies it into the KaTeX `test/` directory for the run, so that babel-jest finds KaTeX's `@babel/runtime`, and then deletes the copy. |
 | `test/katex_conformance/cases.json` | Generated corpus. |
-| `test/katex_conformance/divergences.json` | Divergence list. People edit `category` and `note`. |
+| `test/katex_conformance/divergences.json` | Parse divergences (I1, I2). People edit `category` and `note`. |
+| `test/katex_conformance/render_failures.json` | Accepted cases that do not render (I3). Same format and rules. |
 
-Case record in `cases.json` (a JSON array, sorted by `id`):
+`cases.json` is a JSON object with one case on each line:
 
 ```json
 {
-  "id": "3f9a0c12be47",
-  "tex": "\\begin{align}a&=b\\end{align}",
-  "settings": {"displayMode": false, "strict": "warn", "trust": false,
-               "macros": {}, "maxExpand": 1000, "globalGroup": false,
-               "colorIsTextColor": false},
-  "sources": ["katex-spec.ts: A parser that does not throw on unsupported commands ..."],
-  "katex": {"ok": false, "kind": "ParseError",
-            "message": "{align} can be used only in display mode.",
-            "position": null}
+"katex": "v0.19.1",
+"generator": "tool/katex_sync/katex_sync.dart generate",
+"cases": [
+{"id":"3f9a0c12be47","katex":{"ok":false,"kind":"ParseError","message":"...","position":0},"portable":true,"settings":{...},"sources":["katex-spec: ..."],"tex":"..."},
+...
+]
 }
 ```
 
 - `id`: the first 12 hex characters of SHA-256 of the canonical JSON of
-  `{"tex", "settings"}`, with sorted keys. The id does not change between
-  KaTeX versions if the input does not change.
-- `settings`: only settings that affect parsing. A value that is a
-  JavaScript function is the string `"<function>"`.
-- `sources`: KaTeX test file and test name for each call that gave this
-  case. This field is for people to read. The tool does not use it.
-- `katex.kind`: `ParseError`, or the class name of another thrown error.
-- `katex.message`: `ParseError.rawMessage`.
+  `{"settings", "tex"}`, with sorted keys. The id does not change between
+  KaTeX versions if the input does not change. Cases are sorted by `id`.
+- `settings`: `colorIsTextColor`, `displayMode`, `globalGroup`, `macros`,
+  `maxExpand`, `strict`, `trust`, after KaTeX `Settings` fills in the
+  defaults. Booleans are booleans (`ss_data.yaml` gives `display: 1`). A
+  value that is a JavaScript function, and a macro that is not a string,
+  is written as `"<function>"` or `"<object>"`.
+- `portable`: false when a setting is a function or a non-string macro.
+  The Dart tests cannot reproduce such a case and skip it.
+- `sources`: `<KaTeX test file>: <test name>` for each call that gave this
+  case. This field is for people to read. The tools do not use it.
+- `katex`: `{"ok": true}`, or `{"ok": true, "warning": ...}`, or
+  `{"ok": false, "kind", "message", "position"}`. The KaTeX test setup
+  throws `ConsoleWarning` from `console.warn`. Outside the tests, KaTeX
+  accepts that input and prints a warning, so `generate` writes it as
+  accepted with a warning. `message` is `ParseError.rawMessage`.
+- Calls with a non-string input (KaTeX TypeError tests) are not recorded.
 
-Divergence record in `divergences.json` (a JSON object, keys sorted):
+Divergence record (`divergences.json`, `render_failures.json`), a JSON
+object with one entry on each line, keys sorted:
 
 ```json
-{"3f9a0c12be47": {"category": "not-ported", "note": ""}}
+{"3f9a0c12be47": {"category":"not-ported","note":"","tex":"...","katex":"accepted","dart":"rejected: ..."}}
 ```
 
-Categories: `not-ported`, `setting` (the Dart settings cannot express the
-case), `trust` (`\href`, `\url`, `\htmlClass`, `\includegraphics`),
-`intentional` (Dart differs on purpose; `note` must give the reason).
+`category` and `note` are for people. The update mode
+(`--dart-define=KATEX_UPDATE=true`) keeps them and rewrites `tex`, `katex`
+and `dart`. A new entry gets `trust` if the input uses `\href`, `\url`,
+`\includegraphics` or `\html*`, `render-error` in `render_failures.json`,
+and otherwise `not-ported`.
 
-Provenance header (D7), one line near the top of the Dart file:
+Categories: `not-ported`, `setting` (the Dart settings cannot express the
+case), `trust` (NG3), `render-error` (I3), `intentional` (Dart differs on
+purpose; `note` must give the reason).
+
+Provenance header (D7), one line at the top of the Dart file:
 
 ```dart
 // katex-sync: src/Parser.ts @ c2e5a289
 ```
 
 The revision is a KaTeX tag or commit. The path is the KaTeX path at the
-pinned tag. One Dart file can have more than one header line.
+pinned tag. One Dart file can have more than one header line. `status`
+follows renames (`src/*.js` to `src/*.ts`).
 
 ## 6. Non-goals
 
@@ -355,3 +371,5 @@ Phase 3: later syncs. Do these steps for each new KaTeX release.
 
 - 2026-10-29: First draft.
 - 2026-10-29: D12 cites the selection code in cmark-gfm-widget.
+- 2026-10-29: Accepted. Section 5 matches the implementation: `portable`,
+  warning results, `render_failures.json`, category `render-error`.

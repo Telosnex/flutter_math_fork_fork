@@ -19,8 +19,14 @@ Entry format:
 - KaTeX checkout: `~/dev/KaTeX`. Use `git -C ~/dev/KaTeX checkout <tag>`
   before you generate the corpus.
 - Dart parser base: KaTeX `c2e5a289` (2020-05-30).
-- Pinned KaTeX tag: `v0.19.1` (commit `8000fbd4`), not yet written to
+- Pinned KaTeX tag: `v0.19.1` (commit `8000fbd4`), in
   `tool/katex_sync/katex_version`.
+- Regenerate the corpus: `git -C ~/dev/KaTeX checkout v0.19.1`, then
+  `dart run tool/katex_sync/katex_sync.dart generate --katex ~/dev/KaTeX`.
+- Update the divergence lists after a parser change:
+  `flutter test test/katex_conformance --dart-define=KATEX_UPDATE=true`.
+- Commits to port for each file:
+  `dart run tool/katex_sync/katex_sync.dart status --katex ~/dev/KaTeX`.
 - KaTeX expected results without a build:
   `npm pack katex@<version>`, then `require('./package/dist/katex.js').__parse(tex, settings)`.
 
@@ -28,11 +34,12 @@ Entry format:
 
 | Metric | Value | Date |
 |--------|-------|------|
-| Workplan step | Phase 0 done (steps 1–8); next: step 9 | 2026-10-29 |
+| Workplan step | Phase 1 done (steps 9–15); next: step 16 | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | 403 pass, 1 skip, 0 fail | 2026-10-29 |
-| Corpus cases | not generated | — |
-| Divergences (`not-ported`) | not measured | — |
+| `flutter test` | 408 pass, 2 skip, 0 fail | 2026-10-29 |
+| Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
+| Parse divergences | 366 (309 `not-ported`, 57 `trust`) | 2026-10-29 |
+| Render failures | 18 of 992 accepted cases | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
 - Done: cloned KaTeX to `~/dev/KaTeX`. Wrote the ADR draft and this file.
@@ -78,3 +85,36 @@ Entry format:
   `testTexToRenderLike` fails on different output and on parse errors,
   that a wrong golden fails, and that `toParse` uses its settings.
 - Next: README for this fork. Then step 9 (jest recording hook).
+
+## 2026-10-29 — steps 9–15 — Phase 1: conformance harness
+- Done: `efaa14b` steps 9–13, `68318c0` steps 14–15. ADR section 5
+  updated to match, status ACCEPTED.
+- Numbers: the KaTeX jest suite (1341 tests, 8 suites) makes 1991
+  `parseTree` calls with a string input. They give 1696 distinct cases:
+  1376 accepted, 320 rejected. 36 are not portable (function settings or
+  non-string macros). Of 1660 portable cases, 1294 agree with Dart.
+  `status`: 49 headers, all behind v0.19.1; `src/environments/array.ts`
+  (33 commits), `src/macros.ts` (27) and `src/Parser.ts` (26) lead.
+- Found: KaTeX babel-jest transforms a setup file outside the checkout
+  and then cannot resolve `@babel/runtime`. `generate` copies the hook
+  into the checkout and deletes it after the run.
+- Found: `ss_data.yaml` gives `display: 1`. The first corpus had
+  `displayMode: 1` and the Dart test crashed on a cast. The hook now
+  records booleans.
+- Found: the most frequent "KaTeX accepts, Dart rejects" causes:
+  `\def` 28, `\smash` 26, `\gdef` 14, `\mathllap` 10, strict unicode 10,
+  `\@binrel` 9, `\mathreflectbox` 8, `\mapsfrom` 7, `\let` 6, `\pmb` 6,
+  `matrix*` 5, `CD` 5, `align` 5.
+- Found: 9 "Dart accepts, KaTeX rejects" cases. Examples:
+  `\raisebox5pt{text}`, `\kern2\relax em`, `hello \cr world`,
+  `\@char{\text{2}}`, `\begin{alignedat}{\text{2}}`.
+- Found: 2 Dart crashes (not ParseException): `\sum_{\substack{}}`
+  (RangeError) and `\char"110000` (RangeError).
+- Found (high impact): a top-level `\\` or `\newline` (`x\\y`) parses
+  but does not build ("Temporary node CrNode encountered"). In Telosnex,
+  such math falls back to raw text. 8 of the 18 render failures have this
+  cause. Others: `\begin{matrix}\end{matrix}` (RangeError), and
+  RenderResetDimension constraint assertions with `\binom` and
+  `\left\{\rule...\right.`.
+- Next: step 16, the parser core port in D8 order, starting with
+  `src/Lexer.ts`.
