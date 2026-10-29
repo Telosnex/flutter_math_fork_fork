@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
@@ -9,11 +9,12 @@ import 'package:flutter_math_fork/src/parser/tex/parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Golden images are compared only on macOS. Font rasterization differs
-/// between platforms, and the images in test/golden were made on macOS.
-/// On other platforms, the test still checks that the expression parses,
-/// builds, and lays out.
-final bool compareGoldens = Platform.isMacOS;
+/// Golden images are compared only on macOS (ADR 001 D10). Font
+/// rasterization differs between platforms, and the images in test/golden
+/// were made on macOS. On other platforms, the test still checks that the
+/// expression parses, builds, and lays out. Not in browsers: dart:io's
+/// Platform throws there.
+final bool compareGoldens = !kIsWeb && Platform.isMacOS;
 
 /// Renders [expression] and compares it with a golden image.
 ///
@@ -25,7 +26,9 @@ void testTexToMatchGoldenFile(
   double scale = 1,
 }) {
   testWidgets(description, (WidgetTester tester) async {
-    tester.view.physicalSize = Size(500 * scale, 300 * scale);
+    // Web tests draw the square glyphs of the test font, much wider than
+    // KaTeX's: a wider view, so the long expressions do not overflow.
+    tester.view.physicalSize = Size((kIsWeb ? 2000 : 500) * scale, 300 * scale);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     final key = GlobalKey();
@@ -114,6 +117,7 @@ void testTexToRender(
 
 /// Renders [expression1] and [expression2] under [settings] and requires
 /// identical pixels. A parse error in either expression fails the test.
+/// Skipped on the web: no toImage there in tests.
 void testTexToRenderLike(
   String description,
   String expression1,
@@ -134,7 +138,7 @@ void testTexToRenderLike(
       reason: 'Pixels of "$expression1" differ from pixels of '
           '"$expression2".',
     );
-  });
+  }, skip: kIsWeb);
 }
 
 Future<({int width, int height, Uint8List pixels})> _renderToPixels(

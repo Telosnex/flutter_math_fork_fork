@@ -1,15 +1,10 @@
-import 'dart:io';
-
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 Future<void> loadKaTeXFonts() async {
-  //https://github.com/flutter/flutter/issues/20907
-  if (Directory.current.path.endsWith('/test') ||
-      Directory.current.path.endsWith('\\test')) {
-    Directory.current = Directory.current.parent;
-  }
-
+  // Web tests draw every font with the test font's square glyphs, and the
+  // asset bundle never answers there (platform messages are dropped).
+  if (kIsWeb) return;
   final katexMainLoader = FontLoader('packages/flutter_math_fork/KaTeX_Main')
     ..addFont(getFontData('lib/katex_fonts/fonts/KaTeX_Main-Regular.ttf'))
     ..addFont(getFontData('lib/katex_fonts/fonts/KaTeX_Main-Italic.ttf'))
@@ -77,6 +72,5 @@ Future<void> loadKaTeXFonts() async {
   ]);
 }
 
-Future<ByteData> getFontData(String name) => File(name)
-    .readAsBytes()
-    .then((bytes) => ByteData.view(Uint8List.fromList(bytes).buffer));
+// The package's own font assets (pubspec.yaml).
+Future<ByteData> getFontData(String name) => rootBundle.load(name);

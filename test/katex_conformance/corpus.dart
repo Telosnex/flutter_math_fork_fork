@@ -74,8 +74,8 @@ class KatexCase {
 }
 
 ({String katex, List<KatexCase> cases}) loadCases() {
-  final json = jsonDecode(File(casesPath).readAsStringSync())
-      as Map<String, dynamic>;
+  final json =
+      jsonDecode(File(casesPath).readAsStringSync()) as Map<String, dynamic>;
   return (
     katex: json['katex'] as String,
     cases: (json['cases'] as List<dynamic>)

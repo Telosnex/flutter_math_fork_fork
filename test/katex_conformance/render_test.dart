@@ -4,6 +4,9 @@
 // divergences.json:
 //   flutter test test/katex_conformance/render_test.dart \
 //     --dart-define=KATEX_UPDATE=true
+@TestOn('vm') // dart:io reads the corpus files.
+library;
+
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
@@ -26,8 +29,7 @@ void main() {
     for (final c in corpus.cases.where((c) => c.portable)) {
       final result = runZoned(
         () => parseWithDart(c),
-        zoneSpecification:
-            ZoneSpecification(print: (_, __, ___, ____) {}),
+        zoneSpecification: ZoneSpecification(print: (_, __, ___, ____) {}),
       );
       final tree = result.tree;
       if (tree == null) continue;
@@ -85,8 +87,9 @@ void main() {
 
     final added = [
       for (final id in observed.keys)
-        if (!listed.containsKey(id)) '$id ${observed[id]!.tex}\n'
-            '    ${observed[id]!.dart}',
+        if (!listed.containsKey(id))
+          '$id ${observed[id]!.tex}\n'
+              '    ${observed[id]!.dart}',
     ];
     final fixed = [
       for (final id in listed.keys)

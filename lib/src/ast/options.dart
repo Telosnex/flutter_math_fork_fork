@@ -216,8 +216,7 @@ class MathOptions {
   /// given font differences
   MathOptions withTextFont(PartialFontOptions font) => copyWith(
         mathFontOptions: null,
-        textFontOptions:
-            (textFontOptions ?? FontOptions()).mergeWith(font),
+        textFontOptions: (textFontOptions ?? FontOptions()).mergeWith(font),
       );
 
   /// Returns [MathOptions] with given math font

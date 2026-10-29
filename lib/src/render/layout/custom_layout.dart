@@ -211,18 +211,15 @@ class RenderCustomLayout<T> extends RenderBox
       final sizeMap = <T, Size>{};
       final baselineMap = <T, double?>{};
       for (final entry in table.entries) {
-        sizeMap[entry.key] =
-            entry.value.getDryLayout(infiniteConstraint);
+        sizeMap[entry.key] = entry.value.getDryLayout(infiniteConstraint);
         baselineMap[entry.key] =
             entry.value.getDryBaseline(infiniteConstraint, baseline);
       }
 
       // Compute vertical layout using correct dry baselines (not 0).
       final vconf = d.performVerticalIntrinsicLayout(
-        childrenHeights:
-            sizeMap.map((k, v) => MapEntry(k, v.height)),
-        childrenBaselines:
-            baselineMap.map((k, v) => MapEntry(k, v ?? 0.0)),
+        childrenHeights: sizeMap.map((k, v) => MapEntry(k, v.height)),
+        childrenBaselines: baselineMap.map((k, v) => MapEntry(k, v ?? 0.0)),
       );
 
       // Return offset + baseline of the first child that has a baseline.

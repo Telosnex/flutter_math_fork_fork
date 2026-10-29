@@ -31,8 +31,7 @@ const _operatorNameEntries = {
 };
 GreenNode _operatorNameHandler(TexParser parser, FunctionContext context) {
   var name = parser.parseArgNode(mode: null, optional: false)!;
-  final scripts =
-      parser.parseScripts(
+  final scripts = parser.parseScripts(
       allowLimits: context.funcName == '\\operatornamewithlimits');
   final body = parser.parseGroup(context.funcName,
           optional: false, greediness: 1, mode: null, consumeSpaces: true) ??

@@ -29,8 +29,7 @@ Future<void> main(List<String> args) async {
   final katexIndex = args.indexOf('--katex');
   if (katexIndex < 0 || katexIndex + 1 >= args.length) _usage();
   final katexDir = Directory(args[katexIndex + 1]).absolute;
-  if (!File('pubspec.yaml').existsSync() ||
-      !File(_versionFile).existsSync()) {
+  if (!File('pubspec.yaml').existsSync() || !File(_versionFile).existsSync()) {
     _fail('Run this tool from the flutter_math_fork_fork root.');
   }
   switch (command) {
@@ -342,8 +341,7 @@ Future<void> _status(Directory katexDir) async {
       ],
       workingDirectory: katexDir.path,
     );
-    final commits =
-        log.split('\n').where((l) => l.trim().isNotEmpty).toList();
+    final commits = log.split('\n').where((l) => l.trim().isNotEmpty).toList();
     if (commits.isEmpty) continue;
     behind++;
     stdout.writeln('${h.dartFile} ← ${h.katexPath} @ ${h.revision}: '

@@ -51,8 +51,7 @@ class DemoPage extends StatelessWidget {
                             alignment: Alignment.topCenter,
                             padding: EdgeInsets.all(10),
                             child: Consumer<TextEditingController>(
-                              builder: (context, controller, _) =>
-                                  Math.tex(
+                              builder: (context, controller, _) => Math.tex(
                                 controller.value.text,
                                 textStyle: TextStyle(fontSize: 22),
                               ),

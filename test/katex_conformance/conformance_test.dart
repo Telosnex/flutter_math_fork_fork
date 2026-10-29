@@ -6,6 +6,9 @@
 //   flutter test test/katex_conformance/conformance_test.dart \
 //     --dart-define=KATEX_UPDATE=true
 // Then set the category and note of each new entry.
+@TestOn('vm') // dart:io reads the corpus files.
+library;
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -28,8 +31,8 @@ void main() {
         if (agrees(c, r)) continue;
         final old = listed[c.id];
         observed[c.id] = Divergence(
-          category: old?.category ??
-              (c.usesTrustCommand ? 'trust' : 'not-ported'),
+          category:
+              old?.category ?? (c.usesTrustCommand ? 'trust' : 'not-ported'),
           note: old?.note ?? '',
           tex: shorten(c.tex),
           katex: c.katexAccepted
@@ -48,7 +51,8 @@ void main() {
     listed = observed;
   }
 
-  test('corpus is from KaTeX ${corpus.katex}: '
+  test(
+      'corpus is from KaTeX ${corpus.katex}: '
       '${cases.length} portable cases, ${observed.length} divergences', () {
     final summary = <String, int>{};
     for (final d in observed.values) {

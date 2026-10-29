@@ -41,9 +41,8 @@ extension MathStyleExt on MathStyle {
   bool get cramped => index.isEven;
   int get size => index ~/ 2;
 
-  MathStyle reduce(MathStyleDiff? diff) => diff == null
-      ? this
-      : MathStyle.values[_reduceTable[diff.index][index]];
+  MathStyle reduce(MathStyleDiff? diff) =>
+      diff == null ? this : MathStyle.values[_reduceTable[diff.index][index]];
 
   static const _reduceTable = [
     [4, 5, 4, 5, 6, 7, 6, 7], //sup

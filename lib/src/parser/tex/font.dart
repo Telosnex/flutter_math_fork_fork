@@ -24,7 +24,6 @@
 /// Converted from KaTeX/src/katex.less
 library;
 
-
 import 'dart:ui';
 
 import '../../ast/options.dart';

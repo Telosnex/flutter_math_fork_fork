@@ -145,10 +145,17 @@ class Measurement {
       toLpUnder(options) / options.fontSize;
 
   @override
-  String toString() => '$value${unit.name}';
+  // As the VM prints doubles (1.0, not 1 as on the web), so encoded TeX is
+  // the same on every platform.
+  String toString() => '${_formatDouble(value)}${unit.name}';
 
   static const zero = Measurement(value: 0, unit: Unit.pt);
 }
+
+String _formatDouble(double v) =>
+    v.isFinite && v == v.truncateToDouble() && v.abs() < 1e21
+        ? '${v.toInt()}.0'
+        : '$v';
 
 extension MeasurementExtOnNum on double {
   Measurement get pt => Measurement(value: this, unit: Unit.pt);

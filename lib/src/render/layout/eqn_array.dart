@@ -117,9 +117,10 @@ class RenderEqnArray extends RenderBox
 
   @override
   double? computeDryBaseline(
-      covariant BoxConstraints constraints, TextBaseline baseline) => null;
-    // RenderEqnArray does not report a baseline
-    // (computeDistanceToActualBaseline is not overridden).
+          covariant BoxConstraints constraints, TextBaseline baseline) =>
+      null;
+  // RenderEqnArray does not report a baseline
+  // (computeDistanceToActualBaseline is not overridden).
 
   @override
   Size computeDryLayout(BoxConstraints constraints) =>

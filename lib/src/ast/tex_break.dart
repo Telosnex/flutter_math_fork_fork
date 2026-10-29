@@ -82,8 +82,8 @@ extension EquationRowNodeTexStyleBreakExt on EquationRowNode {
       pos = breakEnd;
     }
     if (pos != caretPositions.last) {
-      res.add(clipChildrenBetween(pos, caretPositions.last)
-          .wrapWithEquationRow());
+      res.add(
+          clipChildrenBetween(pos, caretPositions.last).wrapWithEquationRow());
       penalties.add(10000);
     }
     return BreakResult<EquationRowNode>(

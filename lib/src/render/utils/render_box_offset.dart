@@ -1,4 +1,3 @@
-
 import 'package:flutter/rendering.dart';
 
 extension RenderBoxOffsetExt on RenderBox {
@@ -7,8 +6,7 @@ extension RenderBoxOffsetExt on RenderBox {
     (parentData as BoxParentData).offset = value;
   }
 
-  double get layoutHeight =>
-      getDistanceToBaseline(TextBaseline.alphabetic)!;
+  double get layoutHeight => getDistanceToBaseline(TextBaseline.alphabetic)!;
 
   double get layoutDepth =>
       size.height - getDistanceToBaseline(TextBaseline.alphabetic)!;

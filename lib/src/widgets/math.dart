@@ -38,7 +38,7 @@ class Math extends StatelessWidget {
     this.parseError,
     this.textScaleFactor,
     this.textStyle,
-  })  : assert(ast != null || parseError != null);
+  }) : assert(ast != null || parseError != null);
 
   /// The equation to display.
   ///
