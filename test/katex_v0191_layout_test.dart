@@ -2,9 +2,7 @@
 // (enclose.ts), \overbracket and \underbracket (horizBrace.ts),
 // \overgroup, \undergroup, \overlinesegment, \underlinesegment (accent.ts,
 // accentunder.ts), \mathsfit (font.ts).
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_test/flutter_test.dart';
 
