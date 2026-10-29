@@ -78,7 +78,6 @@
 "d6469a1c7eb1": {"category":"trust","note":"","tex":"\\url {%}end","katex":"accepted","dart":"rejected: Undefined control sequence: \\url"},
 "d7562e614881": {"category":"not-ported","note":"","tex":"x+\\vcenter{y}","katex":"accepted","dart":"rejected: Undefined control sequence: \\vcenter"},
 "db81c9c9a9b9": {"category":"not-ported","note":"","tex":"\\phase{-78.2^\\circ}","katex":"accepted","dart":"rejected: Undefined control sequence: \\phase"},
-"dbe62137a739": {"category":"not-ported","note":"src/unicodeSupOrSub.ts is not ported: x⁺ is a symbol, so \\def+ never expands.","tex":"\\n        \\def\\a#1{\\b{#1}\\b{#1}}\\n        \\def\\b#1{\\c{#1}\\c{#1}}\\n        \\def\\c#1{\\d{#1}\\d{#1}}\\n        \\def\\d#1{\\e{#1}\\e{#1}}\\n        \\def\\e#1{\\f{#1}\\f{#1}}…","katex":"rejected: Too many expansions: infinite loop or need to increase maxExpand setting","dart":"accepted"},
 "de20a6e0f18f": {"category":"not-ported","note":"","tex":"\\overbracket{1+2}","katex":"accepted","dart":"rejected: Undefined control sequence: \\overbracket"},
 "e406a889c38b": {"category":"trust","note":"","tex":"\\htmlStyle %before\\n{width:50%;}%after\\n{x}","katex":"accepted","dart":"rejected: Undefined control sequence: \\htmlStyle"},
 "e5822ba9a805": {"category":"trust","note":"","tex":"\\href{http://example.org/\\~bar/\\#top?foo=\\$\\}foo\\{\\&bar=bar\\^r\\_boo\\%20baz}{\\alpha}","katex":"accepted","dart":"rejected: Undefined control sequence: \\href"},

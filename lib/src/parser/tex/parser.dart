@@ -50,6 +50,7 @@ import 'settings.dart';
 import 'symbols.dart';
 import 'token.dart';
 import 'unicode_accents.dart';
+import 'unicode_sup_or_sub.dart';
 
 /// Parser for TeX equations
 ///
@@ -349,7 +350,29 @@ class TexParser {
           superscript = superscriptList.wrapWithEquationRow();
           break;
         default:
-          break loop;
+          final plain = uSubsAndSups[lex.text];
+          if (plain == null) break loop;
+          // A Unicode subscript or superscript character. As the
+          // unicode-math package, a string of them renders the same as a
+          // (sub|super)script of the plain characters.
+          final isSub = unicodeSubs.contains(lex.text);
+          final tokens = [Token(plain)];
+          consume();
+          while (true) {
+            final next = fetch().text;
+            final nextPlain = uSubsAndSups[next];
+            if (nextPlain == null || unicodeSubs.contains(next) != isSub) {
+              break;
+            }
+            tokens.insert(0, Token(nextPlain)); // stack order
+            consume();
+          }
+          final body = subparse(tokens).wrapWithEquationRow();
+          if (isSub) {
+            subscript = body;
+          } else {
+            superscript = body;
+          }
       }
     }
     return ScriptsParsingResults(

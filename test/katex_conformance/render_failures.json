@@ -1,4 +1,5 @@
 {
+"126de7f0b1f4": {"category":"render-error","note":"Test view only: the expansion is 128 symbols on one line, wider than the 800 px test view.","tex":"\\n        \\def\\a#1{\\b{#1}\\b{#1}}\\n        \\def\\b#1{\\c{#1}\\c{#1}}\\n        \\def\\c#1{\\d{#1}\\d{#1}}\\n        \\def\\d#1{\\e{#1}\\e{#1}}\\n        \\def\\e#1{\\f{#1}\\f{#1}}…","katex":"accepted","dart":"parsed, render failed: A RenderLine overflowed by 146 pixels on the right."},
 "164735adcd8c": {"category":"render-error","note":"Test view only: a 999em rule is wider than the 800 px test view.","tex":"\\rule{999em}{999em}","katex":"accepted","dart":"parsed, render failed: A RenderLine overflowed by 19180 pixels on the right."},
 "50a436d51362": {"category":"render-error","note":"Test view only: KaTeX wraps this long inline line in HTML; Math draws one line, wider than the 800 px test view. Math.texBreak breaks it.","tex":"\\frac{x^2}{y^2} + z^2 =\\nz^2 + \\frac{x^2}{y^2} =\\n\\frac{x^2}{y^2} +\\nobreak z^2 =\\nz^2 + \\frac{x^2}{y^2} =\\n\\frac{x^2}{y^2} + ~ z^2 =\\nz^2 + \\frac{x^2}{y^2} =\\n…","katex":"accepted","dart":"parsed, render failed: A RenderLine overflowed by 372 pixels on the right."}
 }
