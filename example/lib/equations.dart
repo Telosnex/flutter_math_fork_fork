@@ -1,6 +1,6 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_ui/material_ui.dart';
 
 const equations = [
   ['Solution of quadratic equation', r'x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}'],
@@ -24,6 +24,8 @@ const equations = [
 ];
 
 class EquationsPage extends StatelessWidget {
+  const EquationsPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Center(
         child: Container(

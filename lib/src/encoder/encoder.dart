@@ -32,7 +32,7 @@ class NonStrictEncodeResult extends EncodeResult {
     this.errorCode,
     this.errorMsg, [
     String placeHolder = '',
-  ]) : this.placeHolder = StaticEncodeResult(placeHolder);
+  ]) : placeHolder = StaticEncodeResult(placeHolder);
 
   @override
   String stringify(EncodeConf conf) {

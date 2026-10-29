@@ -3,9 +3,9 @@ import 'num_extension.dart';
 
 extension TextSelectionExt on TextSelection {
   bool within(TextRange range) =>
-      this.start >= range.start && this.end <= range.end;
+      start >= range.start && end <= range.end;
   TextSelection constrainedBy(TextRange range) => TextSelection(
-        baseOffset: this.baseOffset.clampInt(range.start, range.end),
-        extentOffset: this.extentOffset.clampInt(range.start, range.end),
+        baseOffset: baseOffset.clampInt(range.start, range.end),
+        extentOffset: extentOffset.clampInt(range.start, range.end),
       );
 }

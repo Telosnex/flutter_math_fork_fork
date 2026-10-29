@@ -1,5 +1,5 @@
 /// Utilities for Tex encoding and parsing.
-library tex;
+library;
 
 export 'src/ast/syntax_tree.dart'
     show SyntaxTree, SyntaxNode, GreenNode, EquationRowNode;

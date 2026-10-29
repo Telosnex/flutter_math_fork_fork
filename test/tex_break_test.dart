@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_math_fork/src/ast/tex_break.dart';
 import 'package:flutter_math_fork/tex.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'helper.dart';
 import 'load_fonts.dart';
@@ -74,11 +74,11 @@ void main() {
 
 final _jsonEncoder = JsonEncoder.withIndent('  ');
 
-class _ToBreakLike extends Matcher {
+class ToBreakLike extends Matcher {
   final List<EquationRowNode> target;
   final List<int>? targetPenalties;
 
-  _ToBreakLike(List<String> target, this.targetPenalties)
+  ToBreakLike(List<String> target, this.targetPenalties)
       : target = target.map(getParsed).toList(growable: false);
 
   @override
@@ -87,7 +87,7 @@ class _ToBreakLike extends Matcher {
 
   @override
   Description describeMismatch(dynamic item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+      Map<dynamic, dynamic> matchState, bool verbose) {
     if (item is String) {
       final breakRes = getBreak(item);
 
@@ -100,7 +100,7 @@ class _ToBreakLike extends Matcher {
   }
 
   @override
-  bool matches(dynamic item, Map matchState) {
+  bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     if (item is String) {
       final breakRes = getBreak(item);
       if (breakRes.parts.length != target.length) {
@@ -122,5 +122,5 @@ class _ToBreakLike extends Matcher {
   }
 }
 
-_ToBreakLike toBreakLike(List<String> target, [List<int>? penalties]) =>
-    _ToBreakLike(target, penalties);
+ToBreakLike toBreakLike(List<String> target, [List<int>? penalties]) =>
+    ToBreakLike(target, penalties);

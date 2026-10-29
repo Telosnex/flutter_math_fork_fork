@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../render/layout/reset_baseline.dart';
 import '../options.dart';
@@ -27,7 +27,7 @@ class SpaceNode extends LeafNode {
 
   /// Break penalty for a manual line breaking command.
   ///
-  /// Related TeX command: \nobreak, \allowbreak, \penalty<number>.
+  /// Related TeX command: `\nobreak`, `\allowbreak`, `\penalty<number>`.
   ///
   /// Should be null for normal space commands.
   final int? breakPenalty;
@@ -35,6 +35,7 @@ class SpaceNode extends LeafNode {
   /// Whether to fill with text color.
   final bool fill;
 
+  @override
   final Mode mode;
 
   final bool alignerOrSpacer;

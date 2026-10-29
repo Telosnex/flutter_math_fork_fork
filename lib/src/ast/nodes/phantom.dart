@@ -9,6 +9,7 @@ import '../types.dart';
 ///
 /// Example: `\phantom` `\hphantom`.
 class PhantomNode extends LeafNode {
+  @override
   Mode get mode => Mode.math;
 
   /// The phantomed child.

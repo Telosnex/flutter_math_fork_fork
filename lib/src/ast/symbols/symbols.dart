@@ -37,10 +37,12 @@ class SymbolId {
   const SymbolId(this.symbol, {this.variantForm = false});
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is SymbolId && o.symbol == symbol && o.variantForm == variantForm;
+    return other is SymbolId &&
+        other.symbol == symbol &&
+        other.variantForm == variantForm;
   }
 
   @override
@@ -1273,7 +1275,7 @@ const symbolRenderConfigs = {
     math: RenderConfig(AtomType.ord, mainrm), // . \ldotp
     text: RenderConfig(AtomType.ord, mainrm), // .
   ), // .
-  '\"': SymbolRenderConfig(
+  '"': SymbolRenderConfig(
     math: RenderConfig(AtomType.ord, mainrm), // "
     text: RenderConfig(AtomType.ord, mainrm), // "
   ), // "

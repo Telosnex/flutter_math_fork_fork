@@ -1,6 +1,6 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'load_fonts.dart';
 
@@ -27,7 +27,8 @@ void main() {
           home: Scaffold(
             body: Math.tex(
               r'\Gaarbled$',
-              onErrorFallback: (_) => Container(
+              onErrorFallback: (_) => const SizedBox(
+                key: Key('fallback'),
                 width: 100,
                 height: 100,
               ),
@@ -35,7 +36,7 @@ void main() {
           ),
         ),
       );
-      final finder = find.byType(Container);
+      final finder = find.byKey(const Key('fallback'));
       expect(finder, findsOneWidget);
     });
   });

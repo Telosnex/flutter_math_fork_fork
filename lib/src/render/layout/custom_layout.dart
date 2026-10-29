@@ -3,13 +3,14 @@ import 'package:flutter/widgets.dart';
 
 import '../constants.dart';
 import '../utils/get_type_of.dart';
-import '../utils/render_box_offset.dart';
 import '../utils/render_box_layout.dart';
+import '../utils/render_box_offset.dart';
 
 abstract class CustomLayoutDelegate<T> {
   const CustomLayoutDelegate();
 
-  // childrenTable parameter is for a hack to render asynchronously for flutter_svg
+  // childrenTable parameter is for a hack to render asynchronously for
+  // flutter_svg
   Size computeLayout(
     BoxConstraints constraints,
     Map<T, RenderBox> childrenTable, {
@@ -47,9 +48,9 @@ class CustomLayoutId<T> extends ParentDataWidget<CustomLayoutParentData<T>> {
   CustomLayoutId({
     Key? key,
     required this.id,
-    required Widget child,
+    required super.child,
   })  : assert(id != null),
-        super(key: key ?? ValueKey<T>(id), child: child);
+        super(key: key ?? ValueKey<T>(id));
 
   final T id;
 
@@ -78,11 +79,11 @@ class CustomLayout<T> extends MultiChildRenderObjectWidget {
   /// Creates a custom multi-child layout.
   ///
   /// The [delegate] argument must not be null.
-  CustomLayout({
-    Key? key,
+  const CustomLayout({
+    super.key,
     required this.delegate,
-    required List<Widget> children,
-  }) : super(key: key, children: children);
+    required super.children,
+  });
 
   /// The delegate that controls the layout of the children.
   final CustomLayoutDelegate<T> delegate;
@@ -93,15 +94,15 @@ class CustomLayout<T> extends MultiChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderCustomLayout renderObject) {
+      BuildContext context, RenderCustomLayout<T> renderObject) {
     renderObject.delegate = delegate;
   }
 }
 
 class RenderCustomLayout<T> extends RenderBox
     with
-        ContainerRenderObjectMixin<RenderBox, CustomLayoutParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, CustomLayoutParentData> {
+        ContainerRenderObjectMixin<RenderBox, CustomLayoutParentData<T>>,
+        RenderBoxContainerDefaultsMixin<RenderBox, CustomLayoutParentData<T>> {
   RenderCustomLayout({
     List<RenderBox>? children,
     required CustomLayoutDelegate<T> delegate,
@@ -238,9 +239,10 @@ class RenderCustomLayout<T> extends RenderBox
 
   @override
   void performLayout() {
-    this.size = _computeLayout(constraints, dry: false);
+    size = _computeLayout(constraints, dry: false);
   }
 
+  @override
   Size computeDryLayout(BoxConstraints constraints) =>
       _computeLayout(constraints);
 

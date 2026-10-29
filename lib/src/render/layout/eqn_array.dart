@@ -19,15 +19,15 @@ class EqnArray extends MultiChildRenderObjectWidget {
   final List<MatrixSeparatorStyle> hlines;
   final List<double> rowSpacings;
 
-  EqnArray({
-    Key? key,
+  const EqnArray({
+    super.key,
     required this.ruleThickness,
     required this.jotSize,
     required this.arrayskip,
     required this.hlines,
     required this.rowSpacings,
-    required List<Widget> children,
-  }) : super(key: key, children: children);
+    required super.children,
+  });
 
   @override
   RenderObject createRenderObject(BuildContext context) => RenderEqnArray(
@@ -141,7 +141,7 @@ class RenderEqnArray extends RenderBox
     final colWidths = <double>[];
     final sizeMap = <RenderBox, Size>{};
     while (child != null) {
-      Size childSize = Size.zero;
+      var childSize = Size.zero;
       if (child is RenderLine) {
         child.alignColWidth = null;
         childSize = child.getLayoutSize(infiniteConstraint, dry: dry);

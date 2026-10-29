@@ -27,7 +27,7 @@ extension TexEncoderExt on GreenNode {
 extension ListTexEncoderExt on List<GreenNode> {
   /// Encode the list of nodes into TeX
   String encodeTex() =>
-      this.wrapWithEquationRow().encodeTeX(conf: TexEncodeConf().mathParam());
+      wrapWithEquationRow().encodeTeX(conf: TexEncodeConf().mathParam());
 }
 
 EncodeResult encodeTex(GreenNode node) {
@@ -61,9 +61,9 @@ class TexEncodeConf extends EncodeConf {
   const TexEncodeConf({
     this.mode = Mode.math,
     this.removeRowBracket = false,
-    Strict strict = Strict.warn,
-    StrictFun? strictFun,
-  }) : super(strict: strict, strictFun: strictFun);
+    super.strict,
+    super.strictFun,
+  });
 
   static const mathConf = TexEncodeConf();
   static const mathParamConf = TexEncodeConf(removeRowBracket: true);
@@ -176,7 +176,7 @@ class TexCommandEncodeResult extends EncodeResult {
 
   @override
   String stringify(TexEncodeConf conf) {
-    assert(this.numArgs >= this.numOptionalArgs);
+    assert(numArgs >= numOptionalArgs);
     if (!spec.allowedInMath && conf.mode == Mode.math) {
       conf.reportNonstrict('command mode mismatch',
           'Text-only command $command occured in math encoding enviroment');
@@ -217,7 +217,7 @@ extension TexEncoderJoinerExt on Iterable<String> {
       final next = (iterator..moveNext()).current;
       if (current.length == 1 ||
           (next.isNotEmpty && !isAlphaNumericUnit(next[0]) && next[0] != '*') ||
-          (current.isNotEmpty && current[current.length - 1] == '\}')) {
+          (current.isNotEmpty && current[current.length - 1] == '}')) {
         return current;
       }
       return '$current ';

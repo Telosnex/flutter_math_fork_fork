@@ -2592,7 +2592,7 @@ void main() {
     // });
 
     test("should preserve spaces after control-symbol function", () {
-      expect("\text{\' }", toParse());
+      expect("\text{' }", toParse());
     });
 
     // test("should consume spaces between arguments", () {

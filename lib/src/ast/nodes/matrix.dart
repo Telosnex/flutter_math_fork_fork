@@ -229,9 +229,9 @@ class MatrixNode extends SlotableNode<EquationRowNode?> {
         hskipBeforeAndAfter: hskipBeforeAndAfter ?? this.hskipBeforeAndAfter,
         isSmall: isSmall ?? this.isSmall,
         columnAligns: columnAligns ?? this.columnAligns,
-        vLines: columnLines ?? this.vLines,
-        rowSpacings: rowSpacing ?? this.rowSpacings,
-        hLines: rowLines ?? this.hLines,
+        vLines: columnLines ?? vLines,
+        rowSpacings: rowSpacing ?? rowSpacings,
+        hLines: rowLines ?? hLines,
         body: body ?? this.body,
       );
 

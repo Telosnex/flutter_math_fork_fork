@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../render/layout/custom_layout.dart';
 import '../options.dart';
@@ -48,11 +48,11 @@ class FracNode extends SlotableNode<EquationRowNode> {
           ),
           children: <Widget>[
             CustomLayoutId(
-              id: _FracPos.numer,
+              id: FracPos.numer,
               child: childBuildResults[0]!.widget,
             ),
             CustomLayoutId(
-              id: _FracPos.denom,
+              id: FracPos.denom,
               child: childBuildResults[1]!.widget,
             ),
           ],
@@ -93,12 +93,12 @@ class FracNode extends SlotableNode<EquationRowNode> {
     });
 }
 
-enum _FracPos {
+enum FracPos {
   numer,
   denom,
 }
 
-class FracLayoutDelegate extends IntrinsicLayoutDelegate<_FracPos> {
+class FracLayoutDelegate extends IntrinsicLayoutDelegate<FracPos> {
   final Measurement? barSize;
   final MathOptions options;
 
@@ -116,17 +116,17 @@ class FracLayoutDelegate extends IntrinsicLayoutDelegate<_FracPos> {
   @override
   double computeDistanceToActualBaseline(
     TextBaseline baseline,
-    Map<_FracPos, RenderBox> childrenTable,
+    Map<FracPos, RenderBox> childrenTable,
   ) =>
       height;
 
   @override
-  AxisConfiguration<_FracPos> performHorizontalIntrinsicLayout({
-    required Map<_FracPos, double> childrenWidths,
+  AxisConfiguration<FracPos> performHorizontalIntrinsicLayout({
+    required Map<FracPos, double> childrenWidths,
     bool isComputingIntrinsics = false,
   }) {
-    final numerSize = childrenWidths[_FracPos.numer]!;
-    final denomSize = childrenWidths[_FracPos.denom]!;
+    final numerSize = childrenWidths[FracPos.numer]!;
+    final denomSize = childrenWidths[FracPos.denom]!;
     final barLength = math.max(numerSize, denomSize);
     // KaTeX/src/katex.less
     final nullDelimiterWidth = 0.12.cssEm.toLpUnder(options);
@@ -139,22 +139,22 @@ class FracLayoutDelegate extends IntrinsicLayoutDelegate<_FracPos> {
     return AxisConfiguration(
       size: width,
       offsetTable: {
-        _FracPos.numer: 0.5 * (width - numerSize),
-        _FracPos.denom: 0.5 * (width - denomSize),
+        FracPos.numer: 0.5 * (width - numerSize),
+        FracPos.denom: 0.5 * (width - denomSize),
       },
     );
   }
 
   @override
-  AxisConfiguration<_FracPos> performVerticalIntrinsicLayout({
-    required Map<_FracPos, double> childrenHeights,
-    required Map<_FracPos, double> childrenBaselines,
+  AxisConfiguration<FracPos> performVerticalIntrinsicLayout({
+    required Map<FracPos, double> childrenHeights,
+    required Map<FracPos, double> childrenBaselines,
     bool isComputingIntrinsics = false,
   }) {
-    final numerSize = childrenHeights[_FracPos.numer]!;
-    final denomSize = childrenHeights[_FracPos.denom]!;
-    final numerHeight = childrenBaselines[_FracPos.numer]!;
-    final denomHeight = childrenBaselines[_FracPos.denom]!;
+    final numerSize = childrenHeights[FracPos.numer]!;
+    final denomSize = childrenHeights[FracPos.denom]!;
+    final numerHeight = childrenBaselines[FracPos.numer]!;
+    final denomHeight = childrenBaselines[FracPos.denom]!;
     final metrics = options.fontMetrics;
     final xi8 = metrics.defaultRuleThickness.cssEm.toLpUnder(options);
     final theta = barSize?.toLpUnder(options) ?? xi8;
@@ -201,8 +201,8 @@ class FracLayoutDelegate extends IntrinsicLayoutDelegate<_FracPos> {
     return AxisConfiguration(
       size: height + depth,
       offsetTable: {
-        _FracPos.numer: height - u - hx,
-        _FracPos.denom: height + v - hz,
+        FracPos.numer: height - u - hx,
+        FracPos.denom: height + v - hz,
       },
     );
   }

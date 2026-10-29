@@ -77,7 +77,7 @@ class TexParserSettings {
     this.strictFun,
     this.globalGroup = false,
     this.colorIsTextColor = false,
-  }) : this.strict = strictFun == null ? strict : Strict.function
+  }) : strict = strictFun == null ? strict : Strict.function
   //: assert(strict != Strict.function || strictFun != null) // This line causes analyzer error
   ;
 

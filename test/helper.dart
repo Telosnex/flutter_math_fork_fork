@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_math_fork/src/parser/tex/parser.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void testTexToMatchGoldenFile(
   String description,
@@ -14,9 +14,9 @@ void testTexToMatchGoldenFile(
   double scale = 1,
 }) {
   testWidgets(description, (WidgetTester tester) async {
-    tester.binding.window.physicalSizeTestValue =
-        Size(500 * scale, 300 * scale);
-    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.view.physicalSize = Size(500 * scale, 300 * scale);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
     final key = GlobalKey();
     await tester.pumpWidget(
       MaterialApp(
@@ -32,7 +32,7 @@ void testTexToMatchGoldenFile(
                     style: MathStyle.display,
                     fontSize: scale * MathOptions.defaultFontSize,
                   ),
-                  onErrorFallback: (_) => throw _,
+                  onErrorFallback: (e) => throw e,
                 ),
               ),
             ),
@@ -68,7 +68,7 @@ void testTexToRender(
                     fontSize: MathOptions.defaultFontSize,
                     style: MathStyle.display,
                   ),
-                  onErrorFallback: (_) => throw _,
+                  onErrorFallback: (e) => throw e,
                 ),
               ),
             ),
@@ -161,13 +161,13 @@ EquationRowNode getParsed(String expr,
 String prettyPrintJson(Map<String, Object> a) =>
     JsonEncoder.withIndent('| ').convert(a);
 
-_ToParse toParse([TexParserSettings settings = strictSettings]) =>
-    _ToParse(settings);
+ToParse toParse([TexParserSettings settings = strictSettings]) =>
+    ToParse(settings);
 
-class _ToParse extends Matcher {
+class ToParse extends Matcher {
   final TexParserSettings settings;
 
-  _ToParse(this.settings);
+  ToParse(this.settings);
 
   @override
   Description describe(Description description) =>
@@ -175,7 +175,7 @@ class _ToParse extends Matcher {
 
   @override
   Description describeMismatch(dynamic item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+      Map<dynamic, dynamic> matchState, bool verbose) {
     try {
       if (item is String) {
         TexParser(item, settings).parse();
@@ -191,7 +191,7 @@ class _ToParse extends Matcher {
   }
 
   @override
-  bool matches(dynamic item, Map matchState) {
+  bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     try {
       if (item is String) {
         // ignore: unused_local_variable
@@ -206,13 +206,13 @@ class _ToParse extends Matcher {
   }
 }
 
-_ToNotParse toNotParse([TexParserSettings settings = strictSettings]) =>
-    _ToNotParse(settings);
+ToNotParse toNotParse([TexParserSettings settings = strictSettings]) =>
+    ToNotParse(settings);
 
-class _ToNotParse extends Matcher {
+class ToNotParse extends Matcher {
   final TexParserSettings settings;
 
-  _ToNotParse(this.settings);
+  ToNotParse(this.settings);
 
   @override
   Description describe(Description description) =>
@@ -220,7 +220,7 @@ class _ToNotParse extends Matcher {
 
   @override
   Description describeMismatch(dynamic item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+      Map<dynamic, dynamic> matchState, bool verbose) {
     try {
       if (item is String) {
         // ignore: unused_local_variable
@@ -237,7 +237,7 @@ class _ToNotParse extends Matcher {
   }
 
   @override
-  bool matches(dynamic item, Map matchState) {
+  bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     try {
       if (item is String) {
         // ignore: unused_local_variable
@@ -252,18 +252,18 @@ class _ToNotParse extends Matcher {
   }
 }
 
-final toBuild = _ToBuild();
+final toBuild = ToBuild();
 
-final toBuildStrict = _ToBuild(settings: strictSettings);
+final toBuildStrict = ToBuild(settings: strictSettings);
 
-class _ToBuild extends Matcher {
+class ToBuild extends Matcher {
   final MathOptions options;
   final TexParserSettings settings;
 
-  _ToBuild({
+  ToBuild({
     MathOptions? options,
     this.settings = nonstrictSettings,
-  }) : this.options = options ?? MathOptions.displayOptions;
+  }) : options = options ?? MathOptions.displayOptions;
 
   @override
   Description describe(Description description) =>
@@ -271,7 +271,7 @@ class _ToBuild extends Matcher {
 
   @override
   Description describeMismatch(dynamic item, Description mismatchDescription,
-      Map matchState, bool verbose) {
+      Map<dynamic, dynamic> matchState, bool verbose) {
     try {
       if (item is String) {
         final ast = SyntaxTree(
@@ -290,7 +290,7 @@ class _ToBuild extends Matcher {
   }
 
   @override
-  bool matches(dynamic item, Map matchState) {
+  bool matches(dynamic item, Map<dynamic, dynamic> matchState) {
     try {
       if (item is String) {
         final ast = SyntaxTree(

@@ -1,4 +1,4 @@
-part of katex_base;
+part of '../katex_base.dart';
 
 const _charEntries = {
   ['\\@char']:

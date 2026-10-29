@@ -10,6 +10,8 @@ const largeSections = {
 };
 
 class FeaturePage extends StatelessWidget {
+  const FeaturePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final entries = supportedData.entries.toList();

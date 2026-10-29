@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../render/layout/line.dart';
 import '../utils/iterable_extensions.dart';
@@ -136,7 +136,7 @@ class SyntaxNode {
           ? SyntaxNode(
               parent: this,
               value: value.children[index]!,
-              pos: this.pos + value.childPositions[index],
+              pos: pos + value.childPositions[index],
             )
           : null,
       growable: false);
@@ -541,11 +541,11 @@ class EquationRowNode extends ParentableNode<GreenNode>
     final lineChildren = List.generate(
       flattenedBuildResults.length,
       (index) => LineElement(
-        child: flattenedBuildResults[index].widget,
         canBreakBefore: false, // TODO
         alignerOrSpacer: flattenedChildList[index] is SpaceNode &&
             (flattenedChildList[index] as SpaceNode).alignerOrSpacer,
         trailingMargin: childSpacingConfs[index].spacingAfter,
+        child: flattenedBuildResults[index].widget,
       ),
       growable: false,
     );
@@ -583,6 +583,7 @@ class EquationRowNode extends ParentableNode<GreenNode>
   @override
   AtomType get rightType => overrideType ?? AtomType.ord;
 
+  @override
   Map<String, Object?> toJson() => super.toJson()
     ..addAll({
       'children': children.map((child) => child.toJson()).toList(),
@@ -634,7 +635,7 @@ mixin _ClipChildrenMixin on ParentableNode<GreenNode> {
         tail = child;
       }
     }
-    return this.updateChildren(<GreenNode>[
+    return updateChildren(<GreenNode>[
       if (head != null) head,
       for (var i = childIndex1Ceil; i < childIndex2Floor; i++) children[i],
       if (tail != null) tail,
@@ -667,7 +668,7 @@ extension GreenNodeWrappingExt on GreenNode {
   /// If the [EquationRowNode] has more than one child, an error will be thrown.
   GreenNode unwrapEquationRow() {
     if (this is EquationRowNode) {
-      if (this.children.length == 1) {
+      if (children.length == 1) {
         return (this as EquationRowNode).children[0];
       }
       throw ArgumentError(
@@ -683,7 +684,7 @@ extension GreenNodeListWrappingExt on List<GreenNode> {
   /// If the list only contain one [EquationRowNode], then this note will be
   /// returned.
   EquationRowNode wrapWithEquationRow() {
-    if (this.length == 1 && this[0] is EquationRowNode) {
+    if (length == 1 && this[0] is EquationRowNode) {
       return this[0] as EquationRowNode;
     }
     return EquationRowNode(children: this);

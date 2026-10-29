@@ -46,7 +46,7 @@ class MathOptions {
   final FontOptions? mathFontOptions;
 
   /// Size multiplier applied to equation elements.
-  late final double sizeMultiplier = this.size.sizeMultiplier;
+  late final double sizeMultiplier = size.sizeMultiplier;
 
   // final double maxSize;
   // final num minRuleThickness; //???
@@ -162,23 +162,23 @@ class MathOptions {
   /// Returns [MathOptions] with given [MathStyle]
   MathOptions havingStyle(MathStyle style) {
     if (this.style == style) return this;
-    return this.copyWith(
+    return copyWith(
       style: style,
     );
   }
 
   /// Returns [MathOptions] with their styles set to cramped (e.g. textCramped)
   MathOptions havingCrampedStyle() {
-    if (this.style.cramped) return this;
-    return this.copyWith(
+    if (style.cramped) return this;
+    return copyWith(
       style: style.cramp(),
     );
   }
 
   /// Returns [MathOptions] with their user-declared size set to given size
   MathOptions havingSize(MathSize size) {
-    if (this.size == size && this.sizeUnderTextStyle == size) return this;
-    return this.copyWith(
+    if (this.size == size && sizeUnderTextStyle == size) return this;
+    return copyWith(
       style: style.atLeastText(),
       sizeUnderTextStyle: size,
     );
@@ -189,10 +189,10 @@ class MathOptions {
   /// at least [MathStyle.text]
   MathOptions havingStyleUnderBaseSize(MathStyle? style) {
     style = style ?? this.style.atLeastText();
-    if (this.sizeUnderTextStyle == MathSize.normalsize && this.style == style) {
+    if (sizeUnderTextStyle == MathSize.normalsize && this.style == style) {
       return this;
     }
-    return this.copyWith(
+    return copyWith(
       style: style,
       sizeUnderTextStyle: MathSize.normalsize,
     );
@@ -200,8 +200,8 @@ class MathOptions {
 
   /// Returns [MathOptions] with size reset to [MathSize.normalsize]
   MathOptions havingBaseSize() {
-    if (this.sizeUnderTextStyle == MathSize.normalsize) return this;
-    return this.copyWith(
+    if (sizeUnderTextStyle == MathSize.normalsize) return this;
+    return copyWith(
       sizeUnderTextStyle: MathSize.normalsize,
     );
   }
@@ -209,21 +209,21 @@ class MathOptions {
   /// Returns [MathOptions] with given text color
   MathOptions withColor(Color color) {
     if (this.color == color) return this;
-    return this.copyWith(color: color);
+    return copyWith(color: color);
   }
 
   /// Returns [MathOptions] with current text-mode font options merged with
   /// given font differences
-  MathOptions withTextFont(PartialFontOptions font) => this.copyWith(
+  MathOptions withTextFont(PartialFontOptions font) => copyWith(
         mathFontOptions: null,
         textFontOptions:
-            (this.textFontOptions ?? FontOptions()).mergeWith(font),
+            (textFontOptions ?? FontOptions()).mergeWith(font),
       );
 
   /// Returns [MathOptions] with given math font
   MathOptions withMathFont(FontOptions font) {
-    if (font == this.mathFontOptions) return this;
-    return this.copyWith(mathFontOptions: font);
+    if (font == mathFontOptions) return this;
+    return copyWith(mathFontOptions: font);
   }
 
   /// Utility method copyWith
@@ -237,8 +237,8 @@ class MathOptions {
     // num minRuleThickness,
   }) =>
       MathOptions._(
-        fontSize: this.fontSize,
-        logicalPpi: this.logicalPpi,
+        fontSize: fontSize,
+        logicalPpi: logicalPpi,
         style: style ?? this.style,
         color: color ?? this.color,
         sizeUnderTextStyle: sizeUnderTextStyle ?? this.sizeUnderTextStyle,
@@ -313,10 +313,10 @@ class OptionsDiff {
   OptionsDiff removeStyle() {
     if (style == null) return this;
     return OptionsDiff(
-      color: this.color,
-      size: this.size,
-      textFontOptions: this.textFontOptions,
-      mathFontOptions: this.mathFontOptions,
+      color: color,
+      size: size,
+      textFontOptions: textFontOptions,
+      mathFontOptions: mathFontOptions,
     );
   }
 
@@ -324,10 +324,10 @@ class OptionsDiff {
   OptionsDiff removeMathFont() {
     if (mathFontOptions == null) return this;
     return OptionsDiff(
-      color: this.color,
-      size: this.size,
-      style: this.style,
-      textFontOptions: this.textFontOptions,
+      color: color,
+      size: size,
+      style: style,
+      textFontOptions: textFontOptions,
     );
   }
 }
@@ -385,14 +385,14 @@ class FontOptions {
   }
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is FontOptions &&
-        o.fontFamily == fontFamily &&
-        o.fontWeight == fontWeight &&
-        o.fontShape == fontShape &&
-        listEquals(o.fallback, fallback);
+    return other is FontOptions &&
+        other.fontFamily == fontFamily &&
+        other.fontWeight == fontWeight &&
+        other.fontShape == fontShape &&
+        listEquals(other.fallback, fallback);
   }
 
   @override
@@ -420,13 +420,13 @@ class PartialFontOptions {
   });
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is PartialFontOptions &&
-        o.fontFamily == fontFamily &&
-        o.fontWeight == fontWeight &&
-        o.fontShape == fontShape;
+    return other is PartialFontOptions &&
+        other.fontFamily == fontFamily &&
+        other.fontWeight == fontWeight &&
+        other.fontShape == fontShape;
   }
 
   @override

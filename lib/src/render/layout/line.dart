@@ -1,13 +1,14 @@
 //ignore_for_file: lines_longer_than_80_chars
 import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../constants.dart';
-import '../utils/render_box_offset.dart';
 import '../utils/render_box_layout.dart';
+import '../utils/render_box_offset.dart';
 
 class LineParentData extends ContainerBoxParentData<RenderBox> {
   // The first canBreakBefore has no effect
@@ -31,13 +32,13 @@ class LineElement extends ParentDataWidget<LineParentData> {
   final bool alignerOrSpacer;
 
   const LineElement({
-    Key? key,
+    super.key,
     this.canBreakBefore = false,
     this.customCrossSize,
     this.trailingMargin = 0.0,
     this.alignerOrSpacer = false,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   @override
   void applyParentData(RenderObject renderObject) {
@@ -89,15 +90,15 @@ class LineElement extends ParentDataWidget<LineParentData> {
 
 /// Line provides abilities for line breaks, delim-sizing and background color indicator.
 class Line extends MultiChildRenderObjectWidget {
-  Line({
-    Key? key,
+  const Line({
+    super.key,
     this.crossAxisAlignment = CrossAxisAlignment.baseline,
     this.minDepth = 0.0,
     this.minHeight = 0.0,
     this.textBaseline = TextBaseline.alphabetic,
     this.textDirection,
-    List<Widget> children = const [],
-  }) : super(key: key, children: children);
+    super.children,
+  });
 
   final CrossAxisAlignment crossAxisAlignment;
 
@@ -444,7 +445,7 @@ class RenderLine extends RenderBox
 
     if (!dry) {
       this.caretOffsets = caretOffsets;
-      this._overflow = mainPos - size.width;
+      _overflow = mainPos - size.width;
       this.maxHeightAboveBaseline = maxHeightAboveBaseline;
     } else {
       return size;
@@ -521,7 +522,7 @@ class RenderLine extends RenderBox
 
     size = constraints.constrain(
         Size(mainPos, maxHeightAboveBaseline + maxDepthBelowBaseline));
-    this._overflow = mainPos - size.width;
+    _overflow = mainPos - size.width;
 
     return size;
   }

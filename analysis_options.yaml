@@ -30,7 +30,6 @@ linter:
     - use_setters_to_change_properties
     - prefer_final_fields
     - avoid_classes_with_only_static_members
-    - one_member_abstracts
     - use_to_and_as_if_applicable
     # Usage: https://dart.dev/effective-dart/usage
     - prefer_relative_imports

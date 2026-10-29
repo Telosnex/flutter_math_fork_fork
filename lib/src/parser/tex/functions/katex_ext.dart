@@ -1,4 +1,4 @@
-library katex_ext;
+library;
 
 import '../../../ast/nodes/symbol.dart';
 import '../../../ast/syntax_tree.dart';

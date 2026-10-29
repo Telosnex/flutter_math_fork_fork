@@ -1,8 +1,10 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 class DemoPage extends StatelessWidget {
+  const DemoPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Center(
         child: Container(

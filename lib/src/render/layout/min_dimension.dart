@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import '../utils/render_box_offset.dart';
 import '../utils/render_box_layout.dart';
+import '../utils/render_box_offset.dart';
 
 class MinDimension extends SingleChildRenderObjectWidget {
   final double minHeight;
@@ -13,13 +13,13 @@ class MinDimension extends SingleChildRenderObjectWidget {
   final double bottomPadding;
 
   const MinDimension({
-    Key? key,
+    super.key,
     this.minHeight = 0,
     this.minDepth = 0,
     this.topPadding = 0,
     this.bottomPadding = 0,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required Widget super.child,
+  });
 
   @override
   RenderMinDimension createRenderObject(BuildContext context) =>

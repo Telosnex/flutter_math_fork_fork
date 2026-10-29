@@ -5,7 +5,7 @@
 /// * [GreenNode]
 /// * [SyntaxNode]
 /// * [SyntaxTree]
-library ast;
+library;
 
 import 'src/ast/syntax_tree.dart';
 

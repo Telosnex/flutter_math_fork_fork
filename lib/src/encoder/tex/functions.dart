@@ -1,4 +1,6 @@
-library tex_encoder_functions;
+library;
+
+import 'dart:ui' show Color;
 
 import 'package:collection/collection.dart';
 

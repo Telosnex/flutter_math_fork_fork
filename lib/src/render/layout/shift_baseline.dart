@@ -3,11 +3,11 @@ import 'package:flutter/widgets.dart';
 
 class ShiftBaseline extends SingleChildRenderObjectWidget {
   const ShiftBaseline({
-    Key? key,
+    super.key,
     this.relativePos,
     this.offset = 0,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required Widget super.child,
+  });
 
   final double? relativePos;
 

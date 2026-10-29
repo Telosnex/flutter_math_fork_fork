@@ -69,6 +69,7 @@ class NodeMatcher<T extends GreenNode> extends Matcher {
         (anyChild?.specificity ?? 0),
       ].max;
 
+  @override
   bool match(GreenNode? node) {
     if (node is! T) return false;
     if (matchSelf != null && matchSelf!(node) == false) return false;

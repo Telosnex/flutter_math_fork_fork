@@ -163,8 +163,8 @@ BuildResult makeCompactedCompositeSymbol(
     widget: Line(
       children: <Widget>[
         LineElement(
-          child: widget1,
           trailingMargin: spacing.toLpUnder(options),
+          child: widget1,
         ),
         widget2,
       ],

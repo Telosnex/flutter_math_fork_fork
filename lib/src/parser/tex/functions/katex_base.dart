@@ -1,4 +1,4 @@
-library katex_base;
+library;
 
 import '../../../ast/nodes/accent.dart';
 import '../../../ast/nodes/accent_under.dart';

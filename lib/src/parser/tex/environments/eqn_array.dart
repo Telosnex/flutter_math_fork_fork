@@ -65,7 +65,7 @@ GreenNode _casesHandler(TexParser parser, EnvContext context) {
     concatRow: (cells) {
       final children = [
         SpaceNode.alignerOrSpacer(),
-        if (cells.length >= 1) ...cells[0].children,
+        if (cells.isNotEmpty) ...cells[0].children,
         if (cells.length > 1) SpaceNode.alignerOrSpacer(),
         if (cells.length > 1)
           SpaceNode(height: Measurement.zero, width: 1.0.em, mode: Mode.math),

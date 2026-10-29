@@ -1,4 +1,4 @@
-part of katex_ext;
+part of '../katex_ext.dart';
 
 const _notEntries = {
   ['\\not']: FunctionSpec(numArgs: 1, handler: _notHandler)

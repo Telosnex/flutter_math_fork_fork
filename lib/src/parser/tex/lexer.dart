@@ -56,6 +56,7 @@ class Lexer implements LexerInterface {
   static final tokenRegex = RegExp(tokenRegexString, multiLine: true);
   Lexer(this.input, this.settings) : it = tokenRegex.allMatches(input).iterator;
 
+  @override
   final String input;
   final TexParserSettings settings;
   final Map<String, int> catCodes = {'%': 14};
@@ -64,7 +65,7 @@ class Lexer implements LexerInterface {
   final Iterator<RegExpMatch> it;
 
   Token lex() {
-    if (this.pos == input.length) {
+    if (pos == input.length) {
       return Token('EOF', SourceLocation(this, pos, pos));
     }
     final hasMatch = it.moveNext();
@@ -89,7 +90,7 @@ class Lexer implements LexerInterface {
         while (it.moveNext()) {
           pos = it.current.end;
         }
-        this.settings.reportNonstrict(
+        settings.reportNonstrict(
             'commentAtEnd',
             '% comment has no terminating newline; LaTeX would '
                 'fail because of commenting the end of math mode (e.g. \$)');
@@ -103,7 +104,7 @@ class Lexer implements LexerInterface {
           }
         }
       }
-      return this.lex();
+      return lex();
     }
     final controlMatch = controlWordWhitespaceRegex.firstMatch(text);
     if (controlMatch != null) {

@@ -197,5 +197,5 @@ extension SizeModeExt on MathSize {
         1.728,
         2.074,
         2.488,
-      ][this.index];
+      ][index];
 }

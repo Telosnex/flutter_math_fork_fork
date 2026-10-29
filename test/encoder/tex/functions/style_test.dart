@@ -1,10 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter_math_fork/ast.dart';
+import 'package:flutter_math_fork/src/encoder/tex/encoder.dart';
 import 'package:flutter_math_fork/src/parser/tex/font.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:flutter_math_fork/src/encoder/tex/encoder.dart';
 
 void main() {
   group('style encoding test', () {
@@ -54,6 +53,15 @@ void main() {
           children: [SymbolNode(symbol: 'a')],
         ).encodeTeX(),
         '\\textcolor{#010203}{a}',
+      );
+
+      // An opaque color must not put the alpha channel in the hex string.
+      expect(
+        StyleNode(
+          optionsDiff: OptionsDiff(color: Color(0xFFFF0000)),
+          children: [SymbolNode(symbol: 'a')],
+        ).encodeTeX(),
+        '\\textcolor{#ff0000}{a}',
       );
     });
 

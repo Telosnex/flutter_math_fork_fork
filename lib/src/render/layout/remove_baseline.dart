@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 
 class RemoveBaseline extends SingleChildRenderObjectWidget {
   const RemoveBaseline({
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
+    super.key,
+    required Widget super.child,
+  });
 
   @override
   RenderRemoveBaseline createRenderObject(BuildContext context) =>

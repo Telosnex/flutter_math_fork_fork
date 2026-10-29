@@ -81,7 +81,7 @@ EncodeResult _optionsDiffEncode(OptionsDiff diff, List<dynamic> children) {
     res = TexCommandEncodeResult(
       command: '\\textcolor',
       args: <dynamic>[
-        '#${diff.color!.value.toRadixString(16).padLeft(6, '0')}',
+        _hexRgb(diff.color!),
         res,
       ],
     );
@@ -109,3 +109,7 @@ const _sizeCommands = {
   MathSize.huge: '\\huge',
   MathSize.HUGE: '\\HUGE',
 };
+
+/// `#RRGGBB`. KaTeX color arguments have no alpha channel.
+String _hexRgb(Color color) =>
+    '#${(color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';

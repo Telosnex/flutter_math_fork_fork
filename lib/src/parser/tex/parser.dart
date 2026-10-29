@@ -24,7 +24,6 @@
 import 'dart:collection';
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
 
 import '../../ast/nodes/multiscripts.dart';
 import '../../ast/nodes/over.dart';
@@ -54,9 +53,9 @@ import 'unicode_accents.dart';
 /// Convert TeX string to Flutter Math's AST
 class TexParser {
   TexParser(String content, this.settings)
-      : this.leftrightDepth = 0,
-        this.mode = Mode.math,
-        this.macroExpander = MacroExpander(content, settings, Mode.math);
+      : leftrightDepth = 0,
+        mode = Mode.math,
+        macroExpander = MacroExpander(content, settings, Mode.math);
 
   final TexParserSettings settings;
   Mode mode;
@@ -67,21 +66,20 @@ class TexParser {
 
   /// Get parse result
   EquationRowNode parse() {
-    if (!this.settings.globalGroup) {
-      this.macroExpander.beginGroup();
+    if (!settings.globalGroup) {
+      macroExpander.beginGroup();
     }
-    if (this.settings.colorIsTextColor) {
-      this
-          .macroExpander
+    if (settings.colorIsTextColor) {
+      macroExpander
           .macros
           .set('\\color', MacroDefinition.fromString('\\textcolor'));
     }
-    final parse = this.parseExpression(breakOnInfix: false);
+    final parse = parseExpression(breakOnInfix: false);
 
-    this.expect('EOF');
+    expect('EOF');
 
-    if (!this.settings.globalGroup) {
-      this.macroExpander.endGroup();
+    if (!settings.globalGroup) {
+      macroExpander.endGroup();
     }
     return parse.wrapWithEquationRow();
   }
@@ -93,10 +91,10 @@ class TexParser {
   }) {
     final body = <GreenNode>[];
     while (true) {
-      if (this.mode == Mode.math) {
-        this.consumeSpaces();
+      if (mode == Mode.math) {
+        consumeSpaces();
       }
-      final lex = this.fetch();
+      final lex = fetch();
       if (endOfExpression.contains(lex.text)) {
         break;
       }
@@ -112,7 +110,7 @@ class TexParser {
         if (breakOnInfix) {
           break;
         }
-        this.consume();
+        consume();
         _enterArgumentParsingMode(lex.text, funcData);
         try {
           // A new way to handle infix operations
@@ -132,7 +130,7 @@ class TexParser {
         }
       } else {
         // Add a normal atom
-        final atom = this.parseAtom(breakOnTokenText);
+        final atom = parseAtom(breakOnTokenText);
         if (atom == null) {
           break;
         }
@@ -172,9 +170,9 @@ class TexParser {
   };
 
   void expect(String text, {bool consume = true}) {
-    if (this.fetch().text != text) {
+    if (fetch().text != text) {
       throw ParseException(
-          'Expected \'$text\', got \'${this.fetch().text}\'', this.fetch());
+          'Expected \'$text\', got \'${fetch().text}\'', fetch());
     }
     if (consume) {
       this.consume();
@@ -182,16 +180,16 @@ class TexParser {
   }
 
   void consumeSpaces() {
-    while (this.fetch().text == ' ') {
-      this.consume();
+    while (fetch().text == ' ') {
+      consume();
     }
   }
 
   GreenNode? parseAtom(String? breakOnTokenText) {
-    final base = this.parseGroup('atom',
+    final base = parseGroup('atom',
         optional: false, greediness: null, breakOnTokenText: breakOnTokenText);
 
-    if (this.mode == Mode.text) {
+    if (mode == Mode.text) {
       return base;
     }
 
@@ -232,8 +230,8 @@ class TexParser {
     bool? limits;
     loop:
     while (true) {
-      this.consumeSpaces();
-      final lex = this.fetch();
+      consumeSpaces();
+      final lex = fetch();
       switch (lex.text) {
         case '\\limits':
         case '\\nolimits':
@@ -242,19 +240,19 @@ class TexParser {
                 'Limit controls must follow a math operator', lex);
           }
           limits = lex.text == '\\limits';
-          this.consume();
+          consume();
           break;
         case '^':
           if (superscript != null) {
             throw ParseException('Double superscript', lex);
           }
-          superscript = this._handleScript().wrapWithEquationRow();
+          superscript = _handleScript().wrapWithEquationRow();
           break;
         case '_':
           if (subscript != null) {
             throw ParseException('Double subscript', lex);
           }
-          subscript = this._handleScript().wrapWithEquationRow();
+          subscript = _handleScript().wrapWithEquationRow();
           break;
         case "'":
           if (superscript != null) {
@@ -270,8 +268,8 @@ class TexParser {
               overrideFont: primeCommand.font,
             ),
           ];
-          this.consume();
-          while (this.fetch().text == "'") {
+          consume();
+          while (fetch().text == "'") {
             superscriptList.add(
               SymbolNode(
                 mode: mode,
@@ -281,10 +279,10 @@ class TexParser {
                 overrideFont: primeCommand.font,
               ),
             );
-            this.consume();
+            consume();
           }
-          if (this.fetch().text == '^') {
-            superscriptList.addAll(this._handleScript().expandEquationRow());
+          if (fetch().text == '^') {
+            superscriptList.addAll(_handleScript().expandEquationRow());
           }
           superscript = superscriptList.wrapWithEquationRow();
           break;
@@ -300,10 +298,10 @@ class TexParser {
   }
 
   GreenNode _handleScript() {
-    final symbolToken = this.fetch();
+    final symbolToken = fetch();
     final symbol = symbolToken.text;
-    this.consume();
-    final group = this.parseGroup(
+    consume();
+    final group = parseGroup(
       symbol == '_' ? 'subscript' : 'superscript',
       optional: false,
       greediness: TexParser.supsubGreediness,
@@ -320,13 +318,13 @@ class TexParser {
   Token fetch() {
     final nextToken = this.nextToken;
     if (nextToken == null) {
-      return this.nextToken = this.macroExpander.expandNextToken();
+      return this.nextToken = macroExpander.expandNextToken();
     }
     return nextToken;
   }
 
   void consume() {
-    this.nextToken = null;
+    nextToken = null;
   }
 
   /// [parseGroup] Return a row if encounters \[\] or {}. Returns single function
@@ -354,7 +352,7 @@ class TexParser {
     // Save current mode and restore after completion
     final outerMode = this.mode;
     if (mode != null) {
-      this.switchMode(mode);
+      switchMode(mode);
     }
     // Consume spaces if requested, crucially *after* we switch modes,
     // so that the next non-space token is parsed in the correct mode.
@@ -362,22 +360,22 @@ class TexParser {
       this.consumeSpaces();
     }
     // Get first token
-    final firstToken = this.fetch();
+    final firstToken = fetch();
     final text = firstToken.text;
     GreenNode? result;
     // Try to parse an open brace or \begingroup
     if (optional ? text == '[' : text == '{' || text == '\\begingroup') {
-      this.consume();
+      consume();
       final groupEnd = endOfGroup[text]!;
       // Start a new group namespace
-      this.macroExpander.beginGroup();
+      macroExpander.beginGroup();
       // If we get a brace, parse an expression
       final expression =
-          this.parseExpression(breakOnInfix: false, breakOnTokenText: groupEnd);
+          parseExpression(breakOnInfix: false, breakOnTokenText: groupEnd);
       // final lastToken = this.fetch();
       // Check that we got a matching closing brace
-      this.expect(groupEnd);
-      this.macroExpander.endGroup();
+      expect(groupEnd);
+      macroExpander.endGroup();
       result = expression.wrapWithEquationRow();
     } else if (optional) {
       // Return nothing for an optional group
@@ -385,20 +383,20 @@ class TexParser {
     } else {
       // If there exists a function with this name, parse the function.
       // Otherwise, just return a nucleus
-      result = this.parseFunction(breakOnTokenText, name, greediness) ??
-          this._parseSymbol();
+      result = parseFunction(breakOnTokenText, name, greediness) ??
+          _parseSymbol();
       if (result == null &&
           text[0] == '\\' &&
           !implicitCommands.contains(text)) {
-        if (this.settings.throwOnError) {
+        if (settings.throwOnError) {
           throw ParseException('Undefined control sequence: $text', firstToken);
         }
-        result = this._formatUnsuppotedCmd(text);
-        this.consume();
+        result = _formatUnsuppotedCmd(text);
+        consume();
       }
     }
     if (mode != null) {
-      this.switchMode(outerMode);
+      switchMode(outerMode);
     }
     return result;
   }
@@ -407,13 +405,13 @@ class TexParser {
 
   GreenNode? parseFunction(
       String? breakOnTokenText, String? name, int? greediness) {
-    final token = this.fetch();
+    final token = fetch();
     final func = token.text;
     final funcData = functions[func];
     if (funcData == null) {
       return null;
     }
-    this.consume();
+    consume();
 
     if (greediness != null &&
         // funcData.greediness != null &&
@@ -421,10 +419,10 @@ class TexParser {
       throw ParseException(
           '''Got function '$func' with no arguments ${name != null ? ' as $name' : ''}''',
           token);
-    } else if (this.mode == Mode.text && !funcData.allowedInText) {
+    } else if (mode == Mode.text && !funcData.allowedInText) {
       throw ParseException(
           '''Can't use function '$func' in text mode''', token);
-    } else if (this.mode == Mode.math && funcData.allowedInMath == false) {
+    } else if (mode == Mode.math && funcData.allowedInMath == false) {
       throw ParseException(
           '''Can't use function '$func' in math mode''', token);
     }
@@ -468,7 +466,7 @@ class TexParser {
     if (!optional && value == null) {
       throw ParseException(
           'Expected group after ${currArgParsingContext.funcName}',
-          this.fetch());
+          fetch());
     }
   }
 
@@ -487,12 +485,12 @@ class TexParser {
     currArgParsingContext.newArgument(optional: optional);
     final i = currArgParsingContext.currArgNum;
     final consumeSpaces =
-        (i > 0 && !optional) || (i == 0 && !optional && this.mode == Mode.math);
+        (i > 0 && !optional) || (i == 0 && !optional && mode == Mode.math);
     if (consumeSpaces) {
       this.consumeSpaces();
     }
     // final res = this.parseColorGroup(optional: optional);
-    final res = this._parseStringGroup('color', optional: optional);
+    final res = _parseStringGroup('color', optional: optional);
     if (res == null) {
       _assertOptionalBeforeReturn(null, optional: optional);
       return null;
@@ -538,14 +536,14 @@ class TexParser {
     currArgParsingContext.newArgument(optional: optional);
     final i = currArgParsingContext.currArgNum;
     final consumeSpaces =
-        (i > 0 && !optional) || (i == 0 && !optional && this.mode == Mode.math);
+        (i > 0 && !optional) || (i == 0 && !optional && mode == Mode.math);
     if (consumeSpaces) {
       this.consumeSpaces();
     }
 
     // final res = this.parseSizeGroup(optional: optional);
     Token? res;
-    if (!optional && this.fetch().text != '{') {
+    if (!optional && fetch().text != '{') {
       res = _parseRegexGroup(_parseSizeRegex, 'size');
     } else {
       res = _parseStringGroup('size', optional: optional);
@@ -593,7 +591,7 @@ class TexParser {
     // if (consumeSpaces) {
     //   this.consumeSpaces();
     // }
-    final res = this.parseGroup(
+    final res = parseGroup(
       currArgParsingContext.name,
       optional: optional,
       greediness: currArgParsingContext.funcData.greediness,
@@ -616,7 +614,7 @@ class TexParser {
     } else {
       return StyleNode(
         optionsDiff: OptionsDiff(style: MathStyle.text),
-        children: res?.children.whereNotNull().toList(growable: false) ?? [],
+        children: res?.children.nonNulls.toList(growable: false) ?? [],
       );
     }
   }
@@ -625,48 +623,48 @@ class TexParser {
     currArgParsingContext.newArgument(optional: optional);
     final i = currArgParsingContext.currArgNum;
     final consumeSpaces =
-        (i > 0 && !optional) || (i == 0 && !optional && this.mode == Mode.math);
+        (i > 0 && !optional) || (i == 0 && !optional && mode == Mode.math);
     if (consumeSpaces) {
       this.consumeSpaces();
     }
-    if (optional && this.fetch().text == '{') {
+    if (optional && fetch().text == '{') {
       return null;
     }
-    final token = this._parseStringGroup('raw', optional: optional);
+    final token = _parseStringGroup('raw', optional: optional);
     if (token != null) {
       return token.text;
     } else {
-      throw ParseException('Expected raw group', this.fetch());
+      throw ParseException('Expected raw group', fetch());
     }
   }
 
-  static final _parseStringGroupRegex = RegExp('''[^{}[\]]''');
+  static final _parseStringGroupRegex = RegExp('''[^{}[]]''');
 
   Token? _parseStringGroup(String modeName,
       {required bool optional, bool raw = false}) {
     final groupBegin = optional ? '[' : '{';
     final groupEnd = optional ? ']' : '}';
-    final beginToken = this.fetch();
+    final beginToken = fetch();
     if (beginToken.text != groupBegin) {
       if (optional) {
         return null;
       } else if (raw &&
           beginToken.text != 'EOF' &&
           _parseStringGroupRegex.hasMatch(beginToken.text)) {
-        this.consume();
+        consume();
         return beginToken;
       }
     }
-    final outerMode = this.mode;
-    this.mode = Mode.text;
-    this.expect(groupBegin);
+    final outerMode = mode;
+    mode = Mode.text;
+    expect(groupBegin);
 
     var str = '';
-    final firstToken = this.fetch();
+    final firstToken = fetch();
     var nested = 0;
     var lastToken = firstToken;
     Token nextToken;
-    while ((nextToken = this.fetch()).text != groupEnd || (raw && nested > 0)) {
+    while ((nextToken = fetch()).text != groupEnd || (raw && nested > 0)) {
       if (nextToken.text == 'EOF') {
         throw ParseException('Unexpected end of input in $modeName',
             Token.range(firstToken, lastToken, str));
@@ -677,41 +675,41 @@ class TexParser {
       }
       lastToken = nextToken;
       str += lastToken.text;
-      this.consume();
+      consume();
     }
-    this.expect(groupEnd);
-    this.mode = outerMode;
+    expect(groupEnd);
+    mode = outerMode;
     return Token.range(firstToken, lastToken, str);
   }
 
   Token _parseRegexGroup(RegExp regex, String modeName) {
-    final outerMode = this.mode;
-    this.mode = Mode.text;
-    final firstToken = this.fetch();
+    final outerMode = mode;
+    mode = Mode.text;
+    final firstToken = fetch();
     var lastToken = firstToken;
     var str = '';
     Token nextToken;
-    while ((nextToken = this.fetch()).text != 'EOF' &&
+    while ((nextToken = fetch()).text != 'EOF' &&
         regex.hasMatch(str + nextToken.text)) {
       lastToken = nextToken;
       str += lastToken.text;
-      this.consume();
+      consume();
     }
     if (str.isEmpty) {
       throw ParseException(
           "Invalid $modeName: '${firstToken.text}'", firstToken);
     }
-    this.mode = outerMode;
+    mode = outerMode;
     return Token.range(firstToken, lastToken, str);
   }
 
   static final _parseVerbRegex = RegExp(r'^\\verb[^a-zA-Z]');
 
   GreenNode? _parseSymbol() {
-    final nucleus = this.fetch();
+    final nucleus = fetch();
     var text = nucleus.text;
     if (_parseVerbRegex.hasMatch(text)) {
-      this.consume();
+      consume();
       var arg = text.substring(5);
       final star = (arg[0] == '*'); //?
       if (star) {
@@ -739,9 +737,9 @@ class TexParser {
     // At this point, we should have a symbol, possibly with accents.
     // First expand any accented base symbol according to unicodeSymbols.
     if (unicodeSymbols.containsKey(text[0]) &&
-        !texSymbolCommandConfigs[this.mode]!.containsKey(text[0])) {
-      if (this.mode == Mode.math) {
-        this.settings.reportNonstrict(
+        !texSymbolCommandConfigs[mode]!.containsKey(text[0])) {
+      if (mode == Mode.math) {
+        settings.reportNonstrict(
             'unicodeTextInMathMode',
             'Accented Unicode text character "${text[0]}" used in math mode',
             nucleus);
@@ -758,20 +756,20 @@ class TexParser {
         if (!unicodeAccents.containsKey(accent)) {
           throw ParseException("Unknown accent ' $accent'", nucleus);
         }
-        final command = unicodeAccents[accent]![this.mode];
+        final command = unicodeAccents[accent]![mode];
         if (command == null) {
           throw ParseException(
-              'Accent $accent unsupported in ${this.mode} mode', nucleus);
+              'Accent $accent unsupported in $mode mode', nucleus);
         }
       }
       combiningMarks = match[0]!;
     }
     // Recognize base symbol
     GreenNode symbol;
-    final symbolCommandConfig = texSymbolCommandConfigs[this.mode]![text];
+    final symbolCommandConfig = texSymbolCommandConfigs[mode]![text];
     if (symbolCommandConfig != null) {
-      if (this.mode == Mode.math && extraLatin.contains(text)) {
-        this.settings.reportNonstrict(
+      if (mode == Mode.math && extraLatin.contains(text)) {
+        settings.reportNonstrict(
             'unicodeTextInMathMode',
             'Latin-1/Unicode text character "${text[0]}" used in math mode',
             nucleus);
@@ -786,13 +784,13 @@ class TexParser {
       );
     } else if (text.isNotEmpty && text.codeUnitAt(0) >= 0x80) {
       if (!supportedCodepoint(text.codeUnitAt(0))) {
-        this.settings.reportNonstrict(
+        settings.reportNonstrict(
             'unknownSymbol',
             'Unrecognized Unicode character "${text[0]}" '
                 '(${text.codeUnitAt(0)})',
             nucleus);
-      } else if (this.mode == Mode.math) {
-        this.settings.reportNonstrict('unicodeTextInMathMode',
+      } else if (mode == Mode.math) {
+        settings.reportNonstrict('unicodeTextInMathMode',
             'Unicode text character "${text[0]} used in math mode"', nucleus);
       }
       symbol = SymbolNode(
@@ -802,13 +800,13 @@ class TexParser {
     } else {
       return null;
     }
-    this.consume();
+    consume();
     return symbol;
   }
 
   void switchMode(Mode newMode) {
-    this.mode = newMode;
-    this.macroExpander.mode = newMode;
+    mode = newMode;
+    macroExpander.mode = newMode;
   }
 
   GreenNode _formatUnsuppotedCmd(String text) {
