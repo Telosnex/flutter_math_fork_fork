@@ -68,6 +68,7 @@ function snapshotSettings(given) {
       macros: macros.out,
       maxExpand: settings.maxExpand,
       strict: settingValue(settings.strict),
+      throwOnError: Boolean(settings.throwOnError),
       trust: settingValue(settings.trust),
     },
     portable: macros.portable &&

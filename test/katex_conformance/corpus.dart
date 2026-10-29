@@ -62,6 +62,7 @@ class KatexCase {
       maxExpand: (settings['maxExpand'] as num).toInt(),
       globalGroup: settings['globalGroup'] as bool,
       colorIsTextColor: settings['colorIsTextColor'] as bool,
+      throwOnError: settings['throwOnError'] as bool,
     );
   }
 

@@ -22,6 +22,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import 'dart:ui' show Color;
+
 import '../../utils/log.dart';
 import 'macros.dart';
 import 'parse_error.dart';
@@ -47,7 +49,12 @@ enum Strict {
 /// Settings for [TexParser]
 class TexParserSettings {
   final bool displayMode; // TODO
-  final bool throwOnError; // TODO
+  /// Whether an undefined command is an error. If false, the command
+  /// shows as its name in [errorColor].
+  final bool throwOnError;
+
+  /// KaTeX default: #cc0000.
+  final Color errorColor;
 
   /// Extra macros
   final Map<String, MacroDefinition> macros;
@@ -72,6 +79,7 @@ class TexParserSettings {
   const TexParserSettings({
     this.displayMode = false,
     this.throwOnError = true,
+    this.errorColor = const Color(0xffcc0000),
     this.macros = const {},
     this.maxExpand = 1000,
     Strict strict = Strict.warn,

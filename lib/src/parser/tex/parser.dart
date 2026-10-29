@@ -814,10 +814,15 @@ class TexParser {
     macroExpander.mode = newMode;
   }
 
-  GreenNode _formatUnsuppotedCmd(String text) {
-    //TODO
-    throw UnimplementedError();
-  }
+  /// KaTeX: formatUnsupportedCmd. With throwOnError false, an undefined
+  /// command shows as its name in the error color.
+  GreenNode _formatUnsuppotedCmd(String text) => StyleNode(
+        optionsDiff: OptionsDiff(color: settings.errorColor),
+        children: [
+          for (final char in text.split(''))
+            SymbolNode(symbol: char, mode: Mode.text),
+        ],
+      );
 }
 
 class ArgumentParsingContext {
