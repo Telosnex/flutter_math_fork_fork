@@ -5,12 +5,14 @@ import '../../../ast/nodes/accent_under.dart';
 import '../../../ast/nodes/enclosure.dart';
 import '../../../ast/nodes/frac.dart';
 import '../../../ast/nodes/function.dart';
+import '../../../ast/nodes/lap.dart';
 import '../../../ast/nodes/left_right.dart';
 import '../../../ast/nodes/multiscripts.dart';
 import '../../../ast/nodes/nary_op.dart';
 import '../../../ast/nodes/over.dart';
 import '../../../ast/nodes/phantom.dart';
 import '../../../ast/nodes/raise_box.dart';
+import '../../../ast/nodes/smash.dart';
 import '../../../ast/nodes/space.dart';
 import '../../../ast/nodes/sqrt.dart';
 import '../../../ast/nodes/stretchy_op.dart';
@@ -47,6 +49,7 @@ part 'katex_base/font.dart';
 part 'katex_base/genfrac.dart';
 part 'katex_base/horiz_brace.dart';
 part 'katex_base/kern.dart';
+part 'katex_base/lap.dart';
 part 'katex_base/math.dart';
 part 'katex_base/mclass.dart';
 part 'katex_base/op.dart';
@@ -56,6 +59,7 @@ part 'katex_base/raise_box.dart';
 part 'katex_base/relax.dart';
 part 'katex_base/rule.dart';
 part 'katex_base/sizing.dart';
+part 'katex_base/smash.dart';
 part 'katex_base/sqrt.dart';
 part 'katex_base/styling.dart';
 part 'katex_base/text.dart';
@@ -78,6 +82,7 @@ const katexBaseFunctionEntries = {
   ..._genfracEntries,
   ..._horizBraceEntries,
   ..._kernEntries,
+  ..._lapEntries,
   ..._mathEntries,
   ..._mclassEntries,
   ..._opEntries,
@@ -87,6 +92,7 @@ const katexBaseFunctionEntries = {
   ..._relaxEntries,
   ..._ruleEntries,
   ..._sizingEntries,
+  ..._smashEntries,
   ..._sqrtEntries,
   ..._stylingEntries,
   ..._textEntries,

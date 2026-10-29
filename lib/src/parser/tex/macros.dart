@@ -424,11 +424,10 @@ final Map<String, MacroDefinition> builtinMacros = {
 // the dot at U+22C5 and gives it punct spacing.
   '\u00b7': MacroDefinition.fromString("\\cdotp"),
 
-  // wont support
   // \llap and \rlap render their contents in text mode
-  // '\\llap': MacroDefinition.fromString("\\mathllap{\\textrm{#1}}"),
-  // '\\rlap': MacroDefinition.fromString("\\mathrlap{\\textrm{#1}}"),
-  // '\\clap': MacroDefinition.fromString("\\mathclap{\\textrm{#1}}"),
+  '\\llap': MacroDefinition.fromString("\\mathllap{\\textrm{#1}}"),
+  '\\rlap': MacroDefinition.fromString("\\mathrlap{\\textrm{#1}}"),
+  '\\clap': MacroDefinition.fromString("\\mathclap{\\textrm{#1}}"),
 
 // \not is defined by base/fontmath.ltx via
 // \DeclareMathSymbol{\not}{\mathrel}{symbols}{"36}
