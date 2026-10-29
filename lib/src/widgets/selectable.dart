@@ -1,7 +1,9 @@
 import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -58,9 +60,13 @@ class SelectableMath extends StatelessWidget {
     this.textScaleFactor,
     this.textSelectionControls,
     this.textStyle,
+    // Deprecated in Flutter for contextMenuBuilder; kept as this package's
+    // API.
+    // ignore: deprecated_member_use
     ToolbarOptions? toolbarOptions,
   })  : assert(ast != null || parseException != null),
         toolbarOptions = toolbarOptions ??
+            // ignore: deprecated_member_use
             const ToolbarOptions(
               selectAll: true,
               copy: true,
@@ -155,6 +161,7 @@ class SelectableMath extends StatelessWidget {
   /// Paste and cut will be disabled regardless.
   ///
   /// If not set, select all and copy will be enabled by default.
+  // ignore: deprecated_member_use
   final ToolbarOptions toolbarOptions;
 
   /// SelectableMath builder using a TeX string
@@ -185,6 +192,9 @@ class SelectableMath extends StatelessWidget {
     double? textScaleFactor,
     TextSelectionControls? textSelectionControls,
     TextStyle? textStyle,
+    // Deprecated in Flutter for contextMenuBuilder; kept as this package's
+    // API.
+    // ignore: deprecated_member_use
     ToolbarOptions? toolbarOptions,
   }) {
     SyntaxTree? ast;
@@ -235,14 +245,20 @@ class SelectableMath extends StatelessWidget {
           .merge(const TextStyle(fontWeight: FontWeight.bold));
     }
 
-    final textScaleFactor =
-        this.textScaleFactor ?? MediaQuery.textScaleFactorOf(context);
+    // An explicit textScaleFactor multiplies; otherwise the MediaQuery's
+
+    // TextScaler scales the size (it can be nonlinear).
+
+    final textScaler = textScaleFactor != null
+        ? TextScaler.linear(textScaleFactor!)
+        : MediaQuery.textScalerOf(context);
 
     final options = this.options ??
         MathOptions(
           style: mathStyle,
-          fontSize: effectiveTextStyle.fontSize! * textScaleFactor,
-          mathFontOptions: effectiveTextStyle.fontWeight != FontWeight.normal && effectiveTextStyle.fontWeight != null
+          fontSize: textScaler.scale(effectiveTextStyle.fontSize!),
+          mathFontOptions: effectiveTextStyle.fontWeight != FontWeight.normal &&
+                  effectiveTextStyle.fontWeight != null
               ? FontOptions(fontWeight: effectiveTextStyle.fontWeight!)
               : null,
           logicalPpi: logicalPpi,
@@ -395,6 +411,7 @@ class InternalSelectableMath extends StatefulWidget {
 
   final TextSelectionControls textSelectionControls;
 
+  // ignore: deprecated_member_use
   final ToolbarOptions toolbarOptions;
 
   @override
@@ -551,6 +568,52 @@ class InternalSelectableMathState extends State<InternalSelectableMath>
 
   @override
   double get preferredLineHeight => widget.options.fontSize;
+
+  // TextSelectionDelegate: the math does not scroll inside itself, so there
+  // is nothing to bring into view. Without this, dragging a selection handle
+  // (and Select All, and losing focus) fell through to noSuchMethod and
+  // threw.
+  @override
+  void bringIntoView(TextPosition position) {}
+
+  // Select all and Copy in the toolbar. Like bringIntoView, these
+  // TextSelectionDelegate methods were missing and fell through to
+  // noSuchMethod, so both buttons threw.
+  @override
+  void selectAll(SelectionChangedCause cause) {
+    handleSelectionChanged(
+      TextSelection(
+        baseOffset: 0,
+        extentOffset: controller.ast.greenRoot.capturedCursor - 1,
+      ),
+      cause,
+      // As the textEditingValue setter (the old Select All path): keeps the
+      // overlay, so the toolbar stays up with Copy.
+      ExtraSelectionChangedCause.handle,
+    );
+  }
+
+  @override
+  void copySelection(SelectionChangedCause cause) {
+    final value = textEditingValue;
+    if (value.selection.isCollapsed) return;
+    Clipboard.setData(
+      ClipboardData(text: value.selection.textInside(value.text)),
+    );
+    if (cause == SelectionChangedCause.toolbar) {
+      // As EditableText: iOS and macOS keep the handles.
+      switch (defaultTargetPlatform) {
+        case TargetPlatform.iOS:
+        case TargetPlatform.macOS:
+          hideToolbar(false);
+        case TargetPlatform.android:
+        case TargetPlatform.fuchsia:
+        case TargetPlatform.linux:
+        case TargetPlatform.windows:
+          hideToolbar();
+      }
+    }
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) {
