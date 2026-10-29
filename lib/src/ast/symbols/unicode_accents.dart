@@ -1,3 +1,4 @@
+// katex-sync: src/unicodeAccents.js @ c2e5a289
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors

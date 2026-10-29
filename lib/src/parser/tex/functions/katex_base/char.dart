@@ -1,3 +1,4 @@
+// katex-sync: src/functions/char.ts @ c2e5a289
 part of '../katex_base.dart';
 
 const _charEntries = {

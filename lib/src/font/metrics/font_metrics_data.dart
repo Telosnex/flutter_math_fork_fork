@@ -1,3 +1,4 @@
+// katex-sync: src/fontMetricsData.js @ c2e5a289
 //ignore_for_file: prefer_single_quotes
 
 // Replace \[([-0-9e.]*), ([-0-9e.]*), ([-0-9e.]*), ([-0-9e.]*), ([-0-9e.]*)\]

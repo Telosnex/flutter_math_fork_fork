@@ -1,3 +1,4 @@
+// katex-sync: src/fontMetrics.ts @ c2e5a289
 import '../../ast/font_metrics.dart';
 import '../../ast/size.dart';
 import '../../ast/types.dart';

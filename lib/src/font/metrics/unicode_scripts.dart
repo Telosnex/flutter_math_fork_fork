@@ -1,3 +1,4 @@
+// katex-sync: src/unicodeScripts.ts @ c2e5a289
 class Script {
   final String name;
   final List<List<int>> blocks;

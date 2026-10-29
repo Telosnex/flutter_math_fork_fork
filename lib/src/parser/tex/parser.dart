@@ -1,3 +1,5 @@
+// katex-sync: src/parseTree.ts @ c2e5a289
+// katex-sync: src/Parser.ts @ c2e5a289
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
