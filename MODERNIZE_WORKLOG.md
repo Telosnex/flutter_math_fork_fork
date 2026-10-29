@@ -34,12 +34,12 @@ Entry format:
 
 | Metric | Value | Date |
 |--------|-------|------|
-| Workplan step | Phase 1 done (steps 9–15); next: step 16 | 2026-10-29 |
+| Workplan step | 16 in progress: Lexer, Namespace, MacroExpander done; next: Parser | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | 408 pass, 2 skip, 0 fail | 2026-10-29 |
+| `flutter test` | 426 pass, 2 skip, 0 fail | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
-| Parse divergences | 366 (309 `not-ported`, 57 `trust`) | 2026-10-29 |
-| Render failures | 18 of 992 accepted cases | 2026-10-29 |
+| Parse divergences | 364 (307 `not-ported`, 57 `trust`) | 2026-10-29 |
+| Render failures | 18 of 994 accepted cases | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
 - Done: cloned KaTeX to `~/dev/KaTeX`. Wrote the ADR draft and this file.
@@ -118,3 +118,33 @@ Entry format:
   `\left\{\rule...\right.`.
 - Next: step 16, the parser core port in D8 order, starting with
   `src/Lexer.ts`.
+
+## 2026-10-29 — step 16 — Lexer, Namespace, MacroExpander
+- Done: Lexer, Namespace and MacroExpander headers are now
+  `@ v0.19.1`. New unit tests: `test/lexer_test.dart`,
+  `test/namespace_test.dart`, `test/macro_expander_test.dart`.
+- Lexer: control space (#2877), `~` catcode 13 (#2949), `\operatorname`
+  as a macro over `\operatorname@` / `\operatornamewithlimits` (#2984;
+  operator_name.dart, macros.dart and the encoder changed with it; the
+  encoder has a new `specName` for commands that are macros). `lex()` uses
+  `matchAsPrefix` at the current position.
+- Namespace: fixed a bug where two local sets in one group restored the
+  wrong value. Added `set(name, null)` and `endGroups()`.
+- MacroExpander: fixed an inverted `isDefined` test in
+  `expandOnce(expandableOnly)`. That fixed 2 divergences
+  (`\noexpand\foo y`, `\expandafter\foo\noexpand\foo`). Added
+  delimited arguments, `scanArgument`, `countExpansion`, `expandTokens`.
+- Numbers: divergences 366 → 364. Render failures unchanged (18).
+- Found: two Dart divergences remain in MacroExpander, and the file says
+  so. (1) `\relax` is dropped in `expandNextToken`. KaTeX v0.19.1 has a
+  `\relax` function that makes an "internal" node, which also ends a
+  size argument: KaTeX rejects `\kern2\relax em`, Dart accepts it.
+  (2) `isExpandable` has no `primitive` check; FunctionSpec has no such
+  flag. Both close with the Parser and defineFunction ports.
+- Next: `src/Parser.ts` with `src/defineFunction.ts`: `allowedInArgument`
+  in place of `greediness` (#2134), argument parsing through
+  `scanArgument` (#2085), "internal" nodes and `\relax`. Then `def.ts`
+  (`\def` 28, `\gdef` 14, `\let` 6, `\global` 4 cases).
+- Next (separate, high user impact): top-level `\\` and `\newline`
+  parse but do not build (8 render failures). In Telosnex this shows raw
+  LaTeX.
