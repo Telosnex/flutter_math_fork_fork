@@ -6,12 +6,12 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_math_fork/src/render/layout/line_editable.dart';
 import 'package:flutter_math_fork/src/widgets/selectable.dart';
 import 'package:flutter_math_fork/src/widgets/selection/handle_overlay.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../load_fonts.dart';
 
@@ -119,7 +119,9 @@ void main() {
       expect(find.text('Copy'), findsOneWidget);
       expect(find.text('Paste'), findsNothing);
       expect(find.text('Cut'), findsNothing);
-    });
+      // On the web this widget shows no Flutter toolbar by design (the
+      // browser's menu is used; MathSelectionOverlayManager.showToolbar).
+    }, skip: kIsWeb);
 
     testWidgets('Can drag handles to change selection',
         (WidgetTester tester) async {
@@ -247,6 +249,9 @@ void main() {
                 'text 1',
                 key: key1,
               ),
+              // The selection handles of text 1 would cover text 2 (9 px
+              // high, right below), and the tap would hit them.
+              const SizedBox(height: 100),
               SelectableMath.tex(
                 'text 2',
                 key: key2,
@@ -372,7 +377,9 @@ void main() {
           find.byType(InternalSelectableMath));
       expect(selectableMath.selectionOverlay!.handlesAreVisible, isTrue);
       expect(selectableMath.selectionOverlay!.toolbarIsVisible, isTrue);
-    });
+      // On the web this widget shows no Flutter toolbar by design (the
+      // browser's menu is used; MathSelectionOverlayManager.showToolbar).
+    }, skip: kIsWeb);
 
     testWidgets('Double tap shows handles and toolbar',
         (WidgetTester tester) async {
@@ -397,7 +404,9 @@ void main() {
           find.byType(InternalSelectableMath));
       expect(selectableMath.selectionOverlay!.handlesAreVisible, isTrue);
       expect(selectableMath.selectionOverlay!.toolbarIsVisible, isTrue);
-    });
+      // On the web this widget shows no Flutter toolbar by design (the
+      // browser's menu is used; MathSelectionOverlayManager.showToolbar).
+    }, skip: kIsWeb);
 
     testWidgets(
       'Mouse tap does not show handles nor toolbar',
@@ -566,6 +575,8 @@ void main() {
         TargetPlatform.linux,
         TargetPlatform.windows,
       }),
+      // The toolbar: not on the web (see 'selectable math basic').
+      skip: kIsWeb,
     );
 
     testWidgets('Does not show handles when updated from the web engine',
@@ -600,14 +611,17 @@ void main() {
       );
 
       if (kIsWeb) {
+        // The widget ignores edits from the web engine and resets them
+        // (WebSelectionManagerMixin.updateEditingValue).
         tester.testTextInput.updateEditingValue(const TextEditingValue(
+          text: 'abc def ghi',
           selection: TextSelection(baseOffset: 2, extentOffset: 7),
         ));
         // Wait for all the `setState` calls to be flushed.
         await tester.pumpAndSettle();
         expect(
           state.currentTextEditingValue.selection,
-          const TextSelection(baseOffset: 2, extentOffset: 7),
+          const TextSelection.collapsed(offset: 0),
         );
         expect(state.selectionOverlay!.handlesAreVisible, isFalse);
       }

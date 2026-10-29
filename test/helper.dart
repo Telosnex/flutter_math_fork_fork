@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_math_fork/src/parser/tex/parser.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+
+/// The goldens were made on Windows, and are compared there only. Not in
+/// browsers: dart:io's Platform throws there.
+final bool _compareGoldens = !kIsWeb && Platform.isWindows;
 
 void testTexToMatchGoldenFile(
   String description,
@@ -14,9 +19,11 @@ void testTexToMatchGoldenFile(
   double scale = 1,
 }) {
   testWidgets(description, (WidgetTester tester) async {
-    tester.binding.window.physicalSizeTestValue =
-        Size(500 * scale, 300 * scale);
-    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    // Web tests draw the square glyphs of the test font, much wider than
+    // KaTeX's: a wider view, so the long expressions do not overflow.
+    tester.view.physicalSize = Size((kIsWeb ? 2000 : 500) * scale, 300 * scale);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
     final key = GlobalKey();
     await tester.pumpWidget(
       MaterialApp(
@@ -32,7 +39,7 @@ void testTexToMatchGoldenFile(
                     style: MathStyle.display,
                     fontSize: scale * MathOptions.defaultFontSize,
                   ),
-                  onErrorFallback: (_) => throw _,
+                  onErrorFallback: (error) => throw error,
                 ),
               ),
             ),
@@ -41,8 +48,7 @@ void testTexToMatchGoldenFile(
       ),
     );
     await tester.pumpAndSettle();
-    if (Platform.isWindows) {
-      // Android-specific code
+    if (_compareGoldens) {
       await expectLater(find.byKey(key),
           matchesGoldenFile(location ?? 'golden/${description.hashCode}.png'));
     }
@@ -68,7 +74,7 @@ void testTexToRender(
                     fontSize: MathOptions.defaultFontSize,
                     style: MathStyle.display,
                   ),
-                  onErrorFallback: (_) => throw _,
+                  onErrorFallback: (error) => throw error,
                 ),
               ),
             ),
@@ -110,8 +116,7 @@ void testTexToRenderLike(
       ),
     );
     await tester.pumpAndSettle();
-    if (Platform.isWindows) {
-      // Android-specific code
+    if (_compareGoldens) {
       await expectLater(
           find.byKey(key),
           matchesGoldenFile(
@@ -141,8 +146,7 @@ void testTexToRenderLike(
       ),
     );
     await tester.pumpAndSettle();
-    if (Platform.isWindows) {
-      // Android-specific code
+    if (_compareGoldens) {
       await expectLater(
           find.byKey(key2),
           matchesGoldenFile(

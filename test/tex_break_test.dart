@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_math_fork/src/ast/tex_break.dart';
 import 'package:flutter_math_fork/tex.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'helper.dart';
 import 'load_fonts.dart';
