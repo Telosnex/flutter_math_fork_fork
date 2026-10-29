@@ -51,7 +51,7 @@ void main() {
         [for (var i = 1; i <= 6; i++) '$command{${'x' * i}}'].join(),
         location: 'golden/${command.substring(1)}${command.hashCode}.png',
         // \vec: old golden kept, the current Flutter draws it differently.
-        skip: command == '\\vec' ? 'old golden, see comment' : null,
+        skip: command == '\\vec',
       );
     }
   });
