@@ -36,10 +36,10 @@ Entry format:
 |--------|-------|------|
 | Workplan step | 16 in progress: Lexer, Namespace, MacroExpander done; next: Parser | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | VM 426 pass / 2 skip; web 360 pass / 62 skip | 2026-10-29 |
+| `flutter test` | VM 433 pass / 2 skip | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
 | Parse divergences | 364 (307 `not-ported`, 57 `trust`) | 2026-10-29 |
-| Render failures | 18 of 994 accepted cases | 2026-10-29 |
+| Render failures | 5 of 994 accepted cases | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
 - Done: cloned KaTeX to `~/dev/KaTeX`. Wrote the ADR draft and this file.
@@ -185,3 +185,20 @@ Entry format:
 - Found: origin's `\textcolor` encoder still wrote the alpha channel; the
   merge keeps the fix from this branch.
 - Next: push (owner). Then the Parser port, as in the previous entry.
+
+## 2026-10-29 — Phase 1 follow-up — top-level line breaks render
+- Done: `parseExpression` splits its result at each `CrNode` (`\\`,
+  `\newline`, `\cr` outside an array) into rows of an
+  `EquationArrayNode`. `\\[1ex]` sets the row spacing. As in KaTeX, a
+  `\\` in display mode with strict `error` does nothing. A trailing
+  break makes no empty row. Test: `test/line_break_test.dart` with a
+  golden, reviewed at 3× zoom.
+- Numbers: render failures 18 → 5. Divergences unchanged (364).
+- Found (divergence, not tracked by the corpus): the rows are centered
+  on each other. KaTeX left-aligns lines in inline mode. The corpus
+  checks only that the case renders, not the layout.
+- Left: `\rule{999em}{999em}` (overflow in the test view only),
+  `\begin{matrix}\end{matrix}` (RangeError), two RenderResetDimension
+  constraint failures (`\binom` in scripts, `\left\{\rule..\right.`),
+  missing font metrics for nested `\textit\textbf` in `\text`.
+- Next: the Parser port, as planned.

@@ -26,6 +26,7 @@
 import 'dart:collection';
 import 'dart:ui';
 
+import '../../ast/nodes/equation_array.dart';
 import '../../ast/nodes/multiscripts.dart';
 import '../../ast/nodes/over.dart';
 import '../../ast/nodes/style.dart';
@@ -40,6 +41,7 @@ import '../../ast/types.dart';
 import '../../font/metrics/unicode_scripts.dart';
 import 'colors.dart';
 import 'functions.dart';
+import 'functions/katex_base.dart';
 import 'lexer.dart';
 import 'macro_expander.dart';
 import 'macros.dart';
@@ -138,7 +140,7 @@ class TexParser {
       }
     }
 
-    return body;
+    return _splitLines(body);
     // We will NOT handle ligatures between '-' and "'", as neither did MathJax.
     // if (this.mode == Mode.text) {
     //   formLigatures(body);
@@ -155,6 +157,37 @@ class TexParser {
     '\\)',
     '\\cr',
   };
+
+  /// Line breaks outside arrays. KaTeX (src/functions/cr.ts) renders a
+  /// `\\` with newLine as a line break, and one without newLine (display
+  /// mode, strict) as nothing. Arrays consume their own `\\`, so a CrNode
+  /// here is a line break. Dart builds the lines as rows of an
+  /// EquationArrayNode.
+  static List<GreenNode> _splitLines(List<GreenNode> body) {
+    if (!body.any((node) => node is CrNode)) return body;
+    final rows = <EquationRowNode>[];
+    final spacings = <Measurement>[];
+    var line = <GreenNode>[];
+    for (final node in body) {
+      if (node is! CrNode) {
+        line.add(node);
+      } else if (node.newLine || node.newRow) {
+        rows.add(line.wrapWithEquationRow());
+        spacings.add(node.size ?? Measurement.zero);
+        line = [];
+      }
+    }
+    if (rows.isEmpty) return line;
+    // As in LaTeX, a break at the end makes no empty last line.
+    if (line.isNotEmpty) {
+      rows.add(line.wrapWithEquationRow());
+    } else {
+      spacings.removeLast();
+    }
+    if (rows.length == 1) return rows.single.children;
+    return [EquationArrayNode(body: rows, rowSpacings: spacings)];
+  }
+
   static const Set<String> endOfExpression = {
     '}',
     '\\endgroup',
