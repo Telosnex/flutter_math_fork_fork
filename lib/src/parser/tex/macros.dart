@@ -915,6 +915,8 @@ final Map<String, MacroDefinition> builtinMacros = {
       '{\\kern{0.1015em}}{\\kern{0.0725em}}\\circ}{-}}}'
       '{\\char`\u29B5}}'),
   '\u29B5': MacroDefinition.fromString('\\minuso'),
+  // actuarialangle.dtx
+  '\\angln': MacroDefinition.fromString('{\\angl n}'),
 
 // Custom Khan Academy colors, should be moved to an optional package
   '\\blue': MacroDefinition.fromString("\\textcolor{##6495ed}{#1}"),

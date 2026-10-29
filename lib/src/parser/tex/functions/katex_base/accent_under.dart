@@ -30,9 +30,8 @@ const _accentUnderEntries = {
     '\\underrightarrow',
     '\\underleftrightarrow',
     '\\undergroup',
-    // '\\underlinesegment': ,
+    '\\underlinesegment',
     '\\utilde',
-
     '\\underline'
   ]: FunctionSpec(numArgs: 1, handler: _accentUnderHandler),
 };
@@ -42,9 +41,8 @@ const accentUnderMapping = {
   '\\underrightarrow': '\u2192',
   '\\underleftrightarrow': '\u2194',
   '\\undergroup': '\u23e0',
-  // '\\underlinesegment',
+  '\\underlinesegment': '\u23af',
   '\\utilde': '\u007e',
-
   '\\underline': '\u00af'
 };
 

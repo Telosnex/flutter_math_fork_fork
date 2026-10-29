@@ -11,6 +11,7 @@ import 'src/ast/syntax_tree.dart';
 
 export 'src/ast/nodes/accent.dart';
 export 'src/ast/nodes/accent_under.dart';
+export 'src/ast/nodes/angle_enclose.dart';
 export 'src/ast/nodes/enclosure.dart' show EnclosureNode;
 export 'src/ast/nodes/equation_array.dart';
 export 'src/ast/nodes/frac.dart' show FracNode;
@@ -34,6 +35,7 @@ export 'src/ast/nodes/style.dart';
 export 'src/ast/nodes/symbol.dart' show SymbolNode;
 export 'src/ast/nodes/text_circled.dart';
 export 'src/ast/nodes/under.dart';
+export 'src/ast/nodes/vcenter.dart';
 export 'src/ast/options.dart';
 export 'src/ast/size.dart';
 export 'src/ast/style.dart';

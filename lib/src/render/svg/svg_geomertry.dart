@@ -202,6 +202,11 @@ v40h399900v-40zM0 241v40h399900v-40zm0 0v40h399900v-40z''',
 -68.7 15.7-86 37-10 12-15 25.3-15 40 0 22.7 9.8 40.7 29.5 54 19.7 13.3 43.5 21
  71.5 23h399859zM103 281v-40h399897v40z''',
 
+  // KaTeX v0.19.1 (single stroke; KaTeX doubles it for browsers)
+  'leftbracketunder': 'M0 0 h120 V290 H399995 v120 H0z',
+  'leftbracketover': 'M0 440 h120 V150 H399995 v-120 H0z',
+  'rightbracketunder': 'M399995 0 h-120 V290 H0 v120 H400000z',
+  'rightbracketover': 'M399995 440 h-120 V150 H0 v-120 H399995z',
   'leftlinesegment': '''M40 281 V428 H0 V94 H40 V241 H400000 v40z
 M40 281 V428 H0 V94 H40 V241 H400000 v40z''',
 

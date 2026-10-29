@@ -1,4 +1,4 @@
-// katex-sync: src/functions/horizBrace.ts @ c2e5a289
+// katex-sync: src/functions/horizBrace.ts @ v0.19.1
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
@@ -25,7 +25,7 @@
 part of '../katex_base.dart';
 
 const _horizBraceEntries = {
-  ['\\overbrace', '\\underbrace']:
+  ['\\overbrace', '\\underbrace', '\\overbracket', '\\underbracket']:
       FunctionSpec(numArgs: 1, handler: _horizBraceHandler),
 };
 
@@ -33,10 +33,11 @@ GreenNode _horizBraceHandler(TexParser parser, FunctionContext context) {
   final base = parser.parseArgNode(mode: null, optional: false)!;
   final scripts = parser.parseScripts();
   var res = base;
-  if (context.funcName == '\\overbrace') {
+  final bracket = context.funcName.endsWith('bracket');
+  if (context.funcName.startsWith('\\over')) {
     res = AccentNode(
       base: res.wrapWithEquationRow(),
-      label: '\u23de',
+      label: bracket ? '\u23b4' : '\u23de',
       isStretchy: true,
       isShifty: false,
     );
@@ -56,7 +57,7 @@ GreenNode _horizBraceHandler(TexParser parser, FunctionContext context) {
   } else {
     res = AccentUnderNode(
       base: res.wrapWithEquationRow(),
-      label: '\u23df',
+      label: bracket ? '\u23b5' : '\u23df',
     );
     if (scripts.subscript != null) {
       res = UnderNode(

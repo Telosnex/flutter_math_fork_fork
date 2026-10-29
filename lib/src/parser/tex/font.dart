@@ -175,6 +175,8 @@ const texMathFontOptions = {
   '\\mathscr': FontOptions(fontFamily: 'Script'),
 
   '\\mathsf': FontOptions(fontFamily: 'SansSerif'),
+  '\\mathsfit':
+      FontOptions(fontFamily: 'SansSerif', fontShape: FontStyle.italic),
 };
 
 const texTextFontOptions = {

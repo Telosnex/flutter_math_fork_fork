@@ -2,6 +2,7 @@ library;
 
 import '../../../ast/nodes/accent.dart';
 import '../../../ast/nodes/accent_under.dart';
+import '../../../ast/nodes/angle_enclose.dart';
 import '../../../ast/nodes/enclosure.dart';
 import '../../../ast/nodes/frac.dart';
 import '../../../ast/nodes/function.dart';
@@ -23,6 +24,7 @@ import '../../../ast/nodes/style.dart';
 import '../../../ast/nodes/symbol.dart';
 import '../../../ast/nodes/text_circled.dart';
 import '../../../ast/nodes/under.dart';
+import '../../../ast/nodes/vcenter.dart';
 import '../../../ast/options.dart';
 import '../../../ast/size.dart';
 import '../../../ast/style.dart';

@@ -101,6 +101,17 @@ const katexCompatibleAccents = {
     // '\u21d2'
     overImageName: 'Overrightarrow',
   ),
+  '\u23b4': AccentRenderConfig(
+    overImageName: 'overbracket',
+  ),
+  '\u23b5': AccentRenderConfig(
+    underImageName: 'underbracket',
+  ),
+  // Dart label for \overlinesegment and \underlinesegment.
+  '\u23af': AccentRenderConfig(
+    overImageName: 'overlinesegment',
+    underImageName: 'underlinesegment',
+  ),
   '\u23e0': AccentRenderConfig(
       // '\u0311'
       overImageName: 'overgroup',

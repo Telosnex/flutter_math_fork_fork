@@ -121,7 +121,7 @@ class AccentNode extends SlotableNode<EquationRowNode> {
               options,
             );
             // \horizBrace also needs a special case, as KaTeX does.
-            if (label == '\u23de') {
+            if (label == '\u23de' || label == '\u23b4') {
               return Padding(
                 padding: EdgeInsets.only(bottom: 0.1.cssEm.toLpUnder(options)),
                 child: svgWidget,

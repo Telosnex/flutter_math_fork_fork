@@ -3,6 +3,7 @@
 // katex-sync: src/functions/mathchoice.ts @ v0.19.1
 // katex-sync: src/functions/pmb.ts @ v0.19.1
 // katex-sync: src/functions/hbox.ts @ v0.19.1
+// katex-sync: src/functions/vcenter.ts @ v0.19.1
 part of '../katex_base.dart';
 
 // Flags come from katex_function_flags.dart.
@@ -15,7 +16,26 @@ const _miscV0191Entries = {
   ['\\mathchoice']: FunctionSpec(numArgs: 4, handler: _mathChoiceHandler),
   ['\\pmb']: FunctionSpec(numArgs: 1, handler: _pmbHandler),
   ['\\hbox']: FunctionSpec(numArgs: 1, handler: _hboxHandler),
+  ['\\vcenter']: FunctionSpec(numArgs: 1, handler: _vcenterHandler),
+  ['\\angl', '\\phase']: FunctionSpec(numArgs: 1, handler: _angleHandler),
 };
+
+GreenNode _vcenterHandler(TexParser parser, FunctionContext context) =>
+    VCenterNode(
+      body: parser
+          .parseArgNode(mode: null, optional: false)!
+          .wrapWithEquationRow(),
+    );
+
+GreenNode _angleHandler(TexParser parser, FunctionContext context) =>
+    AngleEncloseNode(
+      body: parser
+          .parseArgNode(mode: null, optional: false)!
+          .wrapWithEquationRow(),
+      kind: context.funcName == '\\angl'
+          ? AngleEncloseKind.angl
+          : AngleEncloseKind.phase,
+    );
 
 /// The HTML branch. Dart builds no MathML.
 GreenNode _htmlMathmlHandler(TexParser parser, FunctionContext context) {

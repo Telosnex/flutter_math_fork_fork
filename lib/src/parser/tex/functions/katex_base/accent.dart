@@ -44,11 +44,10 @@ const _accentEntries = {
     '\\overleftarrow',
     '\\Overrightarrow',
     '\\overleftrightarrow',
-    // '\\overgroup',
-    // '\\overlinesegment',
+    '\\overgroup',
+    '\\overlinesegment',
     '\\overleftharpoon',
     '\\overrightharpoon',
-
     '\\overline'
   ]: FunctionSpec(
     numArgs: 1,
@@ -115,8 +114,12 @@ const accentCommandMapping = {
   '\\overleftarrow': '\u2190',
   '\\Overrightarrow': '\u21d2',
   '\\overleftrightarrow': '\u2194',
-  // '\\overgroup': '\u',
-  // '\\overlinesegment': '\u',
+  '\\overgroup': '\u23e0',
+  // No Unicode character; a Dart label.
+  '\\overlinesegment': '\u23af',
+  // Encoder only: these parse in horiz_brace.dart.
+  '\\overbrace': '\u23de',
+  '\\overbracket': '\u23b4',
   '\\overleftharpoon': '\u21bc',
   '\\overrightharpoon': '\u21c0',
   "\\'": '\u00b4',

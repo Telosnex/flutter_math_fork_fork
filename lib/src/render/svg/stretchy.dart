@@ -59,6 +59,10 @@ const katexImagesData = {
       _KatexImagesData(['leftarrow', 'rightarrow'], 0.888, 522),
   'overbrace':
       _KatexImagesData(['leftbrace', 'midbrace', 'rightbrace'], 1.6, 548),
+  'overbracket':
+      _KatexImagesData(['leftbracketover', 'rightbracketover'], 1.6, 440),
+  'underbracket':
+      _KatexImagesData(['leftbracketunder', 'rightbracketunder'], 1.6, 410),
   'underbrace': _KatexImagesData(
       ['leftbraceunder', 'midbraceunder', 'rightbraceunder'], 1.6, 548),
   'underleftrightarrow':
