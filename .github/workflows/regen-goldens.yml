@@ -1,6 +1,9 @@
 name: Regen goldens (temporary)
 
 on:
+  # workflow_dispatch cannot start a workflow absent from the default branch.
+  push:
+    branches: ['ci/**']
   workflow_dispatch:
 
 permissions:
