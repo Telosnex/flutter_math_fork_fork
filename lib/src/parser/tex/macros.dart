@@ -55,10 +55,15 @@ class MacroExpansion {
   const MacroExpansion({
     required this.tokens,
     required this.numArgs,
+    this.delimiters,
     this.unexpandable = false,
   });
   final List<Token> tokens;
   final int numArgs;
+
+  /// Delimiters before the first argument and after each argument, for
+  /// macros from \def. Length is numArgs + 1. KaTeX: delimiters.
+  final List<List<String>>? delimiters;
 
   final bool unexpandable;
 

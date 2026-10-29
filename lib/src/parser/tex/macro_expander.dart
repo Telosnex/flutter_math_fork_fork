@@ -1,4 +1,4 @@
-// katex-sync: src/MacroExpander.ts @ c2e5a289
+// katex-sync: src/MacroExpander.ts @ v0.19.1
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
@@ -29,11 +29,17 @@ import 'macros.dart';
 import 'namespace.dart';
 import 'parse_error.dart';
 import 'settings.dart';
+import 'source_location.dart';
 import 'symbols.dart';
 import 'token.dart';
 
 // List of commands that act like macros but aren't defined as a macro,
 // function, or symbol.  Used in `isDefined`.
+//
+// Dart divergence: KaTeX v0.19.1 defines \relax as a function
+// (src/functions/relax.ts) that returns an "internal" node, which the
+// Parser drops. The Dart parser has no internal nodes yet, so
+// expandNextToken drops \relax and \relax stays an implicit command.
 const implicitCommands = {
   '\\relax', // MacroExpander.js
   '^', // Parser.js
@@ -42,167 +48,111 @@ const implicitCommands = {
   '\\nolimits', // Parser.js
 };
 
+/// The result of [MacroExpander.consumeArg]. KaTeX: MacroArg.
+typedef MacroArg = ({List<Token> tokens, Token start, Token end});
+
+/// The "gullet" where macros are expanded until only non-macro tokens
+/// remain.
 class MacroExpander implements MacroContext {
-  MacroExpander(this.input, this.settings, this.mode)
+  MacroExpander(String input, this.settings, this.mode)
       : macros = Namespace(builtinMacros, settings.macros),
         lexer = Lexer(input, settings);
 
-  String input;
   TexParserSettings settings;
   @override
   Mode mode;
   int expansionCount = 0;
+
+  /// Tokens in REVERSE order.
   var stack = <Token>[];
   Lexer lexer;
   @override
   Namespace<MacroDefinition> macros;
 
-  @override
-  Token expandAfterFuture() {
-    expandOnce();
-    return future();
+  String get input => lexer.input;
+
+  /// Feeds a new input string to the same MacroExpander (with the existing
+  /// macros).
+  void feed(String input) {
+    lexer = Lexer(input, settings);
   }
 
-  @override
-  Token expandNextToken() {
-    while (true) {
-      final expanded = expandOnce();
-      if (expanded != null) {
-        if (expanded.text == r'\relax') {
-          stack.removeLast();
-        } else {
-          return stack.removeLast();
-        }
-      }
-    }
-  }
+  // switchMode is replaced by the [mode] setter.
 
-  // switchMode is replaced by a plain setter
-
+  /// Starts a new group nesting within all namespaces.
   void beginGroup() {
     macros.beginGroup();
   }
 
+  /// Ends the current group nesting within all namespaces.
   void endGroup() {
     macros.endGroup();
   }
 
-  @override
-  Token? expandOnce([bool expandableOnly = false]) {
-    final topToken = popToken();
-    final name = topToken.text;
-    final expansion = !topToken.noexpand ? _getExpansion(name) : null;
-    if (expansion == null || (expandableOnly && expansion.unexpandable)) {
-      if (expandableOnly &&
-          expansion == null &&
-          name[0] == '\\' &&
-          isDefined(name)) {
-        throw ParseException('Undefined control sequence: $name');
-      }
-      pushToken(topToken);
-      return topToken;
-    }
-    expansionCount += 1;
-    if (expansionCount > settings.maxExpand) {
-      throw ParseException('Too many expansions: infinite loop or '
-          'need to increase maxExpand setting');
-    }
-    var tokens = expansion.tokens;
-    if (expansion.numArgs != 0) {
-      final args = consumeArgs(expansion.numArgs);
-      // Make a copy to avoid modify to be sure.
-      // Actually not needed with current implementation.
-      // But who knows for the future?
-      tokens = tokens.toList();
-      for (var i = tokens.length - 1; i >= 0; --i) {
-        var tok = tokens[i];
-        if (tok.text == '#') {
-          if (i == 0) {
-            throw ParseException(
-                'Incomplete placeholder at end of macro body', tok);
-          }
-          --i;
-          tok = tokens[i];
-          if (tok.text == '#') {
-            tokens.removeAt(i + 1);
-          } else {
-            try {
-              tokens.replaceRange(i, i + 2, args[int.parse(tok.text) - 1]);
-            } on FormatException {
-              throw ParseException('Not a valid argument number', tok);
-            }
-          }
-        }
-      }
-    }
-    pushTokens(tokens);
-    return null;
+  /// Ends all nested groups, restoring the values from before the groups.
+  /// Useful after an error in the middle of parsing.
+  void endGroups() {
+    macros.endGroups();
   }
 
-  void pushToken(Token token) {
-    stack.add(token);
-  }
-
-  void pushTokens(List<Token> tokens) {
-    stack.addAll(tokens);
-  }
-
-  @override
-  Token popToken() {
-    future();
-    return stack.removeLast();
-  }
-
+  /// Returns the topmost token on the stack, without expanding it.
+  /// Similar in behavior to TeX's `\futurelet`.
   @override
   Token future() {
     if (stack.isEmpty) {
-      stack.add(lexer.lex());
+      pushToken(lexer.lex());
     }
     return stack.last;
   }
 
-  MacroExpansion? _getExpansion(String name) {
-    final definition = macros.get(name);
-    if (definition == null) {
-      return null;
-    }
-    return definition.expand(this);
-  }
-
+  /// Removes and returns the next unexpanded token.
   @override
-  List<List<Token>> consumeArgs(int numArgs) {
-    final args = List<List<Token>>.generate(numArgs, (i) {
-      consumeSpaces();
-      final startOfArg = popToken();
-      if (startOfArg.text == '{') {
-        final arg = <Token>[];
-        var depth = 1;
-        while (depth != 0) {
-          final tok = popToken();
-          arg.add(tok);
-          switch (tok.text) {
-            case '{':
-              ++depth;
-              break;
-            case '}':
-              --depth;
-              break;
-            case 'EOF':
-              throw ParseException(
-                  'End of input in macro argument', startOfArg);
-          }
-        }
-        arg.removeLast();
-        return arg.reversed.toList();
-      } else if (startOfArg.text == 'EOF') {
-        throw ParseException('End of input expecting macro argument');
-      } else {
-        return [startOfArg];
-      }
-    });
-    return args;
+  Token popToken() {
+    future(); // ensure non-empty stack
+    return stack.removeLast();
   }
 
+  /// Adds a token to the token stack. In particular, this can be used to
+  /// put back a token returned from one of the other methods.
+  void pushToken(Token token) {
+    stack.add(token);
+  }
+
+  /// Appends a list of tokens to the token stack.
+  void pushTokens(List<Token> tokens) {
+    stack.addAll(tokens);
+  }
+
+  /// Finds a macro argument without expanding tokens and appends the tokens
+  /// to the token stack. Returns a Token that spans the argument, or null
+  /// for a missing optional argument.
+  @override
+  Token? scanArgument({required bool isOptional}) {
+    Token start;
+    Token end;
+    List<Token> tokens;
+    if (isOptional) {
+      consumeSpaces(); // \@ifnextchar gobbles any space following it
+      if (future().text != '[') {
+        return null;
+      }
+      start = popToken(); // don't include [ in tokens
+      final arg = consumeArg([']']);
+      tokens = arg.tokens;
+      end = arg.end;
+    } else {
+      final arg = consumeArg();
+      tokens = arg.tokens;
+      start = arg.start;
+      end = arg.end;
+    }
+    // indicate the end of an argument
+    pushToken(Token('EOF', end.loc));
+    pushTokens(tokens);
+    return Token('', SourceLocation.range(start, end));
+  }
+
+  /// Consumes all following space tokens, without expansion.
   @override
   void consumeSpaces() {
     while (true) {
@@ -215,6 +165,245 @@ class MacroExpander implements MacroContext {
     }
   }
 
+  /// Consumes an argument from the token stream. Returns its tokens (in
+  /// stack order) and its start and end tokens.
+  @override
+  MacroArg consumeArg([List<String>? delims]) {
+    // The argument for a delimited parameter is the shortest (possibly
+    // empty) sequence of tokens with properly nested {...} groups that is
+    // followed ... by this particular list of non-parameter tokens.
+    // The argument for an undelimited parameter is the next nonblank
+    // token, unless that token is ‘{’, when the argument will be the
+    // entire {...} group that follows.
+    final tokens = <Token>[];
+    final isDelimited = delims != null && delims.isNotEmpty;
+    if (!isDelimited) {
+      // Ignore spaces between arguments. As the TeXbook says:
+      // "After you have said ‘\def\row#1#2{...}’, you are allowed to
+      //  put spaces between the arguments (e.g., ‘\row x n’), because
+      //  TeX doesn’t use single spaces as undelimited arguments."
+      consumeSpaces();
+    }
+    final start = future();
+    Token tok;
+    var depth = 0;
+    var match = 0;
+    do {
+      tok = popToken();
+      tokens.add(tok);
+      if (tok.text == '{') {
+        ++depth;
+      } else if (tok.text == '}') {
+        --depth;
+        if (depth == -1) {
+          throw ParseException('Extra }', tok);
+        }
+      } else if (tok.text == 'EOF') {
+        throw ParseException(
+            'Unexpected end of input in a macro argument, expected '
+            "'${isDelimited ? delims[match] : '}'}'",
+            tok);
+      }
+      if (isDelimited) {
+        if ((depth == 0 || (depth == 1 && delims[match] == '{')) &&
+            tok.text == delims[match]) {
+          ++match;
+          if (match == delims.length) {
+            // don't include delims in tokens
+            tokens.removeRange(tokens.length - match, tokens.length);
+            break;
+          }
+        } else {
+          match = 0;
+        }
+      }
+    } while (depth != 0 || isDelimited);
+    // If the argument found ... has the form ‘{<nested tokens>}’,
+    // ... the outermost braces enclosing the argument are removed
+    if (start.text == '{' && tokens.isNotEmpty && tokens.last.text == '}') {
+      tokens
+        ..removeLast()
+        ..removeAt(0);
+    }
+    return (tokens: tokens.reversed.toList(), start: start, end: tok);
+  }
+
+  /// Consumes [numArgs] (delimited) arguments from the token stream.
+  @override
+  List<List<Token>> consumeArgs(int numArgs, [List<List<String>>? delimiters]) {
+    if (delimiters != null) {
+      if (delimiters.length != numArgs + 1) {
+        throw ParseException(
+            "The length of delimiters doesn't match the number of args!");
+      }
+      final delims = delimiters[0];
+      for (var i = 0; i < delims.length; i++) {
+        final tok = popToken();
+        if (delims[i] != tok.text) {
+          throw ParseException(
+              "Use of the macro doesn't match its definition", tok);
+        }
+      }
+    }
+    return [
+      for (var i = 0; i < numArgs; i++) consumeArg(delimiters?[i + 1]).tokens,
+    ];
+  }
+
+  /// Increments [expansionCount] by [amount]. Throws if it exceeds
+  /// maxExpand.
+  void countExpansion(int amount) {
+    expansionCount += amount;
+    if (expansionCount > settings.maxExpand) {
+      throw ParseException('Too many expansions: infinite loop or '
+          'need to increase maxExpand setting');
+    }
+  }
+
+  /// Expands the next token only once if possible.
+  ///
+  /// If the token is expanded, the resulting tokens are pushed onto the
+  /// stack in reverse order, and the number of such tokens is returned.
+  /// This number might be zero or positive.
+  ///
+  /// If not, the return value is null (KaTeX: false), and the next token
+  /// remains at the top of the stack.
+  ///
+  /// If [expandableOnly], only expandable tokens are expanded and an
+  /// undefined control sequence results in an error.
+  @override
+  int? expandOnce([bool expandableOnly = false]) {
+    final topToken = popToken();
+    final name = topToken.text;
+    final expansion = !topToken.noexpand ? _getExpansion(name) : null;
+    if (expansion == null || (expandableOnly && expansion.unexpandable)) {
+      if (expandableOnly &&
+          expansion == null &&
+          name.startsWith('\\') &&
+          !isDefined(name)) {
+        throw ParseException('Undefined control sequence: $name');
+      }
+      pushToken(topToken);
+      return null;
+    }
+    countExpansion(1);
+    var tokens = expansion.tokens;
+    final args = consumeArgs(expansion.numArgs, expansion.delimiters);
+    if (expansion.numArgs != 0) {
+      // paste arguments in place of the placeholders
+      tokens = tokens.toList(); // make a shallow copy
+      for (var i = tokens.length - 1; i >= 0; --i) {
+        var tok = tokens[i];
+        if (tok.text == '#') {
+          if (i == 0) {
+            throw ParseException(
+                'Incomplete placeholder at end of macro body', tok);
+          }
+          tok = tokens[--i]; // next token on stack
+          if (tok.text == '#') {
+            // ## → #
+            tokens.removeAt(i + 1); // drop first #
+          } else if (_argNumber.hasMatch(tok.text)) {
+            // replace the placeholder with the indicated argument
+            tokens.replaceRange(i, i + 2, args[int.parse(tok.text) - 1]);
+          } else {
+            throw ParseException('Not a valid argument number', tok);
+          }
+        }
+      }
+    }
+    // Concatenate expansion onto top of stack.
+    pushTokens(tokens);
+    return tokens.length;
+  }
+
+  static final _argNumber = RegExp(r'^[1-9]$');
+
+  /// Expands the next token only once (if possible), and returns the
+  /// resulting top token on the stack (without removing anything from the
+  /// stack). Similar in behavior to TeX's `\expandafter\futurelet`.
+  @override
+  Token expandAfterFuture() {
+    expandOnce();
+    return future();
+  }
+
+  /// Recursively expands the first token, then returns the first
+  /// non-expandable token.
+  @override
+  Token expandNextToken() {
+    while (true) {
+      if (expandOnce() == null) {
+        // fully expanded
+        final token = stack.removeLast();
+        // the token after \noexpand is interpreted as if its meaning were
+        // ‘\relax’
+        if (token.treatAsRelax) {
+          token.text = '\\relax';
+        }
+        // Dart divergence: drop \relax here. See implicitCommands.
+        if (token.text == '\\relax') continue;
+        return token;
+      }
+    }
+  }
+
+  /// Fully expands the macro [name] and returns the resulting tokens, or
+  /// null if no such macro is defined.
+  List<Token>? expandMacro(String name) =>
+      macros.has(name) ? expandTokens([Token(name)]) : null;
+
+  /// Fully expands [tokens] and returns the resulting tokens. The input
+  /// tokens are in reverse order; the output tokens are in forward order.
+  @override
+  List<Token> expandTokens(List<Token> tokens) {
+    final output = <Token>[];
+    final oldStackLength = stack.length;
+    pushTokens(tokens);
+    while (stack.length > oldStackLength) {
+      // Expand only expandable tokens
+      if (expandOnce(true) == null) {
+        // fully expanded
+        final token = stack.removeLast();
+        if (token.treatAsRelax) {
+          // the expansion of \noexpand is the token itself
+          token
+            ..noexpand = false
+            ..treatAsRelax = false;
+        }
+        output.add(token);
+      }
+    }
+    // Count all of these tokens as additional expansions, to prevent
+    // exponential blowup from linearly many \edef's.
+    countExpansion(output.length);
+    return output;
+  }
+
+  /// Fully expands the macro [name] and returns the result as a string, or
+  /// null if no such macro is defined.
+  String? expandMacroAsText(String name) =>
+      expandMacro(name)?.map((token) => token.text).join();
+
+  MacroExpansion? _getExpansion(String name) {
+    final definition = macros.get(name);
+    if (definition == null) {
+      return null;
+    }
+    // If a single character has an associated catcode other than 13
+    // (active character), then don't expand it.
+    if (name.length == 1) {
+      final catcode = lexer.catCodes[name];
+      if (catcode != null && catcode != 13) {
+        return null;
+      }
+    }
+    return definition.expand(this);
+  }
+
+  /// Whether a command is "defined" (has some functionality): a macro (in
+  /// the current group), a function, a symbol, or one of the
+  /// [implicitCommands].
   @override
   bool isDefined(String name) =>
       macros.has(name) ||
@@ -223,54 +412,36 @@ class MacroExpander implements MacroContext {
       functions.containsKey(name) ||
       implicitCommands.contains(name);
 
+  /// Whether a command is expandable.
+  ///
+  /// Dart divergence: KaTeX also requires `!functions[name].primitive`.
+  /// FunctionSpec has no primitive flag yet.
   @override
   bool isExpandable(String name) {
     final macro = macros.get(name);
-    return macro?.expandable ?? functions.containsKey(name);
+    if (macro != null) return macro.expandable;
+    return functions.containsKey(name);
   }
 
   @override
   Lexer getNewLexer(String input) => Lexer(input, settings);
-
-  String? expandMacroAsText(String name) {
-    final tokens = expandMacro(name);
-    if (tokens != null) {
-      return tokens.map((token) => token.text).join('');
-    }
-    return null;
-  }
-
-  List<Token>? expandMacro(String name) {
-    if (macros.get(name) == null) {
-      return null;
-    }
-    final output = <Token>[];
-    final oldStackLength = stack.length;
-    pushToken(Token(name));
-    while (stack.length > oldStackLength) {
-      final expanded = expandOnce();
-      // expandOnce returns Token if and only if it's fully expanded.
-      if (expanded != null) {
-        output.add(stack.removeLast());
-      }
-    }
-    return output;
-  }
 }
 
+/// KaTeX: MacroContextInterface (src/defineMacro.ts).
 abstract class MacroContext {
   Mode get mode;
   Namespace<MacroDefinition> get macros;
   Token future();
   Token popToken();
   void consumeSpaces();
-//  Token expandAfterFuture();
   // ignore: avoid_positional_boolean_parameters
-  Token? expandOnce([bool expandableOnly]);
+  int? expandOnce([bool expandableOnly]);
   Token expandAfterFuture();
   Token expandNextToken();
-//
-  List<List<Token>> consumeArgs(int numArgs);
+  List<Token> expandTokens(List<Token> tokens);
+  MacroArg consumeArg([List<String>? delims]);
+  List<List<Token>> consumeArgs(int numArgs, [List<List<String>>? delimiters]);
+  Token? scanArgument({required bool isOptional});
   bool isDefined(String name);
   bool isExpandable(String name);
 
