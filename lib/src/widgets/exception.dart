@@ -14,5 +14,8 @@ class BuildException implements FlutterMathException {
   const BuildException(this.message, {this.trace});
 
   @override
+  String toString() => messageWithType;
+
+  @override
   String get messageWithType => 'Build Exception: $message';
 }

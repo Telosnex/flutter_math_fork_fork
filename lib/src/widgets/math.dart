@@ -173,7 +173,9 @@ class Math extends StatelessWidget {
             .merge(const TextStyle(fontWeight: FontWeight.bold));
       }
 
-      final unscaledFontSize = effectiveTextStyle.fontSize!;
+      // DefaultTextStyle.fallback() has no size and no color. Use the same
+      // defaults as Flutter text: 14 logical pixels, opaque black.
+      final unscaledFontSize = effectiveTextStyle.fontSize ?? 14.0;
       final textScaleFactor = this.textScaleFactor;
       final fontSize = textScaleFactor != null
           ? unscaledFontSize * textScaleFactor
@@ -187,7 +189,7 @@ class Math extends StatelessWidget {
             ? FontOptions(fontWeight: fontWeight)
             : null,
         logicalPpi: logicalPpi,
-        color: effectiveTextStyle.color!,
+        color: effectiveTextStyle.color ?? const Color(0xFF000000),
       );
     }
 

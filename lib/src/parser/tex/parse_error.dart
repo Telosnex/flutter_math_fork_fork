@@ -36,7 +36,11 @@ class ParseException implements FlutterMathException {
   /// Nullable
   Token? token;
 
-  ParseException(String message, [this.token]) : message = message {
+  /// The message without the position and the input excerpt.
+  /// KaTeX calls this `rawMessage`.
+  final String rawMessage;
+
+  ParseException(this.message, [this.token]) : rawMessage = message {
     final loc = token?.loc;
     if (loc != null && loc.start <= loc.end) {
       final input = loc.lexer.input;
@@ -65,4 +69,7 @@ class ParseException implements FlutterMathException {
       }
     }
   }
+
+  @override
+  String toString() => messageWithType;
 }

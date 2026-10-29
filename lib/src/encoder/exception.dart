@@ -8,5 +8,8 @@ class EncoderException implements FlutterMathException {
   const EncoderException(this.message, [this.token]);
 
   @override
+  String toString() => messageWithType;
+
+  @override
   String get messageWithType => 'Encoder Exception: $message';
 }
