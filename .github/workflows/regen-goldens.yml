@@ -1,0 +1,42 @@
+name: Regen goldens (temporary)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  regen:
+    name: Regen Windows goldens
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: Telosnex/telosnex_ci_tools/actions/setup-flutter@cba77fc0d4330f1bef81193c53cd7dd976f0ebcf # v0.5.3
+      - run: flutter --version
+      - run: flutter pub get
+      - name: Normal run (failure diffs)
+        continue-on-error: true
+        run: flutter test test/render_test.dart test/render_sample_test.dart test/katex_spec_test.dart -r expanded
+      - uses: actions/upload-artifact@v4
+        with:
+          name: failures-before
+          path: test/failures
+          if-no-files-found: warn
+      - name: Update goldens
+        run: flutter test --update-goldens test/render_test.dart test/render_sample_test.dart test/katex_spec_test.dart -r expanded
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goldens-after
+          path: |
+            test/golden
+            doc/img
+            test/failures
+          if-no-files-found: warn
