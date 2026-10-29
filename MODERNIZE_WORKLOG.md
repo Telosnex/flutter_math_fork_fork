@@ -34,12 +34,12 @@ Entry format:
 
 | Metric | Value | Date |
 |--------|-------|------|
-| Workplan step | 16: parser core, def.ts, smash.ts, lap.ts done; next: environments | 2026-10-29 |
+| Workplan step | 16: Groups 1 and 2 done; Group 3 left (listed in divergences.json) | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | VM 487 pass / 2 skip | 2026-10-29 |
+| `flutter test` | VM 551 pass / 1 skip; Chrome 323 pass / 62 skip | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
-| Parse divergences | 247 (190 `not-ported`, 57 `trust`) | 2026-10-29 |
-| Render failures | 5 of 994 accepted cases | 2026-10-29 |
+| Parse divergences | 92 (34 `not-ported`, 57 `trust`, 1 `setting`) | 2026-10-29 |
+| Render failures | 2 of 1252 accepted cases (both test-view size) | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
 - Done: cloned KaTeX to `~/dev/KaTeX`. Wrote the ADR draft and this file.
@@ -262,3 +262,26 @@ Entry format:
   Write each review image to a new file name.
 - Next: environments (`align`, `CD`, starred matrices: 17+ cases), then
   `src/macros.ts` (`\@binrel`, `\mathreflectbox`, `\pmb`, `\mapsfrom`).
+
+## 2026-10-29 — step 16 — Groups 1 and 2 (macros, symbols, fixes, AMS environments)
+- Done, in four commits: throwOnError and formatUnsupportedCmd; macros,
+  symbols and small functions; AMS environments with one shared array
+  loop (`parseArrayBody`) and cr.ts; the remaining small fixes.
+- Numbers: divergences 247 -> 92. Render failures 5 -> 2. No existing
+  golden changed. New goldens (reviewed zoomed): `ams_environments`
+  (`=` signs aligned at the same x, measured), `katex_v0_19_1_misc`.
+- Found (corpus): it did not record `throwOnError`, and it recorded a
+  KaTeX warning as "accepted", although the KaTeX test setup stops the
+  parse at the warning. Both fixed in the hook. Case ids changed once.
+- Found (Dart bugs): U+FE0F was a macro for `\textregistered`; the
+  color table key was "magenta (synonym of fuchsia)"; ResetDimension
+  ignored its parent's constraints; an empty matrix and `\substack{}`
+  crashed; nested text fonts failed for missing metrics.
+- Changed behavior: `\not{ab}` parses (KaTeX does). This reverses an
+  assertion in `not_overlay_test.dart` from `297dbb9`.
+- Dart divergences (kept, documented in code): no automatic equation
+  numbers in align/gather/equation; a `\tag` follows its row after a
+  `\qquad`; accented letters render composed.
+- Left (Group 3, 34 cases): `CD`, `\vcenter`, `\phase`, `\angl`,
+  `\overbracket`/`\underbracket`, `\overgroup`, `\underlinesegment`,
+  `\mathsfit`; one `unicodeSupOrSub.ts` case.

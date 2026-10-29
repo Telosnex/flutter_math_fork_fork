@@ -187,6 +187,8 @@ Paths:
 | `tool/katex_sync/katex_sync.dart` | The sync tool. Commands: `generate --katex <checkout>`, `status --katex <checkout>`. |
 | `tool/katex_sync/record_parse_calls.js` | Jest setup file. The only JavaScript in the repo. `generate` copies it into the KaTeX `test/` directory for the run, so that babel-jest finds KaTeX's `@babel/runtime`, and then deletes the copy. |
 | `test/katex_conformance/cases.json` | Generated corpus. |
+| `test/katex_conformance/functions.json` | Generated KaTeX function and environment table. |
+| `lib/src/parser/tex/katex_function_flags.dart` | Generated from functions.json: KaTeX flags for each function (D9). |
 | `test/katex_conformance/divergences.json` | Parse divergences (I1, I2). People edit `category` and `note`. |
 | `test/katex_conformance/render_failures.json` | Accepted cases that do not render (I3). Same format and rules. |
 
@@ -207,7 +209,7 @@ Paths:
   `{"settings", "tex"}`, with sorted keys. The id does not change between
   KaTeX versions if the input does not change. Cases are sorted by `id`.
 - `settings`: `colorIsTextColor`, `displayMode`, `globalGroup`, `macros`,
-  `maxExpand`, `strict`, `trust`, after KaTeX `Settings` fills in the
+  `maxExpand`, `strict`, `throwOnError`, `trust`, after KaTeX `Settings` fills in the
   defaults. Booleans are booleans (`ss_data.yaml` gives `display: 1`). A
   value that is a JavaScript function, and a macro that is not a string,
   is written as `"<function>"` or `"<object>"`.
@@ -217,9 +219,9 @@ Paths:
   case. This field is for people to read. The tools do not use it.
 - `katex`: `{"ok": true}`, or `{"ok": true, "warning": ...}`, or
   `{"ok": false, "kind", "message", "position"}`. The KaTeX test setup
-  throws `ConsoleWarning` from `console.warn`. Outside the tests, KaTeX
-  accepts that input and prints a warning, so `generate` writes it as
-  accepted with a warning. `message` is `ParseError.rawMessage`.
+  throws `ConsoleWarning` from `console.warn`. The hook then parses again
+  with `console.warn` collecting messages, and records that result: what
+  KaTeX does outside the tests. `message` is `ParseError.rawMessage`.
 - Calls with a non-string input (KaTeX TypeError tests) are not recorded.
 
 Divergence record (`divergences.json`, `render_failures.json`), a JSON
@@ -377,6 +379,8 @@ Phase 3: later syncs. Do these steps for each new KaTeX release.
 
 - 2026-10-29: First draft.
 - 2026-10-29: D12 cites the selection code in cmark-gfm-widget.
+- 2026-10-29: Section 5: throwOnError in settings; warning results are
+  re-parsed; functions.json and katex_function_flags.dart.
 - 2026-10-29: D10 and D11 match the CI merged from origin/master
   (telosnex_ci_tools); macOS goldens kept.
 - 2026-10-29: Accepted. Section 5 matches the implementation: `portable`,
