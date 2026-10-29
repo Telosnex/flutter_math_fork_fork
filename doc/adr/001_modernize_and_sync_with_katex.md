@@ -109,16 +109,22 @@ D9: When a KaTeX file is pure data (symbols, font metrics, Unicode tables),
     Instead of: edits by hand. Hand edits drift from KaTeX and cannot be
     checked.
 
-D10: Golden tests run on macOS and in CI on macOS. The Windows-only gate
-     is removed.
+D10: Golden images are made on macOS and compared on macOS only. Other
+     platforms (Linux, Windows, web) still parse, build and lay out each
+     golden expression. The Windows-only gate is removed.
      Because: R5
-     Instead of: Linux CI. Golden images differ between platforms, and
-     development occurs on macOS.
+     Instead of: Windows goldens. Golden images differ between platforms,
+     and development occurs on macOS.
 
-D11: CI is one GitHub Actions workflow on macOS: flutter analyze, then
-     flutter test, with the Flutter version pinned.
+D11: CI is the telosnex_ci_tools workflows. unit.yml (Ubuntu, each push
+     and pull request): lint, dart format check, flutter analyze
+     --fatal-infos, flutter test. integration.yml (push and nightly):
+     flutter test on macOS ARM64 and Windows x64, and on Chrome with
+     dart2js and dart2wasm. The macOS job compares the goldens (D10).
+     Tests that need dart:io are @TestOn('vm').
      Because: R5, R6
-     Instead of: Travis CI, which this repo does not use.
+     Instead of: a separate macOS-only workflow. The shared tools already
+     pin Flutter and cover the web compilers.
 
 D12: Remove SelectableMath and its support code from the package.
      Because: R4 (no consumer uses it), R6 (it causes most deprecation
@@ -305,7 +311,7 @@ Phase 0: make tests trustworthy. Complete this phase before parser changes
 4. Change `test/helper.dart`: run goldens on macOS, make
    `testTexToRenderLike` compare two renders, and make `toParse` use its
    `settings` argument. Regenerate all goldens. Examine each image.
-5. Add the CI workflow (D11). Delete `.travis.yml` and
+5. Add the CI workflows (D11). Delete `.travis.yml` and
    `.github/workflows/publish.yml`.
 6. Add `toString()` to `ParseException`.
 7. Write `test/api_surface_test.dart` (I5).
@@ -371,5 +377,7 @@ Phase 3: later syncs. Do these steps for each new KaTeX release.
 
 - 2026-10-29: First draft.
 - 2026-10-29: D12 cites the selection code in cmark-gfm-widget.
+- 2026-10-29: D10 and D11 match the CI merged from origin/master
+  (telosnex_ci_tools); macOS goldens kept.
 - 2026-10-29: Accepted. Section 5 matches the implementation: `portable`,
   warning results, `render_failures.json`, category `render-error`.

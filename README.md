@@ -107,13 +107,15 @@ cmark-gfm-widget.
 ## Development
 
 ```sh
-flutter analyze
+dart format .                # CI checks the format
+flutter analyze --fatal-infos
 flutter test                 # goldens compare on macOS only
 flutter test --update-goldens
 ```
 
 Golden images are made on macOS. Review every changed image before you
-commit it.
+commit it. CI runs the tests on Linux, macOS, Windows, and Chrome (dart2js
+and dart2wasm); see `.github/workflows/`.
 
 ## Credits
 

@@ -36,7 +36,7 @@ Entry format:
 |--------|-------|------|
 | Workplan step | 16 in progress: Lexer, Namespace, MacroExpander done; next: Parser | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | 426 pass, 2 skip, 0 fail | 2026-10-29 |
+| `flutter test` | VM 426 pass / 2 skip; web 360 pass / 62 skip | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
 | Parse divergences | 364 (307 `not-ported`, 57 `trust`) | 2026-10-29 |
 | Render failures | 18 of 994 accepted cases | 2026-10-29 |
@@ -163,3 +163,25 @@ Entry format:
   and all golden images.
 - Next: owner decides on D10, D11 and D12 given origin's direction, then
   rebase this branch onto origin/master.
+
+## 2026-10-29 — merge — origin/master merged, blocker resolved
+- Decision (owner): keep origin's CI; ADR decisions win (no
+  SelectableMath, goldens on macOS).
+- Done: `3921065` merges origin/master. Kept from origin: unit.yml and
+  integration.yml (telosnex_ci_tools v0.5.3), the ResetDimension accent fix
+  (`55e52e7`), web measurement encoding (`8353d3c`), web test support.
+  Dropped: origin's SelectableMath fixes, Windows goldens, and this
+  branch's ci.yml. ADR D10, D11 and the README match.
+- Numbers: VM 426 pass, 2 skip. Chrome dart2js and dart2wasm: 360 pass,
+  62 skip (render-alike tests need toImage; conformance tests are
+  @TestOn('vm')). `dart format` check and `analyze --fatal-infos` clean.
+  Conformance unchanged: 364 divergences, 18 render failures.
+- Found (correction): the macOS goldens from step 4 had the stretched
+  `\vec` and off-center accent bug that `55e52e7` fixes. My review "by
+  eye" missed it at full-sheet scale. After the merge, I compared the
+  accent goldens at 4× zoom: `\vec` is one short arrow and `\hat`,
+  `\tilde` and the others sit over their letter. Review goldens zoomed in,
+  one at a time.
+- Found: origin's `\textcolor` encoder still wrote the alpha channel; the
+  merge keeps the fix from this branch.
+- Next: push (owner). Then the Parser port, as in the previous entry.
