@@ -38,36 +38,46 @@ void main() {
       '\\undergroup',
       // '\\underlinesegment': ,
       '\\utilde',
-      '\\underline',
+      '\\underline'
     };
     for (final command in [
       ...accents,
       ...accentsUnder,
       '\\overline',
-      '\\underline',
+      '\\underline'
     ]) {
       testTexToMatchGoldenFile(
         'render $command',
         [for (var i = 1; i <= 6; i++) '$command{${'x' * i}}'].join(),
         location: 'golden/${command.substring(1)}${command.hashCode}.png',
-        // \vec's golden (made on Windows, old Flutter) is kept: the current
-        // Flutter draws it differently (wide arrows over several x's).
-        skip: command == '\\vec'
-            ? 'golden layout mismatch with Flutter 3.47.1, old golden kept'
-            : null,
+        // \vec: old golden kept, the current Flutter draws it differently.
+        skip: command == '\\vec' ? 'old golden, see comment' : null,
       );
     }
   });
 
   group('Text accent renderer', () {
-    const accents1 = {'\\`', '\\"', '\\~', '\\=', "\\'", '\\^', '\\.'};
-    const accents2 = {'\\u', '\\v', '\\r', '\\H'};
+    const accents1 = {
+      '\\`',
+      '\\"',
+      '\\~',
+      '\\=',
+      "\\'",
+      '\\^',
+      '\\.',
+    };
+    const accents2 = {
+      '\\u',
+      '\\v',
+      '\\r',
+      '\\H',
+    };
 
     testTexToMatchGoldenFile(
       'render text accent set #1',
       [
         for (final command in accents1)
-          '\\text{${command}a$command{i}$command{ab}}',
+          '\\text{${command}a$command{i}$command{ab}}'
       ].join(),
       location: 'golden/text-accents-1.png',
     );
@@ -76,7 +86,7 @@ void main() {
       'render text accent set #2',
       [
         for (final command in accents2)
-          '\\text{$command a$command{i}$command{ab}}',
+          '\\text{$command a$command{i}$command{ab}}'
       ].join(),
       location: 'golden/text-accents-2.png',
     );
@@ -87,7 +97,7 @@ void main() {
       'ä', 'Ö',
       '\u00e1', '\u0061\u0301', // á = \'{a}
       '\u01df', '\u0061\u0308\u0304', // ǟ = \"\={a}
-      'i\u0300', 'j\u0300',
+      'i\u0300', 'j\u0300'
     };
 
     testTexToMatchGoldenFile(
