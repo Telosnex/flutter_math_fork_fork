@@ -1,4 +1,4 @@
-// katex-sync: src/Lexer.ts @ c2e5a289
+// katex-sync: src/Lexer.ts @ v0.19.1
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
@@ -27,90 +27,87 @@ import 'settings.dart';
 import 'source_location.dart';
 import 'token.dart';
 
+/// The token regex. Capturing groups:
+///   [1] regular whitespace
+///   [2] backslash followed by whitespace
+///   [3] anything else, which may include:
+///     [4] left character of \verb*
+///     [5] left character of \verb
+///     [6] backslash followed by word, excluding any trailing whitespace
 const spaceRegexString = '[ \r\n\t]';
 const controlWordRegexString = '\\\\[a-zA-Z@]+';
 const controlSymbolRegexString = '\\\\[^\uD800-\uDFFF]';
 const controlWordWhitespaceRegexString =
-    '$controlWordRegexString$spaceRegexString*';
-final controlWordWhitespaceRegex =
-    RegExp('^($controlWordRegexString)$spaceRegexString*\$');
+    '($controlWordRegexString)$spaceRegexString*';
+const controlSpaceRegexString = '\\\\(\n|[ \r\t]+\n?)[ \r\t]*';
 const combiningDiacriticalMarkString = '[\u0300-\u036f]';
 final combiningDiacriticalMarksEndRegex =
     RegExp('$combiningDiacriticalMarkString+\$');
-const tokenRegexString = '($spaceRegexString+)|' // white space
+const tokenRegexString = '($spaceRegexString+)|' // whitespace
+    '$controlSpaceRegexString|' // \whitespace
     '([!-\\[\\]-\u2027\u202A-\uD7FF\uF900-\uFFFF]' // single codepoint
     '$combiningDiacriticalMarkString*' // ...plus accents
     '|[\uD800-\uDBFF][\uDC00-\uDFFF]' // surrogate pair
     '$combiningDiacriticalMarkString*' // ...plus accents
-    '|\\\\verb\\*([^]).*?\\3' // \verb*
-    '|\\\\verb([^*a-zA-Z]).*?\\4' // \verb unstarred
-    '|\\\\operatorname\\*' // \operatorname*
+    '|\\\\verb\\*([^]).*?\\4' // \verb*
+    '|\\\\verb([^*a-zA-Z]).*?\\5' // \verb unstarred
     '|$controlWordWhitespaceRegexString' // \macroName + spaces
     '|$controlSymbolRegexString)'; // \\, \', etc.
 
 abstract class LexerInterface {
   String get input;
-  static final RegExp tokenRegex = RegExp(tokenRegexString, multiLine: true);
 }
 
 class Lexer implements LexerInterface {
-  static final tokenRegex = RegExp(tokenRegexString, multiLine: true);
-  Lexer(this.input, this.settings) : it = tokenRegex.allMatches(input).iterator;
+  static final tokenRegex = RegExp(tokenRegexString);
+
+  Lexer(this.input, this.settings);
 
   @override
   final String input;
   final TexParserSettings settings;
-  final Map<String, int> catCodes = {'%': 14};
-  int pos = 0;
-  // final Iterable<RegExpMatch> matches;
-  final Iterator<RegExpMatch> it;
 
+  /// Category codes. The lexer only supports comment characters (14).
+  /// MacroExpander also distinguishes active characters (13).
+  final Map<String, int> catCodes = {
+    '%': 14, // comment character
+    '~': 13, // active character
+  };
+
+  /// The position of the next token. KaTeX: tokenRegex.lastIndex.
+  int pos = 0;
+
+  void setCatcode(String char, int code) => catCodes[char] = code;
+
+  /// Lexes a single token.
   Token lex() {
     if (pos == input.length) {
       return Token('EOF', SourceLocation(this, pos, pos));
     }
-    final hasMatch = it.moveNext();
-    if (!hasMatch) {
-      throw ParseException('Unexpected character: \'${input[pos]}\'',
+    final match = tokenRegex.matchAsPrefix(input, pos);
+    if (match == null) {
+      throw ParseException("Unexpected character: '${input[pos]}'",
           Token(input[pos], SourceLocation(this, pos, pos + 1)));
     }
-
-    final match = it.current;
-    if (match.start != pos) {
-      throw ParseException('Unexpected character: \'${input[pos]}\'',
-          Token(input[pos], SourceLocation(this, pos, pos + 1)));
-    }
+    final start = pos;
     pos = match.end;
+    final text = match[6] ?? match[3] ?? (match[2] != null ? '\\ ' : ' ');
 
-    var text = match[2] ?? ' ';
-    if (text == '%') {
+    if (catCodes[text] == 14) {
       // comment character
-      final nlIndex = input.indexOf('\n', it.current.end);
+      final nlIndex = input.indexOf('\n', pos);
       if (nlIndex == -1) {
-        pos = input.length;
-        while (it.moveNext()) {
-          pos = it.current.end;
-        }
+        pos = input.length; // EOF
         settings.reportNonstrict(
             'commentAtEnd',
             '% comment has no terminating newline; LaTeX would '
                 'fail because of commenting the end of math mode (e.g. \$)');
       } else {
-        while (it.current.end < nlIndex + 1) {
-          final canMoveNext = it.moveNext();
-          if (canMoveNext) {
-            pos = it.current.end;
-          } else {
-            break;
-          }
-        }
+        pos = nlIndex + 1;
       }
       return lex();
     }
-    final controlMatch = controlWordWhitespaceRegex.firstMatch(text);
-    if (controlMatch != null) {
-      text = controlMatch.group(1)!;
-    }
-    return Token(text, SourceLocation(this, match.start, match.end));
+
+    return Token(text, SourceLocation(this, start, pos));
   }
 }

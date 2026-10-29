@@ -8,9 +8,12 @@ EncodeResult _functionEncoder(GreenNode node) {
     'The default encoder for FunctionNode is used, which is imprecise. '
         'Non better alternatives were found.',
     TransparentTexEncodeResult(<dynamic>[
-      TexCommandEncodeResult(command: '\\operatorname', args: <dynamic>[
-        functionNode.functionName,
-      ]),
+      TexCommandEncodeResult(
+          command: '\\operatorname',
+          specName: '\\operatorname@',
+          args: <dynamic>[
+            functionNode.functionName,
+          ]),
       functionNode.argument,
     ]),
   );
@@ -30,14 +33,17 @@ final _functionOptimizationEntries = [
     optimize: (node) {
       final functionNode = node as FunctionNode;
       texEncodingCache[node] = TransparentTexEncodeResult(<dynamic>[
-        TexCommandEncodeResult(command: '\\operatorname', args: <dynamic>[
-          _optionsDiffEncode(
-            (functionNode.functionName.children.first as StyleNode)
-                .optionsDiff
-                .removeMathFont(),
-            functionNode.functionName.children.first.children,
-          )
-        ]),
+        TexCommandEncodeResult(
+            command: '\\operatorname',
+            specName: '\\operatorname@',
+            args: <dynamic>[
+              _optionsDiffEncode(
+                (functionNode.functionName.children.first as StyleNode)
+                    .optionsDiff
+                    .removeMathFont(),
+                functionNode.functionName.children.first.children,
+              )
+            ]),
         functionNode.argument,
       ]);
     },

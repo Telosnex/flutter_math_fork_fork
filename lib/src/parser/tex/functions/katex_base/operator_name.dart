@@ -25,13 +25,15 @@
 part of '../katex_base.dart';
 
 const _operatorNameEntries = {
-  ['\\operatorname', '\\operatorname*']:
+  // KaTeX v0.19.1: \operatorname is a macro that maps to these.
+  ['\\operatorname@', '\\operatornamewithlimits']:
       FunctionSpec(numArgs: 1, handler: _operatorNameHandler),
 };
 GreenNode _operatorNameHandler(TexParser parser, FunctionContext context) {
   var name = parser.parseArgNode(mode: null, optional: false)!;
   final scripts =
-      parser.parseScripts(allowLimits: context.funcName == '\\operatorname*');
+      parser.parseScripts(
+      allowLimits: context.funcName == '\\operatornamewithlimits');
   final body = parser.parseGroup(context.funcName,
           optional: false, greediness: 1, mode: null, consumeSpaces: true) ??
       EquationRowNode.empty();

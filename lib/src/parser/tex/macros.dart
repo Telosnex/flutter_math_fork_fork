@@ -708,6 +708,9 @@ final Map<String, MacroDefinition> builtinMacros = {
   '\\minuscolon': MacroDefinition.fromString("\\eqcolon"),
 
 // Present in newtxmath, pxfonts and txfonts
+  // KaTeX src/functions/operatorname.ts
+  '\\operatorname': MacroDefinition.fromString(
+      '\\@ifstar\\operatornamewithlimits\\operatorname@'),
   '\\limsup': MacroDefinition.fromString("\\DOTSB\\operatorname*{lim\\,sup}"),
   '\\liminf': MacroDefinition.fromString("\\DOTSB\\operatorname*{lim\\,inf}"),
 

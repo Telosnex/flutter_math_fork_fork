@@ -155,7 +155,11 @@ class TexCommandEncodeResult extends EncodeResult {
   /// Accepted type: [Null], [String], [EncodeResult], [GreenNode]
   final List<dynamic> args;
 
-  late final FunctionSpec spec = functions[command]!;
+  /// The function that parses [command]. Differs from [command] when
+  /// [command] is a macro, as `\operatorname` is for `\operatorname@`.
+  final String? specName;
+
+  late final FunctionSpec spec = functions[specName ?? command]!;
 
   final int? _numArgs;
   late final int numArgs = _numArgs ?? spec.numArgs;
@@ -169,6 +173,7 @@ class TexCommandEncodeResult extends EncodeResult {
   TexCommandEncodeResult({
     required this.command,
     required this.args,
+    this.specName,
     int? numArgs,
     int? numOptionalArgs,
   })  : _numArgs = numArgs,
