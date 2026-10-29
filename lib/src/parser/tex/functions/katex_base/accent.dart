@@ -66,7 +66,8 @@ const _accentEntries = {
     '\\r',
     '\\H',
     '\\v',
-    // '\\textcircled',
+    '\\c',
+    '\\textcircled',
   ]: FunctionSpec(
     numArgs: 1,
     allowedInMath: false,
@@ -129,7 +130,7 @@ const accentCommandMapping = {
   '\\r': '\u02da',
   '\\H': '\u02dd',
   '\\v': '\u02c7',
-  // '\\textcircled': '\u',
+  '\\c': '\u00b8',
 
   '\\overline': '\u00AF',
 };
@@ -160,7 +161,7 @@ const textUnicodeAccentMapping = {
   '\\.': '\u0307',
   '\\r': '\u030a',
   '\\H': '\u030b',
-  // '\\textcircled': '\u',
+  '\\c': '\u0327',
 };
 GreenNode _textAccentHandler(TexParser parser, FunctionContext context) {
   if (parser.mode == Mode.math) {
@@ -171,6 +172,9 @@ GreenNode _textAccentHandler(TexParser parser, FunctionContext context) {
     );
   }
   final base = parser.parseArgNode(mode: null, optional: false)!;
+  if (context.funcName == '\\textcircled') {
+    return TextCircledNode(body: base.wrapWithEquationRow());
+  }
   if (base is SymbolNode) {
     return base.withSymbol(
       base.symbol + textUnicodeAccentMapping[context.funcName]!,

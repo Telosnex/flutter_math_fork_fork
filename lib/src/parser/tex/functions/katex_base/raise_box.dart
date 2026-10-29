@@ -29,6 +29,13 @@ const _raiseBoxEntries = {
       FunctionSpec(numArgs: 2, allowedInText: true, handler: _raiseBoxHandler),
 };
 GreenNode _raiseBoxHandler(TexParser parser, FunctionContext context) {
+  // KaTeX fails on an unbraced length (\raisebox5pt{text}), as LaTeX.
+  parser.consumeSpaces();
+  if (parser.fetch().text != '{') {
+    throw ParseException(
+        "Expected '{' after \\raisebox, got '${parser.fetch().text}'",
+        parser.fetch());
+  }
   final dy = parser.parseArgSize(optional: false) ?? Measurement.zero;
   final body = parser.parseArgHbox(optional: false);
   return RaiseBoxNode(

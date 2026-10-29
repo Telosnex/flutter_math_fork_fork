@@ -248,12 +248,11 @@ class Case {
 }
 
 /// The result that KaTeX gave. The KaTeX test setup turns console.warn into
-/// a thrown ConsoleWarning. Outside the tests, KaTeX accepts the input and
-/// prints the warning, so the result is "accepted, with a warning".
+/// a thrown ConsoleWarning; the hook parses again without that and records
+/// the result that KaTeX gives outside the tests.
 Map<String, dynamic> normalizeResult(Map<String, dynamic> raw) {
-  if (raw['ok'] == true) return {'ok': true};
-  if (raw['kind'] == 'ConsoleWarning') {
-    return {'ok': true, 'warning': raw['message']};
+  if (raw['ok'] == true) {
+    return {'ok': true, if (raw['warning'] != null) 'warning': raw['warning']};
   }
   return {
     'ok': false,

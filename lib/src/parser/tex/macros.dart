@@ -460,7 +460,6 @@ final Map<String, MacroDefinition> builtinMacros = {
   '\u231F': MacroDefinition.fromString("\\lrcorner"),
   '\u00A9': MacroDefinition.fromString("\\copyright"),
   '\u00AE': MacroDefinition.fromString("\\textregistered"),
-  '\uFE0F': MacroDefinition.fromString("\\textregistered"),
 
 // The KaTeX fonts have corners at codepoints that don't match Unicode.
 // For MathML purposes, use the Unicode code point.
@@ -478,8 +477,7 @@ final Map<String, MacroDefinition> builtinMacros = {
 // We'll call \varvdots, which gets a glyph from symbols.js.
 // The zero-width rule gets us an equivalent to the vertical 6pt kern.
 // TODO should we accept \vdots's kern ?
-  '\\vdots':
-      MacroDefinition.fromString("\\mathord{\\varvdots\\rule{0pt}{15pt}}"),
+  '\\vdots': MacroDefinition.fromString('{\\varvdots\\rule{0pt}{15pt}}'),
   '\u22ee': MacroDefinition.fromString("\\vdots"),
 
 //////////////////////////////////////////////////////////////////////
@@ -684,7 +682,7 @@ final Map<String, MacroDefinition> builtinMacros = {
 // \def\@hspace#1{\hskip  #1\relax}
 // \def\@hspacer#1{\vrule \@width\z@\nobreak
 //                 \hskip #1\hskip \z@skip}
-  '\\hspace': MacroDefinition.fromString("\\hskip #1\\relax"),
+  '\\hspace': MacroDefinition.fromString('\\@ifstar\\@hspacer\\@hspace'),
 
 //////////////////////////////////////////////////////////////////////
 // mathtools.sty migrated to extra_symbols

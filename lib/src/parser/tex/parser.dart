@@ -747,6 +747,9 @@ class TexParser {
     }
     // At this point, we should have a symbol, possibly with accents.
     // First expand any accented base symbol according to unicodeSymbols.
+    // Dart keeps the composed character for the SymbolNode, so that it
+    // renders as before; the decomposed text checks the base symbol.
+    final original = text;
     if (unicodeSymbols.containsKey(text[0]) &&
         !texSymbolCommandConfigs[mode]!.containsKey(text[0])) {
       if (mode == Mode.math) {
@@ -755,7 +758,7 @@ class TexParser {
             'Accented Unicode text character "${text[0]}" used in math mode',
             nucleus);
       }
-      // text = unicodeSymbols[text[0]] + text.substring(1);
+      text = unicodeSymbols[text[0]]! + text.substring(1);
     }
     // Strip off any combining characters
     final match = combiningDiacriticalMarksEndRegex.firstMatch(text);
@@ -788,7 +791,9 @@ class TexParser {
       // final loc = SourceLocation.range(nucleus);
       symbol = SymbolNode(
         mode: mode,
-        symbol: symbolCommandConfig.symbol + combiningMarks,
+        symbol: original != text
+            ? original
+            : symbolCommandConfig.symbol + combiningMarks,
         variantForm: symbolCommandConfig.variantForm,
         overrideAtomType: symbolCommandConfig.type,
         overrideFont: symbolCommandConfig.font,

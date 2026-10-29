@@ -154,7 +154,11 @@ final _delimiterSymbols = delimiterCommands
     .map((command) => texSymbolCommandConfigs[Mode.math]![command]!)
     .toList(growable: false);
 
-String? _checkDelimiter(GreenNode delim, FunctionContext context) {
+String? _checkDelimiter(GreenNode arg, FunctionContext context) {
+  // KaTeX normalizeArgument: a group of one node is that node.
+  final delim = arg is EquationRowNode && arg.children.length == 1
+      ? arg.children.single
+      : arg;
   if (delim is SymbolNode) {
     if (_delimiterSymbols.any((symbol) =>
         symbol.symbol == delim.symbol &&

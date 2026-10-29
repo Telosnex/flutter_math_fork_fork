@@ -175,6 +175,7 @@ class RenderResetDimension extends RenderShiftedBox {
       child.offset = Offset(dx, height - childHeight);
     }
 
-    return Size(width, height + depth);
+    // Parents may set a minimum size. The child keeps its place.
+    return constraints.constrain(Size(width, height + depth));
   }
 }

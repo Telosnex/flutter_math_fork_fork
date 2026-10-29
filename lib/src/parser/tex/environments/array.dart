@@ -480,7 +480,7 @@ GreenNode _subArrayHandler(TexParser parser, EnvContext context) {
     arrayStretch: 0.5,
     style: MathStyle.script,
   );
-  if (res.body[0].length > 1) {
+  if (res.body.isNotEmpty && res.body[0].length > 1) {
     throw ParseException('{subarray} can contain only one column');
   }
   return res;

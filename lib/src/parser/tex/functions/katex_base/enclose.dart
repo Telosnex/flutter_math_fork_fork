@@ -78,6 +78,10 @@ GreenNode _fboxHandler(TexParser parser, FunctionContext context) {
 }
 
 GreenNode _cancelHandler(TexParser parser, FunctionContext context) {
+  if (context.funcName == '\\sout' && parser.mode == Mode.math) {
+    parser.settings.reportNonstrict(
+        'mathVsSout', "LaTeX's \\sout works only in text mode");
+  }
   final body = parser.parseArgNode(mode: null, optional: false)!;
   return EnclosureNode(
     notation: const {

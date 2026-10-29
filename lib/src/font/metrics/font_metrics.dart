@@ -198,7 +198,14 @@ final Map<String, Map<int, CharacterMetrics>> metricsMap = fontMetricsData;
 
 CharacterMetrics? getCharacterMetrics(
     {required String character, required String fontName, required Mode mode}) {
-  final metricsMapFont = metricsMap[fontName];
+  // KaTeX has no metrics for SansSerif-BoldItalic or Typewriter-Bold, for
+  // example. Dart uses the nearest style that has metrics: a nested
+  // \textsf{\textit{\textbf{x}}} must not fail to build.
+  final family = fontName.split('-').first;
+  final metricsMapFont = metricsMap[fontName] ??
+      (fontName.endsWith('-BoldItalic') ? metricsMap['$family-Bold'] : null) ??
+      (fontName.endsWith('Italic') ? metricsMap['$family-Italic'] : null) ??
+      metricsMap['$family-Regular'];
   if (metricsMapFont == null) {
     throw Exception('Font metrics not found for font: $fontName.');
   }

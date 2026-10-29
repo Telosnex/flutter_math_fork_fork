@@ -1,4 +1,4 @@
-// katex-sync: src/unicodeScripts.ts @ c2e5a289
+// katex-sync: src/unicodeScripts.ts @ v0.19.1
 class Script {
   final String name;
   final List<List<int>> blocks;
@@ -21,6 +21,10 @@ const Map<String, List<List<int>>> scriptData = {
   // symbols in symbols.js
   'cyrillic': [
     [0x0400, 0x04ff]
+  ],
+
+  'armenian': [
+    [0x0530, 0x058F]
   ],
 
   // The Brahmic scripts of South and Southeast Asia

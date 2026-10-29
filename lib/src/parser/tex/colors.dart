@@ -122,7 +122,7 @@ const colorByName = {
   'lightyellow': Color(0xffffffe0),
   'limegreen': Color(0xff32cd32),
   'linen': Color(0xfffaf0e6),
-  'magenta (synonym of fuchsia)': Color(0xffff00ff),
+  'magenta': Color(0xffff00ff),
   'mediumaquamarine': Color(0xff66cdaa),
   'mediumblue': Color(0xff0000cd),
   'mediumorchid': Color(0xffba55d3),

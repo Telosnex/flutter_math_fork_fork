@@ -29,11 +29,14 @@ void main() {
         ['\u2260', '\u219B', '\u2209']);
   });
 
-  test('single-symbol braces work; incomplete and multi-symbol args still fail',
-      () {
+  test('single-symbol braces work; an incomplete \\not fails', () {
     expect(Math.tex(r'\not{\leadsto}').parseError, isNull);
     expect(Math.tex(r'\not').parseError, isNotNull);
-    expect(Math.tex(r'\not{ab}').parseError, isNotNull);
+  });
+
+  test('\\not before a group puts the slash over its start, as KaTeX', () {
+    // KaTeX v0.19.1: \not is \mathrel{\mathrlap\@not}.
+    expect(Math.tex(r'\not{ab}').parseError, isNull);
   });
 
   testWidgets('overlay is centered and does not widen the relation',

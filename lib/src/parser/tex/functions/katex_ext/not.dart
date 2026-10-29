@@ -56,7 +56,23 @@ GreenNode _notHandler(TexParser parser, FunctionContext context) {
   while (base is EquationRowNode && base.children.length == 1) {
     base = base.children.single;
   }
-  final node = assertNodeType<SymbolNode>(base);
+  if (base is! SymbolNode) {
+    // KaTeX: \not is \mathrel{\mathrlap\@not}, the slash glyph (U+E020,
+    // from U+0338) over the start of what follows.
+    return EquationRowNode(children: [
+      EquationRowNode(
+        overrideType: AtomType.rel,
+        children: [
+          LapNode(
+            alignment: LapAlignment.right,
+            body: EquationRowNode(children: [SymbolNode(symbol: '\u0338')]),
+          ),
+        ],
+      ),
+      ...base.expandEquationRow(),
+    ]);
+  }
+  final node = base;
   final remappedSymbol = _notRemap[node.symbol];
   if (node.mode != Mode.math) {
     throw ParseException('\\not has to be followed by a combinable character');

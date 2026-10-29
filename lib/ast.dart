@@ -32,6 +32,7 @@ export 'src/ast/nodes/sqrt.dart' show SqrtNode;
 export 'src/ast/nodes/stretchy_op.dart' show StretchyOpNode;
 export 'src/ast/nodes/style.dart';
 export 'src/ast/nodes/symbol.dart' show SymbolNode;
+export 'src/ast/nodes/text_circled.dart';
 export 'src/ast/nodes/under.dart';
 export 'src/ast/options.dart';
 export 'src/ast/size.dart';

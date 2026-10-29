@@ -31,8 +31,8 @@ const _operatorNameEntries = {
 };
 GreenNode _operatorNameHandler(TexParser parser, FunctionContext context) {
   var name = parser.parseArgNode(mode: null, optional: false)!;
-  final scripts = parser.parseScripts(
-      allowLimits: context.funcName == '\\operatornamewithlimits');
+  // KaTeX: \limits and \nolimits follow any operatorname.
+  final scripts = parser.parseScripts(allowLimits: true);
   final body =
       parser.parseOperand(context.breakOnTokenText) ?? EquationRowNode.empty();
 

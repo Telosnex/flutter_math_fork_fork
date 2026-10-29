@@ -1537,6 +1537,215 @@ const symbolRenderConfigs = {
     math: RenderConfig(AtomType.ord, mathdefault, 'A'), // \uD835\uDD04
     text: RenderConfig(AtomType.ord, mainrm, 'A'), // \uD835\uDD04
   ), // 𝔄
+  // KaTeX v0.19.1: bold Fraktur
+  '\uD835\uDD6C': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'A'),
+    text: RenderConfig(AtomType.ord, mainrm, 'A'),
+  ),
+  '\uD835\uDD6D': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'B'),
+    text: RenderConfig(AtomType.ord, mainrm, 'B'),
+  ),
+  '\uD835\uDD6E': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'C'),
+    text: RenderConfig(AtomType.ord, mainrm, 'C'),
+  ),
+  '\uD835\uDD6F': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'D'),
+    text: RenderConfig(AtomType.ord, mainrm, 'D'),
+  ),
+  '\uD835\uDD70': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'E'),
+    text: RenderConfig(AtomType.ord, mainrm, 'E'),
+  ),
+  '\uD835\uDD71': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'F'),
+    text: RenderConfig(AtomType.ord, mainrm, 'F'),
+  ),
+  '\uD835\uDD72': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'G'),
+    text: RenderConfig(AtomType.ord, mainrm, 'G'),
+  ),
+  '\uD835\uDD73': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'H'),
+    text: RenderConfig(AtomType.ord, mainrm, 'H'),
+  ),
+  '\uD835\uDD74': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'I'),
+    text: RenderConfig(AtomType.ord, mainrm, 'I'),
+  ),
+  '\uD835\uDD75': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'J'),
+    text: RenderConfig(AtomType.ord, mainrm, 'J'),
+  ),
+  '\uD835\uDD76': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'K'),
+    text: RenderConfig(AtomType.ord, mainrm, 'K'),
+  ),
+  '\uD835\uDD77': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'L'),
+    text: RenderConfig(AtomType.ord, mainrm, 'L'),
+  ),
+  '\uD835\uDD78': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'M'),
+    text: RenderConfig(AtomType.ord, mainrm, 'M'),
+  ),
+  '\uD835\uDD79': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'N'),
+    text: RenderConfig(AtomType.ord, mainrm, 'N'),
+  ),
+  '\uD835\uDD7A': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'O'),
+    text: RenderConfig(AtomType.ord, mainrm, 'O'),
+  ),
+  '\uD835\uDD7B': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'P'),
+    text: RenderConfig(AtomType.ord, mainrm, 'P'),
+  ),
+  '\uD835\uDD7C': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'Q'),
+    text: RenderConfig(AtomType.ord, mainrm, 'Q'),
+  ),
+  '\uD835\uDD7D': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'R'),
+    text: RenderConfig(AtomType.ord, mainrm, 'R'),
+  ),
+  '\uD835\uDD7E': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'S'),
+    text: RenderConfig(AtomType.ord, mainrm, 'S'),
+  ),
+  '\uD835\uDD7F': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'T'),
+    text: RenderConfig(AtomType.ord, mainrm, 'T'),
+  ),
+  '\uD835\uDD80': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'U'),
+    text: RenderConfig(AtomType.ord, mainrm, 'U'),
+  ),
+  '\uD835\uDD81': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'V'),
+    text: RenderConfig(AtomType.ord, mainrm, 'V'),
+  ),
+  '\uD835\uDD82': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'W'),
+    text: RenderConfig(AtomType.ord, mainrm, 'W'),
+  ),
+  '\uD835\uDD83': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'X'),
+    text: RenderConfig(AtomType.ord, mainrm, 'X'),
+  ),
+  '\uD835\uDD84': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'Y'),
+    text: RenderConfig(AtomType.ord, mainrm, 'Y'),
+  ),
+  '\uD835\uDD85': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'Z'),
+    text: RenderConfig(AtomType.ord, mainrm, 'Z'),
+  ),
+  '\uD835\uDD86': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'a'),
+    text: RenderConfig(AtomType.ord, mainrm, 'a'),
+  ),
+  '\uD835\uDD87': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'b'),
+    text: RenderConfig(AtomType.ord, mainrm, 'b'),
+  ),
+  '\uD835\uDD88': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'c'),
+    text: RenderConfig(AtomType.ord, mainrm, 'c'),
+  ),
+  '\uD835\uDD89': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'd'),
+    text: RenderConfig(AtomType.ord, mainrm, 'd'),
+  ),
+  '\uD835\uDD8A': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'e'),
+    text: RenderConfig(AtomType.ord, mainrm, 'e'),
+  ),
+  '\uD835\uDD8B': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'f'),
+    text: RenderConfig(AtomType.ord, mainrm, 'f'),
+  ),
+  '\uD835\uDD8C': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'g'),
+    text: RenderConfig(AtomType.ord, mainrm, 'g'),
+  ),
+  '\uD835\uDD8D': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'h'),
+    text: RenderConfig(AtomType.ord, mainrm, 'h'),
+  ),
+  '\uD835\uDD8E': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'i'),
+    text: RenderConfig(AtomType.ord, mainrm, 'i'),
+  ),
+  '\uD835\uDD8F': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'j'),
+    text: RenderConfig(AtomType.ord, mainrm, 'j'),
+  ),
+  '\uD835\uDD90': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'k'),
+    text: RenderConfig(AtomType.ord, mainrm, 'k'),
+  ),
+  '\uD835\uDD91': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'l'),
+    text: RenderConfig(AtomType.ord, mainrm, 'l'),
+  ),
+  '\uD835\uDD92': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'm'),
+    text: RenderConfig(AtomType.ord, mainrm, 'm'),
+  ),
+  '\uD835\uDD93': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'n'),
+    text: RenderConfig(AtomType.ord, mainrm, 'n'),
+  ),
+  '\uD835\uDD94': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'o'),
+    text: RenderConfig(AtomType.ord, mainrm, 'o'),
+  ),
+  '\uD835\uDD95': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'p'),
+    text: RenderConfig(AtomType.ord, mainrm, 'p'),
+  ),
+  '\uD835\uDD96': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'q'),
+    text: RenderConfig(AtomType.ord, mainrm, 'q'),
+  ),
+  '\uD835\uDD97': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'r'),
+    text: RenderConfig(AtomType.ord, mainrm, 'r'),
+  ),
+  '\uD835\uDD98': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 's'),
+    text: RenderConfig(AtomType.ord, mainrm, 's'),
+  ),
+  '\uD835\uDD99': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 't'),
+    text: RenderConfig(AtomType.ord, mainrm, 't'),
+  ),
+  '\uD835\uDD9A': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'u'),
+    text: RenderConfig(AtomType.ord, mainrm, 'u'),
+  ),
+  '\uD835\uDD9B': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'v'),
+    text: RenderConfig(AtomType.ord, mainrm, 'v'),
+  ),
+  '\uD835\uDD9C': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'w'),
+    text: RenderConfig(AtomType.ord, mainrm, 'w'),
+  ),
+  '\uD835\uDD9D': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'x'),
+    text: RenderConfig(AtomType.ord, mainrm, 'x'),
+  ),
+  '\uD835\uDD9E': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'y'),
+    text: RenderConfig(AtomType.ord, mainrm, 'y'),
+  ),
+  '\uD835\uDD9F': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mathdefault, 'z'),
+    text: RenderConfig(AtomType.ord, mainrm, 'z'),
+  ),
   '\uD835\uDDA0': SymbolRenderConfig(
     math: RenderConfig(AtomType.ord, mathdefault, 'A'), // \uD835\uDDA0
     text: RenderConfig(AtomType.ord, mainrm, 'A'), // \uD835\uDDA0

@@ -26,13 +26,13 @@ import '../../../ast/nodes/equation_array.dart';
 import '../../../ast/nodes/left_right.dart';
 import '../../../ast/nodes/space.dart';
 import '../../../ast/nodes/style.dart';
-import '../../../ast/nodes/symbol.dart';
 import '../../../ast/options.dart';
 import '../../../ast/size.dart';
 import '../../../ast/style.dart';
 import '../../../ast/syntax_tree.dart';
 import '../../../ast/types.dart';
 import '../define_environment.dart';
+import '../functions/katex_base.dart';
 import '../parse_error.dart';
 import '../parser.dart';
 import 'array.dart';
@@ -122,11 +122,11 @@ GreenNode _alignedHandler(TexParser parser, EnvContext context) {
   int? numMaths;
   if (isAlignAt) {
     const message = 'Number of columns should be a positive integer';
-    final arg = parser.parseArgNode(mode: null, optional: false);
-    final children = arg is EquationRowNode ? arg.children : [arg];
-    final string = children
-        .map((e) => e is SymbolNode ? e.symbol : throw ParseException(message))
-        .join();
+    final string = assertCharacterGroup(
+      parser,
+      parser.parseArgNode(mode: null, optional: false),
+      message,
+    );
     numMaths = RegExp(r'^[0-9]+$').hasMatch(string) ? int.parse(string) : 0;
     if (numMaths < 1) throw ParseException(message);
   }

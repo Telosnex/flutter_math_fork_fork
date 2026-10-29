@@ -297,6 +297,12 @@ class MatrixLayoutDelegate extends IntrinsicLayoutDelegate<int> {
     required Map<int, double> childrenWidths,
     bool isComputingIntrinsics = false,
   }) {
+    // An empty matrix (\begin{matrix}\end{matrix}) has no columns.
+    if (cols == 0) {
+      width = 0.0;
+      if (!isComputingIntrinsics) this.vLinePos = [0.0];
+      return AxisConfiguration(size: 0.0, offsetTable: {});
+    }
     final childWidths = List.generate(
         cols * rows, (index) => childrenWidths[index] ?? 0.0,
         growable: false);

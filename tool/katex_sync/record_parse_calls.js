@@ -92,6 +92,7 @@ function wrapped(toParse, settings) {
   }
   // Copy the settings first. A parse can add macros to settings.macros.
   const snap = snapshotSettings(settings);
+  const retrySettings = copySettings(settings);
   const tex = String(toParse);
   const record = {
     tex,
@@ -105,7 +106,12 @@ function wrapped(toParse, settings) {
     records.push(record);
     return result;
   } catch (error) {
-    if (error instanceof ParseError) {
+    if (error && error.constructor &&
+        error.constructor.name === 'ConsoleWarning') {
+      // The test setup throws at the warning. Outside the tests, KaTeX
+      // prints the warning and goes on. Parse again to get that result.
+      record.katex = retryWithWarnings(tex, retrySettings);
+    } else if (error instanceof ParseError) {
       record.katex = {
         ok: false,
         kind: 'ParseError',
@@ -123,6 +129,39 @@ function wrapped(toParse, settings) {
     }
     records.push(record);
     throw error;
+  }
+}
+
+function copySettings(settings) {
+  if (settings instanceof Settings) {
+    const copy = Object.assign(
+      Object.create(Object.getPrototypeOf(settings)), settings);
+    copy.macros = Object.assign({}, settings.macros);
+    return copy;
+  }
+  const copy = Object.assign({}, settings);
+  copy.macros = Object.assign({}, (settings || {}).macros);
+  return new Settings(copy);
+}
+
+function retryWithWarnings(tex, settings) {
+  const warnings = [];
+  const oldWarn = console.warn;
+  console.warn = (message) => warnings.push(String(message));
+  try {
+    original(tex, settings);
+    return {ok: true, warning: warnings[0] || null};
+  } catch (error) {
+    return {
+      ok: false,
+      kind: error instanceof ParseError ? 'ParseError' :
+        (error && error.constructor && error.constructor.name) || 'Error',
+      message: error instanceof ParseError ? error.rawMessage :
+        String(error && error.message),
+      position: error && error.position !== undefined ? error.position : null,
+    };
+  } finally {
+    console.warn = oldWarn;
   }
 }
 
