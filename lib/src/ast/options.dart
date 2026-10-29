@@ -379,7 +379,11 @@ class FontOptions {
     return copyWith(
       fontFamily: value.fontFamily,
       fontWeight: value.fontWeight,
-      fontShape: value.fontShape,
+      fontShape: value.toggleShape
+          ? (fontShape == FontStyle.italic
+              ? FontStyle.normal
+              : FontStyle.italic)
+          : value.fontShape,
     );
   }
 
@@ -412,10 +416,14 @@ class PartialFontOptions {
   /// Override font style.
   final FontStyle? fontShape;
 
+  /// Switch between italic and upright (`\emph`). Ignores [fontShape].
+  final bool toggleShape;
+
   const PartialFontOptions({
     this.fontFamily,
     this.fontWeight,
     this.fontShape,
+    this.toggleShape = false,
   });
 
   @override
@@ -425,10 +433,11 @@ class PartialFontOptions {
     return other is PartialFontOptions &&
         other.fontFamily == fontFamily &&
         other.fontWeight == fontWeight &&
-        other.fontShape == fontShape;
+        other.fontShape == fontShape &&
+        other.toggleShape == toggleShape;
   }
 
   @override
   int get hashCode =>
-      Object.hash(fontFamily.hashCode, fontWeight.hashCode, fontShape.hashCode);
+      Object.hash(fontFamily, fontWeight, fontShape, toggleShape);
 }

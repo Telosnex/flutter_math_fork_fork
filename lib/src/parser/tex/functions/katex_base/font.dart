@@ -27,7 +27,7 @@ part of '../katex_base.dart';
 const _fontEntries = {
   [
     // styles, except \boldsymbol defined below
-    '\\mathrm', '\\mathit', '\\mathbf', //'\\mathnormal',
+    '\\mathrm', '\\mathit', '\\mathbf', '\\mathnormal',
 
     // families
     '\\mathbb', '\\mathcal', '\\mathfrak', '\\mathscr', '\\mathsf',

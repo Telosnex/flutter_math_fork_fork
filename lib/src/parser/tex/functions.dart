@@ -61,6 +61,10 @@ class FunctionSpec<T extends GreenNode> {
   /// KaTeX: argTypes: ["primitive"].
   final bool primitiveArg;
 
+  /// KaTeX gives argTypes. A primitive function with argTypes parses its
+  /// arguments by type, not as groups.
+  final bool typedArgs;
+
   final bool allowedInText;
   final bool allowedInMath;
   final int numOptionalArgs;
@@ -75,6 +79,7 @@ class FunctionSpec<T extends GreenNode> {
     this.allowedInArgument = false,
     this.primitive = false,
     this.primitiveArg = false,
+    this.typedArgs = false,
     this.allowedInText = false,
     this.allowedInMath = true,
     this.numOptionalArgs = 0,
@@ -90,6 +95,7 @@ class FunctionSpec<T extends GreenNode> {
         allowedInArgument: flags & kfArgument != 0,
         primitive: flags & kfPrimitive != 0,
         primitiveArg: flags & kfPrimitiveArg != 0,
+        typedArgs: flags & kfTypedArgs != 0,
         allowedInText: flags & kfText != 0,
         allowedInMath: flags & kfMath != 0,
         numOptionalArgs: numOptionalArgs,

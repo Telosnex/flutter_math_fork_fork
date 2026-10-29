@@ -422,7 +422,6 @@ final Map<String, MacroDefinition> builtinMacros = {
 // Unicode middle dot
 // The KaTeX fonts do not contain U+00B7. Instead, \cdotp displays
 // the dot at U+22C5 and gives it punct spacing.
-  '\u00b7': MacroDefinition.fromString("\\cdotp"),
 
   // \llap and \rlap render their contents in text mode
   '\\llap': MacroDefinition.fromString("\\mathllap{\\textrm{#1}}"),
@@ -819,6 +818,101 @@ final Map<String, MacroDefinition> builtinMacros = {
   '\\braket': MacroDefinition.fromString("\\mathinner{\\langle{#1}\\rangle}"),
   '\\Bra': MacroDefinition.fromString("\\left\\langle#1\\right|"),
   '\\Ket': MacroDefinition.fromString("\\left|#1\\right\\rangle"),
+  '\\bra@ket': MacroDefinition(_braketHelper(one: false)),
+  '\\bra@set': MacroDefinition(_braketHelper(one: true)),
+  '\\Braket': MacroDefinition.fromString('\\bra@ket{\\left\\langle}'
+      '{\\,\\middle\\vert\\,}{\\,\\middle\\vert\\,}{\\right\\rangle}'),
+  '\\Set': MacroDefinition.fromString('\\bra@set{\\left\\{\\:}'
+      '{\\;\\middle\\vert\\;}{\\;\\middle\\Vert\\;}{\\:\\right\\}}'),
+  // has no support for special || or \|
+  '\\set': MacroDefinition.fromString('\\bra@set{\\{\\,}{\\mid}{}{\\,\\}}'),
+
+  // KaTeX v0.19.1 macros.ts
+  '\\aa': MacroDefinition.fromString('\\r a'),
+  '\\AA': MacroDefinition.fromString('\\r A'),
+  '\\textcopyright':
+      MacroDefinition.fromString('\\html@mathml{\\textcircled{c}}{\\char`©}'),
+  '\\copyright': MacroDefinition.fromString(
+      '\\TextOrMath{\\textcopyright}{\\text{\\textcopyright}}'),
+  '\\textregistered': MacroDefinition.fromString(
+      '\\html@mathml{\\textcircled{\\scriptsize R}}{\\char`®}'),
+  // \mathstrut from the TeXbook, p 360
+  '\\mathstrut': MacroDefinition.fromString('\\vphantom{(}'),
+  // \underbar from TeXbook p 353
+  '\\underbar': MacroDefinition.fromString('\\underline{\\text{#1}}'),
+  '\u2258': MacroDefinition.fromString('\\html@mathml{\\mathrel{=\\kern{-1em}'
+      '\\raisebox{0.4em}{\$\\scriptsize\\frown\$}}}{\\mathrel{\\char`\u2258}}'),
+  '\\dddot': MacroDefinition.fromString(
+      '{\\overset{\\raisebox{-0.1ex}{\\normalsize ...}}{#1}}'),
+  '\\ddddot': MacroDefinition.fromString(
+      '{\\overset{\\raisebox{-0.1ex}{\\normalsize ....}}{#1}}'),
+  '\\@hspace': MacroDefinition.fromString('\\hskip #1\\relax'),
+  '\\@hspacer': MacroDefinition.fromString('\\rule{0pt}{0pt}\\hskip #1\\relax'),
+  '\\Coloneqq': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\dblcolon\\mathrel{\\mkern-1.2mu}=}}{\\mathop{\\char"2237\\char"3d}}'),
+  '\\coloneq': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\vcentcolon\\mathrel{\\mkern-1.2mu}\\mathrel{-}}}'
+      '{\\mathop{\\char"3a\\char"2212}}'),
+  '\\Coloneq': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\dblcolon\\mathrel{\\mkern-1.2mu}\\mathrel{-}}}'
+      '{\\mathop{\\char"2237\\char"2212}}'),
+  '\\Eqqcolon': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '=\\mathrel{\\mkern-1.2mu}\\dblcolon}}{\\mathop{\\char"3d\\char"2237}}'),
+  '\\Eqcolon': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\mathrel{-}\\mathrel{\\mkern-1.2mu}\\dblcolon}}'
+      '{\\mathop{\\char"2212\\char"2237}}'),
+  '\\colonapprox': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\vcentcolon\\mathrel{\\mkern-1.2mu}\\approx}}'
+      '{\\mathop{\\char"3a\\char"2248}}'),
+  '\\Colonapprox': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\dblcolon\\mathrel{\\mkern-1.2mu}\\approx}}'
+      '{\\mathop{\\char"2237\\char"2248}}'),
+  '\\colonsim': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\vcentcolon\\mathrel{\\mkern-1.2mu}\\sim}}'
+      '{\\mathop{\\char"3a\\char"223c}}'),
+  '\\Colonsim': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\dblcolon\\mathrel{\\mkern-1.2mu}\\sim}}'
+      '{\\mathop{\\char"2237\\char"223c}}'),
+  '\u2A74': MacroDefinition.fromString('\\Coloneqq'),
+  '\\coloncolonequals': MacroDefinition.fromString('\\Coloneqq'),
+  '\\equalscoloncolon': MacroDefinition.fromString('\\Eqqcolon'),
+  '\\colonminus': MacroDefinition.fromString('\\coloneq'),
+  '\\coloncolonminus': MacroDefinition.fromString('\\Coloneq'),
+  '\\minuscoloncolon': MacroDefinition.fromString('\\Eqcolon'),
+  '\\coloncolonapprox': MacroDefinition.fromString('\\Colonapprox'),
+  '\\coloncolonsim': MacroDefinition.fromString('\\Colonsim'),
+  '\\simcolon': MacroDefinition.fromString(
+      '\\mathrel{\\sim\\mathrel{\\mkern-1.2mu}\\vcentcolon}'),
+  '\\simcoloncolon': MacroDefinition.fromString(
+      '\\mathrel{\\sim\\mathrel{\\mkern-1.2mu}\\dblcolon}'),
+  '\\approxcolon': MacroDefinition.fromString(
+      '\\mathrel{\\approx\\mathrel{\\mkern-1.2mu}\\vcentcolon}'),
+  '\\approxcoloncolon': MacroDefinition.fromString(
+      '\\mathrel{\\approx\\mathrel{\\mkern-1.2mu}\\dblcolon}'),
+  '\\injlim': MacroDefinition.fromString('\\DOTSB\\operatorname*{inj\\,lim}'),
+  '\\projlim': MacroDefinition.fromString('\\DOTSB\\operatorname*{proj\\,lim}'),
+  '\\varlimsup':
+      MacroDefinition.fromString('\\DOTSB\\operatorname*{\\overline{lim}}'),
+  '\\varliminf':
+      MacroDefinition.fromString('\\DOTSB\\operatorname*{\\underline{lim}}'),
+  '\\varinjlim': MacroDefinition.fromString(
+      '\\DOTSB\\operatorname*{\\underrightarrow{lim}}'),
+  '\\varprojlim': MacroDefinition.fromString(
+      '\\DOTSB\\operatorname*{\\underleftarrow{lim}}'),
+  '\u27E6': MacroDefinition.fromString('\\llbracket'),
+  '\u27E7': MacroDefinition.fromString('\\rrbracket'),
+  '\u2983': MacroDefinition.fromString('\\lBrace'),
+  '\u2984': MacroDefinition.fromString('\\rBrace'),
+  '\u21A4': MacroDefinition.fromString('\\mapsfrom'),
+  '\\mapsfrom': MacroDefinition.fromString('\\html@mathml{\\mathrel{'
+      '\\mathreflectbox{\\mapsto}}}{\\mathrel{\\char`\u21A4}}'),
+  // The stmaryrd function `\minuso` provides a "Plimsoll" symbol that
+  // superimposes the characters \circ and \mathminus. Used in chemistry.
+  '\\minuso': MacroDefinition.fromString('\\mathbin{\\html@mathml{'
+      '{\\mathrlap{\\mathchoice{\\kern{0.145em}}{\\kern{0.145em}}'
+      '{\\kern{0.1015em}}{\\kern{0.0725em}}\\circ}{-}}}'
+      '{\\char`\u29B5}}'),
+  '\u29B5': MacroDefinition.fromString('\\minuso'),
 
 // Custom Khan Academy colors, should be moved to an optional package
   '\\blue': MacroDefinition.fromString("\\textcolor{##6495ed}{#1}"),
@@ -878,3 +972,52 @@ final Map<String, MacroDefinition> builtinMacros = {
   '\\kaBlue': MacroDefinition.fromString("\\textcolor{##314453}{#1}"),
   '\\kaGreen': MacroDefinition.fromString("\\textcolor{##71B307}{#1}"),
 };
+
+/// KaTeX macros.ts braketHelper (braket.sty). [one]: only the first | or
+/// \| is the middle.
+MacroExpansion Function(MacroContext) _braketHelper({required bool one}) =>
+    (context) {
+      final left = context.consumeArg().tokens;
+      final middle = context.consumeArg().tokens;
+      final middleDouble = context.consumeArg().tokens;
+      final right = context.consumeArg().tokens;
+      final oldMiddle = context.macros.get('|');
+      final oldMiddleDouble = context.macros.get('\\|');
+      context.macros.beginGroup();
+      MacroDefinition midMacro({required bool double}) =>
+          MacroDefinition((context) {
+            if (one) {
+              // Only modify the first instance of | or \|
+              context.macros.set('|', oldMiddle);
+              if (middleDouble.isNotEmpty) {
+                context.macros.set('\\|', oldMiddleDouble);
+              }
+            }
+            var doubled = double;
+            if (!double && middleDouble.isNotEmpty) {
+              // Mimic \@ifnextchar
+              final nextToken = context.future();
+              if (nextToken.text == '|') {
+                context.popToken();
+                doubled = true;
+              }
+            }
+            return MacroExpansion(
+              tokens: doubled ? middleDouble : middle,
+              numArgs: 0,
+            );
+          });
+      context.macros.set('|', midMacro(double: false));
+      if (middleDouble.isNotEmpty) {
+        context.macros.set('\\|', midMacro(double: true));
+      }
+      final arg = context.consumeArg().tokens;
+      final expanded = context.expandTokens([
+        ...right, ...arg, ...left, // reversed
+      ]);
+      context.macros.endGroup();
+      return MacroExpansion(
+        tokens: expanded.reversed.toList(),
+        numArgs: 0,
+      );
+    };

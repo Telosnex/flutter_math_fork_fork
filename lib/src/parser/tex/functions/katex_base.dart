@@ -7,11 +7,14 @@ import '../../../ast/nodes/frac.dart';
 import '../../../ast/nodes/function.dart';
 import '../../../ast/nodes/lap.dart';
 import '../../../ast/nodes/left_right.dart';
+import '../../../ast/nodes/math_choice.dart';
 import '../../../ast/nodes/multiscripts.dart';
 import '../../../ast/nodes/nary_op.dart';
 import '../../../ast/nodes/over.dart';
 import '../../../ast/nodes/phantom.dart';
+import '../../../ast/nodes/pmb.dart';
 import '../../../ast/nodes/raise_box.dart';
+import '../../../ast/nodes/reflect_box.dart';
 import '../../../ast/nodes/smash.dart';
 import '../../../ast/nodes/space.dart';
 import '../../../ast/nodes/sqrt.dart';
@@ -52,6 +55,7 @@ part 'katex_base/kern.dart';
 part 'katex_base/lap.dart';
 part 'katex_base/math.dart';
 part 'katex_base/mclass.dart';
+part 'katex_base/misc_v0191.dart';
 part 'katex_base/op.dart';
 part 'katex_base/operator_name.dart';
 part 'katex_base/phantom.dart';
@@ -85,6 +89,7 @@ const katexBaseFunctionEntries = {
   ..._lapEntries,
   ..._mathEntries,
   ..._mclassEntries,
+  ..._miscV0191Entries,
   ..._opEntries,
   ..._operatorNameEntries,
   ..._phantomEntries,

@@ -1038,6 +1038,7 @@ const symbolRenderConfigs = {
   ), // -
   '\u22C5': SymbolRenderConfig(
     math: RenderConfig(AtomType.bin, mainrm), // \u22C5 \cdotp \cdot
+    text: RenderConfig(AtomType.ord, mainrm), // \u00B7
     variantForm: SymbolRenderConfig(
       math: RenderConfig(AtomType.bin, amsrm), // \centerdot
     ),
@@ -3587,9 +3588,11 @@ const symbolRenderConfigs = {
     text: RenderConfig(AtomType.spacing, mainrm, '\u00A0'), //
   ), //
   '\u00A7': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mainrm), // \S
     text: RenderConfig(AtomType.ord, mainrm), // \u00A7 \S
   ), // §
   '\u00B6': SymbolRenderConfig(
+    math: RenderConfig(AtomType.ord, mainrm), // \P
     text: RenderConfig(AtomType.ord, mainrm), // \u00B6 \P
   ), // ¶
   '\u00DF': SymbolRenderConfig(
@@ -3897,7 +3900,24 @@ const symbolRenderConfigs = {
   ), // ⨆
   '\u22EE': SymbolRenderConfig(
     math: RenderConfig(AtomType.ord, mainrm), // \varvdots
+    text: RenderConfig(AtomType.ord, mainrm), // \varvdots
   ), // ⋮
+  // KaTeX v0.19.1: not in the KaTeX fonts.
+  '\u22B6': SymbolRenderConfig(
+    math: RenderConfig(AtomType.rel, mainrm), // \origof
+  ), // ⊶
+  '\u22B7': SymbolRenderConfig(
+    math: RenderConfig(AtomType.rel, mainrm), // \imageof
+  ), // ⊷
+  '\u2217': SymbolRenderConfig(
+    math: RenderConfig(AtomType.bin, mainrm),
+  ), // ∗
+  '\u2212': SymbolRenderConfig(
+    math: RenderConfig(AtomType.bin, mainrm),
+  ), // −
+  '\u00B8': SymbolRenderConfig(
+    text: RenderConfig(null, mainrm), // \c
+  ), // ¸
   '\u02CA': SymbolRenderConfig(
     math: RenderConfig(null, mainrm), // \acute
     text: RenderConfig(null, mainrm), // \\'

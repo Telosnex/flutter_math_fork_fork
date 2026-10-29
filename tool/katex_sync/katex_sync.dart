@@ -188,6 +188,7 @@ Future<void> writeFunctionFlags(Map<String, dynamic> table) async {
     ..writeln('const kfText = 4; // allowedInText')
     ..writeln('const kfMath = 8; // allowedInMath')
     ..writeln("const kfPrimitiveArg = 16; // argTypes: ['primitive']")
+    ..writeln('const kfTypedArgs = 32; // has argTypes')
     ..writeln()
     ..writeln(
         '/// The flags of each KaTeX function. For these names, the flags')
@@ -201,6 +202,7 @@ Future<void> writeFunctionFlags(Map<String, dynamic> table) async {
       if (f['allowedInText'] == true) 'kfText',
       if (f['allowedInMath'] == true) 'kfMath',
       if (jsonEncode(f['argTypes']) == '["primitive"]') 'kfPrimitiveArg',
+      if (f['argTypes'] != null) 'kfTypedArgs',
     ];
     final value = bits.isEmpty ? '0' : bits.join(' | ');
     buffer.writeln('  ${_dartString(name)}: $value,');

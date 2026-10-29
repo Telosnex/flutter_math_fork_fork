@@ -576,7 +576,10 @@ class TexParser {
   GreenNode? parseArgNode({required Mode? mode, required bool optional}) {
     currArgParsingContext.newArgument(optional: optional);
     final funcData = currArgParsingContext.funcData;
-    if (!optional && (funcData.primitive || funcData.primitiveArg)) {
+    // KaTeX: a primitive function's argument without an argType.
+    if (!optional &&
+        ((funcData.primitive && !funcData.typedArgs) ||
+            funcData.primitiveArg)) {
       return parseArgPrimitive();
     }
     _returnFetchedToken();

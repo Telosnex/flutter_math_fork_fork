@@ -31,7 +31,7 @@ const _textEntries = {
     // Font weights
     '\\textbf', '\\textmd',
     // Font Shapes
-    '\\textit', '\\textup',
+    '\\textit', '\\textup', '\\emph',
   ]: FunctionSpec(
     numArgs: 1,
     allowedInText: true,

@@ -135,6 +135,13 @@ const texMathFontOptions = {
     fontShape: FontStyle.italic,
   ),
 
+  // KaTeX "mathnormal": Math-Italic, else the default math font.
+  '\\mathnormal': FontOptions(
+    fontFamily: 'Math',
+    fontShape: FontStyle.italic,
+    fallback: [FontOptions(fontFamily: 'Main', fontShape: FontStyle.italic)],
+  ),
+
   '\\mathrm': FontOptions(
     fontFamily: 'Main',
     fontShape: FontStyle.normal,
@@ -179,4 +186,5 @@ const texTextFontOptions = {
   '\\textmd': PartialFontOptions(fontWeight: FontWeight.normal),
   '\\textit': PartialFontOptions(fontShape: FontStyle.italic),
   '\\textup': PartialFontOptions(fontShape: FontStyle.normal),
+  '\\emph': PartialFontOptions(toggleShape: true),
 };
