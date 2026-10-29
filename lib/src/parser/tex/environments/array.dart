@@ -22,6 +22,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import 'dart:math' as math;
+
 import 'package:collection/collection.dart';
 
 import '../../../ast/nodes/left_right.dart';
@@ -33,10 +35,10 @@ import '../../../ast/size.dart';
 import '../../../ast/style.dart';
 import '../../../ast/syntax_tree.dart';
 import '../define_environment.dart';
-import '../functions/katex_base.dart';
 import '../macros.dart';
 import '../parse_error.dart';
 import '../parser.dart';
+import '../token.dart';
 
 const arrayEntries = {
   [
@@ -53,6 +55,12 @@ const arrayEntries = {
     'Bmatrix',
     'vmatrix',
     'Vmatrix',
+    'matrix*',
+    'pmatrix*',
+    'bmatrix*',
+    'Bmatrix*',
+    'vmatrix*',
+    'Vmatrix*',
   ]: EnvSpec(
     numArgs: 0,
     handler: _matrixHandler,
@@ -73,6 +81,12 @@ List<MatrixSeparatorStyle> getHLines(TexParser parser) {
   final hlineInfo = <MatrixSeparatorStyle>[];
   parser.consumeSpaces();
   var next = parser.fetch().text;
+  if (next == '\\relax') {
+    // \relax is an artifact of the \cr macro
+    parser.consume();
+    parser.consumeSpaces();
+    next = parser.fetch().text;
+  }
   while (next == '\\hline' || next == '\\hdashline') {
     parser.consume();
     hlineInfo.add(next == '\\hdashline'
@@ -82,6 +96,188 @@ List<MatrixSeparatorStyle> getHLines(TexParser parser) {
     next = parser.fetch().text;
   }
   return hlineInfo;
+}
+
+/// The rows of an array, a matrix or an AMS environment. KaTeX: the body
+/// loop of parseArray (src/environments/array.ts).
+class ArrayBody {
+  ArrayBody({
+    required this.body,
+    required this.rowGaps,
+    required this.hLines,
+    required this.tags,
+    required this.arrayStretch,
+  });
+
+  final List<List<EquationRowNode>> body;
+  final List<Measurement> rowGaps;
+  final List<MatrixSeparatorStyle> hLines;
+
+  /// For each row, a manual tag (`\tag`), or null. Null if the
+  /// environment takes no tags. Dart has no automatic equation numbers.
+  final List<List<GreenNode>?>? tags;
+  final double arrayStretch;
+}
+
+/// Parses rows delimited by `\\` and columns delimited by `&`.
+///
+/// [autoTag]: null for no tags; false for manual tags only; true for
+/// automatic numbering (amsmath `align`, `gather`, `equation`). Dart keeps
+/// the `\@eqnsw` bookkeeping but shows only manual tags.
+ArrayBody parseArrayBody(
+  TexParser parser, {
+  double? arrayStretch,
+  MathStyle? style,
+  bool? autoTag,
+  bool singleRow = false,
+  bool emptySingleRow = false,
+  int? maxNumCols,
+  bool strictColumns = false,
+}) {
+  final gullet = parser.macroExpander;
+  gullet.beginGroup();
+  if (!singleRow) {
+    // \cr is equivalent to \\ without the optional size argument
+    gullet.macros.set('\\cr', MacroDefinition.fromString('\\\\\\relax'));
+  }
+
+  // Get current arraystretch if it's not set by the environment
+  if (arrayStretch == null) {
+    final stretch = gullet.expandMacroAsText('\\arraystretch');
+    if (stretch == null) {
+      // Default \arraystretch from lttab.dtx
+      arrayStretch = 1.0;
+    } else {
+      arrayStretch = double.tryParse(stretch);
+      if (arrayStretch == null || arrayStretch <= 0) {
+        throw ParseException('Invalid \\arraystretch: $stretch');
+      }
+    }
+  }
+
+  // Start group for first cell
+  gullet.beginGroup();
+
+  var row = <EquationRowNode>[];
+  final body = [row];
+  final rowGaps = <Measurement>[];
+  final hLinesBeforeRow = <MatrixSeparatorStyle>[];
+  final tags = autoTag != null ? <List<GreenNode>?>[] : null;
+  // Per row: an automatic number (true), not shown in Dart.
+  var autoNumbered = false;
+
+  // amsmath uses \global\@eqnswtrue and \global\@eqnswfalse to represent
+  // whether this row should have an equation number. Simulate this with
+  // a \@eqnsw macro set to 1 or 0.
+  void beginRow() {
+    if (autoTag == true) {
+      gullet.macros
+          .set('\\@eqnsw', MacroDefinition.fromString('1'), global: true);
+    }
+  }
+
+  void endRow() {
+    if (tags == null) return;
+    if (gullet.macros.get('\\df@tag') != null) {
+      tags.add(parser.subparse([Token('\\df@tag')]));
+      gullet.macros.set('\\df@tag', null, global: true);
+      autoNumbered = false;
+    } else {
+      tags.add(null);
+      autoNumbered =
+          autoTag == true && gullet.expandMacroAsText('\\@eqnsw') == '1';
+    }
+  }
+
+  beginRow();
+
+  // Test for \hline at the top of the array.
+  hLinesBeforeRow
+      .add(getHLines(parser).lastOrNull ?? MatrixSeparatorStyle.none);
+
+  while (true) {
+    // Parse each cell in its own group (namespace)
+    final cellBody = parser.parseExpression(
+      breakOnInfix: false,
+      breakOnTokenText: singleRow ? '\\end' : '\\\\',
+    );
+    gullet.endGroup();
+    gullet.beginGroup();
+
+    final cell = style == null
+        ? cellBody.wrapWithEquationRow()
+        : StyleNode(
+            children: cellBody,
+            optionsDiff: OptionsDiff(style: style),
+          ).wrapWithEquationRow();
+    row.add(cell);
+
+    final next = parser.fetch().text;
+    if (next == '&') {
+      if (maxNumCols != null && row.length == maxNumCols) {
+        if (singleRow || strictColumns) {
+          // {equation} or {split}
+          throw ParseException('Too many tab characters: &', parser.nextToken);
+        } else {
+          // {array} environment
+          parser.settings.reportNonstrict('textEnv',
+              'Too few columns specified in the {array} column argument.');
+        }
+      }
+      parser.consume();
+    } else if (next == '\\end') {
+      endRow();
+      // Arrays terminate newlines with `\crcr` which consumes a `\cr` if
+      // the last line is empty. However, AMS environments keep the empty
+      // row if it's the only one, has a manual tag, or is an automatically
+      // numbered row explicitly ended with `\\`.
+      if (row.length == 1 &&
+          cellBody.isEmpty &&
+          (body.length > 1 || !emptySingleRow) &&
+          tags?.lastOrNull == null &&
+          !autoNumbered) {
+        body.removeLast();
+        if (tags != null) tags.removeLast();
+      }
+      if (hLinesBeforeRow.length < body.length + 1) {
+        hLinesBeforeRow.add(MatrixSeparatorStyle.none);
+      }
+      break;
+    } else if (next == '\\\\') {
+      parser.consume();
+      // \def\math@cr@{\new@ifnextchar[\math@cr@@{\math@cr@@[\z@]}}
+      Measurement? size;
+      if (gullet.future().text != ' ') {
+        size = parser.parseSizeGroup(optional: true);
+      }
+      rowGaps.add(size ?? Measurement.zero);
+      endRow();
+
+      // check for \hline(s) following the row separator
+      hLinesBeforeRow
+          .add(getHLines(parser).lastOrNull ?? MatrixSeparatorStyle.none);
+
+      row = [];
+      body.add(row);
+      beginRow();
+    } else {
+      throw ParseException(
+          'Expected & or \\\\ or \\cr or \\end', parser.nextToken);
+    }
+  }
+
+  // End cell group
+  gullet.endGroup();
+  // End array group defining \cr
+  gullet.endGroup();
+
+  return ArrayBody(
+    body: body,
+    rowGaps: rowGaps,
+    hLines: hLinesBeforeRow,
+    tags: tags,
+    arrayStretch: arrayStretch,
+  );
 }
 
 /// Parse the body of the environment, with rows delimited by \\ and
@@ -96,94 +292,21 @@ MatrixNode parseArray(
   List<MatrixColumnAlign> colAligns = const [],
   MathStyle? style,
   bool isSmall = false,
+  int? maxNumCols,
 }) {
-  // Parse body of array with \\ temporarily mapped to \cr
-  parser.macroExpander.beginGroup();
-  parser.macroExpander.macros.set('\\\\', MacroDefinition.fromString('\\cr'));
-
-  // Get current arraystretch if it's not set by the environment
-  if (arrayStretch == null) {
-    final stretch = parser.macroExpander.expandMacroAsText('\\arraystretch');
-    if (stretch == null) {
-      // Default \arraystretch from lttab.dtx
-      arrayStretch = 1.0;
-    } else {
-      arrayStretch = double.tryParse(stretch);
-      if (arrayStretch == null || arrayStretch < 0) {
-        throw ParseException('Invalid \\arraystretch: $stretch');
-      }
-    }
-  }
-
-  // Start group for first cell
-  parser.macroExpander.beginGroup();
-
-  var row = <EquationRowNode>[];
-  final body = [row];
-  final rowGaps = <Measurement>[];
-  final hLinesBeforeRow = <MatrixSeparatorStyle>[];
-
-  // Test for \hline at the top of the array.
-  hLinesBeforeRow
-      .add(getHLines(parser).lastOrNull ?? MatrixSeparatorStyle.none);
-
-  while (true) {
-    // Parse each cell in its own group (namespace)
-    final cellBody =
-        parser.parseExpression(breakOnInfix: false, breakOnTokenText: '\\cr');
-    parser.macroExpander.endGroup();
-    parser.macroExpander.beginGroup();
-
-    final cell = style == null
-        ? cellBody.wrapWithEquationRow()
-        : StyleNode(
-            children: cellBody,
-            optionsDiff: OptionsDiff(style: style),
-          ).wrapWithEquationRow();
-    row.add(cell);
-
-    final next = parser.fetch().text;
-    if (next == '&') {
-      parser.consume();
-    } else if (next == '\\end') {
-      // Arrays terminate newlines with `\crcr` which consumes a `\cr` if
-      // the last line is empty.
-      // NOTE: Currently, `cell` is the last item added into `row`.
-      if (row.length == 1 && cellBody.isEmpty) {
-        body.removeLast();
-      }
-      if (hLinesBeforeRow.length < body.length + 1) {
-        hLinesBeforeRow.add(MatrixSeparatorStyle.none);
-      }
-      break;
-    } else if (next == '\\cr') {
-      final cr = assertNodeType<CrNode>(parser.parseFunction(null, null));
-      rowGaps.add(cr.size ?? Measurement.zero);
-
-      // check for \hline(s) following the row separator
-      hLinesBeforeRow
-          .add(getHLines(parser).lastOrNull ?? MatrixSeparatorStyle.none);
-
-      row = [];
-      body.add(row);
-    } else {
-      throw ParseException(
-          'Expected & or \\\\ or \\cr or \\end', parser.nextToken);
-    }
-  }
-
-  // End cell group
-  parser.macroExpander.endGroup();
-  // End array group defining \\
-  parser.macroExpander.endGroup();
-
+  final res = parseArrayBody(
+    parser,
+    arrayStretch: arrayStretch,
+    style: style,
+    maxNumCols: maxNumCols,
+  );
   return MatrixNode(
-    body: body,
+    body: res.body,
     vLines: separators,
     columnAligns: colAligns,
-    rowSpacings: rowGaps,
-    arrayStretch: arrayStretch,
-    hLines: hLinesBeforeRow,
+    rowSpacings: res.rowGaps,
+    arrayStretch: res.arrayStretch,
+    hLines: res.hLines,
     hskipBeforeAndAfter: hskipBeforeAndAfter,
     isSmall: isSmall,
   );
@@ -267,10 +390,12 @@ GreenNode _arrayHandler(TexParser parser, EnvContext context) {
     colAligns: aligns,
     hskipBeforeAndAfter: true,
     style: _dCellStyle(context.envName),
+    maxNumCols: aligns.length,
   );
 }
 
 GreenNode _matrixHandler(TexParser parser, EnvContext context) {
+  final baseName = context.envName.replaceAll('*', '');
   final delimiters = const {
     'matrix': null,
     'pmatrix': ['(', ')'],
@@ -278,11 +403,36 @@ GreenNode _matrixHandler(TexParser parser, EnvContext context) {
     'Bmatrix': ['{', '}'],
     'vmatrix': ['|', '|'],
     'Vmatrix': ['\u2223', '\u2223'],
-  }[context.envName];
-  final res = parseArray(
-    parser,
+  }[baseName];
+  var colAlign = MatrixColumnAlign.center;
+  if (context.envName.endsWith('*')) {
+    // It's one of the mathtools starred functions.
+    // Parse the optional alignment argument.
+    parser.consumeSpaces();
+    if (parser.fetch().text == '[') {
+      parser.consume();
+      parser.consumeSpaces();
+      final align = parser.fetch().text;
+      colAlign = switch (align) {
+        'l' => MatrixColumnAlign.left,
+        'c' => MatrixColumnAlign.center,
+        'r' => MatrixColumnAlign.right,
+        _ => throw ParseException('Expected l or c or r', parser.nextToken),
+      };
+      parser.consume();
+      parser.consumeSpaces();
+      parser.expect(']');
+    }
+  }
+  final body = parseArrayBody(parser, style: _dCellStyle(context.envName));
+  final numCols = body.body.fold(0, (n, row) => math.max(n, row.length));
+  final res = MatrixNode(
+    body: body.body,
+    columnAligns: List.filled(numCols, colAlign),
+    rowSpacings: body.rowGaps,
+    arrayStretch: body.arrayStretch,
+    hLines: body.hLines,
     hskipBeforeAndAfter: false,
-    style: _dCellStyle(context.envName),
   );
   return delimiters == null
       ? res

@@ -22,11 +22,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import 'package:collection/collection.dart';
-
 import '../../../ast/nodes/equation_array.dart';
 import '../../../ast/nodes/left_right.dart';
-import '../../../ast/nodes/matrix.dart';
 import '../../../ast/nodes/space.dart';
 import '../../../ast/nodes/style.dart';
 import '../../../ast/nodes/symbol.dart';
@@ -36,8 +33,6 @@ import '../../../ast/style.dart';
 import '../../../ast/syntax_tree.dart';
 import '../../../ast/types.dart';
 import '../define_environment.dart';
-import '../functions/katex_base.dart';
-import '../macros.dart';
 import '../parse_error.dart';
 import '../parser.dart';
 import 'array.dart';
@@ -52,13 +47,28 @@ const eqnArrayEntries = {
     numArgs: 0,
     handler: _casesHandler,
   ),
-  ['aligned']: EnvSpec(
+  ['align', 'align*', 'aligned', 'split']: EnvSpec(
     numArgs: 0,
     handler: _alignedHandler,
   ),
-  // ['gathered']: EnvSpec(numArgs: 0, handler: _gatheredHandler),
-  ['alignedat']: EnvSpec(numArgs: 1, handler: _alignedAtHandler),
+  ['gathered', 'gather', 'gather*']:
+      EnvSpec(numArgs: 0, handler: _gatheredHandler),
+  ['alignat', 'alignat*', 'alignedat']:
+      EnvSpec(numArgs: 1, handler: _alignedHandler),
+  ['equation', 'equation*']: EnvSpec(numArgs: 0, handler: _equationHandler),
 };
+
+void _validateAmsEnvironmentContext(TexParser parser, EnvContext context) {
+  if (!parser.settings.displayMode) {
+    throw ParseException(
+        '{${context.envName}} can be used only in display mode.');
+  }
+}
+
+/// KaTeX getAutoTag: null for the -ed environments, else numbered unless
+/// starred. Not for "split".
+bool? _getAutoTag(String name) =>
+    name.contains('ed') ? null : !name.contains('*');
 
 GreenNode _casesHandler(TexParser parser, EnvContext context) {
   final body = parseEqnArray(
@@ -103,37 +113,35 @@ GreenNode _casesHandler(TexParser parser, EnvContext context) {
   }
 }
 
-GreenNode _alignedHandler(TexParser parser, EnvContext context) =>
-    parseEqnArray(
-      parser,
-      addJot: true,
-      concatRow: (cells) {
-        final expanded = cells
-            .expand((cell) => [...cell.children, SpaceNode.alignerOrSpacer()])
-            .toList(growable: true);
-        return EquationRowNode(children: expanded);
-      },
-    );
-
-// GreenNode _gatheredHandler(TexParser parser, EnvContext context) {}
-
-GreenNode _alignedAtHandler(TexParser parser, EnvContext context) {
-  final arg = parser.parseArgNode(mode: null, optional: false);
-  final numNode = assertNodeType<EquationRowNode>(arg);
-  final string = numNode.children
-      .map((e) => assertNodeType<SymbolNode>(e).symbol)
-      .join('');
-  final cols = int.tryParse(string);
-  if (cols == null) {
-    throw ParseException('Invalid argument for environment: alignedat');
+/// align, align*, aligned, split, alignat, alignat*, alignedat.
+GreenNode _alignedHandler(TexParser parser, EnvContext context) {
+  if (!context.envName.contains('ed')) {
+    _validateAmsEnvironmentContext(parser, context);
   }
+  final isAlignAt = context.envName.contains('at');
+  int? numMaths;
+  if (isAlignAt) {
+    const message = 'Number of columns should be a positive integer';
+    final arg = parser.parseArgNode(mode: null, optional: false);
+    final children = arg is EquationRowNode ? arg.children : [arg];
+    final string = children
+        .map((e) => e is SymbolNode ? e.symbol : throw ParseException(message))
+        .join();
+    numMaths = RegExp(r'^[0-9]+$').hasMatch(string) ? int.parse(string) : 0;
+    if (numMaths < 1) throw ParseException(message);
+  }
+  final isSplit = context.envName == 'split';
   return parseEqnArray(
     parser,
     addJot: true,
+    autoTag: isSplit ? null : _getAutoTag(context.envName),
+    emptySingleRow: true,
+    strictColumns: true,
+    maxNumCols: isSplit ? 2 : null,
     concatRow: (cells) {
-      if (cells.length > 2 * cols) {
+      if (numMaths != null && cells.length / 2 > numMaths) {
         throw ParseException('Too many math in a row: '
-            'expected ${2 * cols}, but got ${cells.length}');
+            'expected $numMaths, but got ${cells.length / 2}');
       }
       final expanded = cells
           .expand((cell) => [...cell.children, SpaceNode.alignerOrSpacer()])
@@ -143,93 +151,73 @@ GreenNode _alignedAtHandler(TexParser parser, EnvContext context) {
   );
 }
 
+// A gathered environment is like an array environment with one centered
+// column, but where rows are considered lines so get \jot line spacing
+// and contents are set in \displaystyle.
+GreenNode _gatheredHandler(TexParser parser, EnvContext context) {
+  if (context.envName != 'gathered') {
+    _validateAmsEnvironmentContext(parser, context);
+  }
+  return parseEqnArray(
+    parser,
+    addJot: true,
+    autoTag: _getAutoTag(context.envName),
+    emptySingleRow: true,
+    concatRow: (cells) => EquationRowNode(
+      children: [for (final cell in cells) ...cell.children],
+    ),
+  );
+}
+
+GreenNode _equationHandler(TexParser parser, EnvContext context) {
+  _validateAmsEnvironmentContext(parser, context);
+  return parseEqnArray(
+    parser,
+    autoTag: _getAutoTag(context.envName),
+    emptySingleRow: true,
+    singleRow: true,
+    maxNumCols: 1,
+    concatRow: (cells) => cells.single,
+  );
+}
+
 EquationArrayNode parseEqnArray(
   TexParser parser, {
   bool addJot = false,
+  bool? autoTag,
+  bool singleRow = false,
+  bool emptySingleRow = false,
+  bool strictColumns = false,
+  int? maxNumCols,
   required EquationRowNode Function(List<EquationRowNode> cells) concatRow,
 }) {
-  // Parse body of array with \\ temporarily mapped to \cr
-  parser.macroExpander.beginGroup();
-  parser.macroExpander.macros.set('\\\\', MacroDefinition.fromString('\\cr'));
-
-  // Get current arraystretch if it's not set by the environment
-  double? arrayStretch = 1.0;
-  // if (arrayStretch == null) {
-  final stretch = parser.macroExpander.expandMacroAsText('\\arraystretch');
-  if (stretch == null) {
-    // Default \arraystretch from lttab.dtx
-    arrayStretch = 1.0;
-  } else {
-    arrayStretch = double.tryParse(stretch);
-    if (arrayStretch == null || arrayStretch < 0) {
-      throw ParseException('Invalid \\arraystretch: $stretch');
+  final res = parseArrayBody(
+    parser,
+    autoTag: autoTag,
+    singleRow: singleRow,
+    emptySingleRow: emptySingleRow,
+    strictColumns: strictColumns,
+    maxNumCols: maxNumCols,
+  );
+  final rows = <EquationRowNode>[];
+  for (var i = 0; i < res.body.length; i++) {
+    final cells = res.body[i];
+    final tag = res.tags?[i];
+    // Dart divergence: the tag follows the last cell of its row after a
+    // \qquad. KaTeX puts it at the right edge of the display.
+    if (tag != null && cells.isNotEmpty) {
+      cells.last = EquationRowNode(children: [
+        ...cells.last.children,
+        SpaceNode(height: Measurement.zero, width: 2.0.em, mode: Mode.math),
+        ...tag,
+      ]);
     }
+    rows.add(concatRow(cells));
   }
-  // }
-
-  // Start group for first cell
-  parser.macroExpander.beginGroup();
-
-  var row = <EquationRowNode>[];
-  final body = [row];
-  final rowGaps = <Measurement>[];
-  final hLinesBeforeRow = <MatrixSeparatorStyle>[];
-
-  // Test for \hline at the top of the array.
-  hLinesBeforeRow
-      .add(getHLines(parser).lastOrNull ?? MatrixSeparatorStyle.none);
-
-  while (true) {
-    // Parse each cell in its own group (namespace)
-    final cellBody =
-        parser.parseExpression(breakOnInfix: false, breakOnTokenText: '\\cr');
-    parser.macroExpander.endGroup();
-    parser.macroExpander.beginGroup();
-
-    final cell = cellBody.wrapWithEquationRow();
-    row.add(cell);
-
-    final next = parser.fetch().text;
-    if (next == '&') {
-      parser.consume();
-    } else if (next == '\\end') {
-      // Arrays terminate newlines with `\crcr` which consumes a `\cr` if
-      // the last line is empty.
-      // NOTE: Currently, `cell` is the last item added into `row`.
-      if (row.length == 1 && cell is StyleNode && cell.children.isEmpty) {
-        body.removeLast();
-      }
-      if (hLinesBeforeRow.length < body.length + 1) {
-        hLinesBeforeRow.add(MatrixSeparatorStyle.none);
-      }
-      break;
-    } else if (next == '\\cr') {
-      final cr = assertNodeType<CrNode>(parser.parseFunction(null, null));
-      rowGaps.add(cr.size ?? Measurement.zero);
-
-      // check for \hline(s) following the row separator
-      hLinesBeforeRow
-          .add(getHLines(parser).lastOrNull ?? MatrixSeparatorStyle.none);
-
-      row = [];
-      body.add(row);
-    } else {
-      throw ParseException(
-          'Expected & or \\\\ or \\cr or \\end', parser.nextToken);
-    }
-  }
-
-  // End cell group
-  parser.macroExpander.endGroup();
-  // End array group defining \\
-  parser.macroExpander.endGroup();
-
-  final rows = body.map<EquationRowNode>(concatRow).toList();
-
   return EquationArrayNode(
-    arrayStretch: arrayStretch,
-    hlines: hLinesBeforeRow,
-    rowSpacings: rowGaps,
+    arrayStretch: res.arrayStretch,
+    hlines: res.hLines,
+    rowSpacings: res.rowGaps,
     addJot: addJot,
     body: rows,
   );

@@ -641,7 +641,11 @@ final Map<String, MacroDefinition> builtinMacros = {
 // LaTeX source2e
 
 // \\ defaults to \newline, but changes to \cr within array environment
-  '\\\\': MacroDefinition.fromString("\\newline"),
+  '\\newline': MacroDefinition.fromString('\\\\\\relax'),
+  // amsmath: no equation number for this row. Dart has no automatic
+  // equation numbers; the macros keep KaTeX's bookkeeping.
+  '\\nonumber': MacroDefinition.fromString('\\gdef\\@eqnsw{0}'),
+  '\\notag': MacroDefinition.fromString('\\nonumber'),
 
 // \def\TeX{T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\@}
 // TODO: Doesn't normally work in math mode because \@ fails.  KaTeX doesn't

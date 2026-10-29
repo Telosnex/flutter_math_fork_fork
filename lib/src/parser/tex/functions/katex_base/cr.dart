@@ -1,4 +1,4 @@
-// katex-sync: src/functions/cr.ts @ c2e5a289
+// katex-sync: src/functions/cr.ts @ v0.19.1
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
@@ -24,43 +24,28 @@
 
 part of '../katex_base.dart';
 
+// Row breaks within tabular environments, and line breaks at top level
+
+// \\ is a TeX primitive; \newline (macros.dart) is \\\relax. \cr is
+// defined only inside arrays.
 const _crEntries = {
-  ['\\cr', '\\newline']: FunctionSpec(
-    numArgs: 0,
-    numOptionalArgs: 1,
-    allowedInText: true,
-    handler: _crHandler,
-  ),
+  ['\\\\']: FunctionSpec(numArgs: 0, handler: _crHandler),
 };
 
 class CrNode extends TemporaryNode {
   final bool newLine;
-  final bool newRow;
   final Measurement? size;
-  CrNode({
-    required this.newLine,
-    required this.newRow,
-    this.size,
-  });
+  CrNode({required this.newLine, this.size});
 }
 
 GreenNode _crHandler(TexParser parser, FunctionContext context) {
-  // KaTeX: a size only if `[` follows at once. `\\ [x]` is a line
-  // break before "[x]".
   final next = parser.nextToken ?? parser.macroExpander.future();
   final size = next.text == '[' ? parser.parseArgSize(optional: true) : null;
-  final newRow = context.funcName == '\\cr';
-  var newLine = false;
-  if (!newRow) {
-    if (parser.settings.displayMode &&
-        parser.settings.useStrictBehavior(
-            'newLineInDisplayMode',
-            'In LaTeX, \\\\ or \\newline '
-                'does nothing in display mode')) {
-      newLine = false;
-    } else {
-      newLine = true;
-    }
-  }
-  return CrNode(newLine: newLine, newRow: newRow, size: size);
+  // In LaTeX, \\ does nothing in display mode.
+  final newLine = !parser.settings.displayMode ||
+      !parser.settings.useStrictBehavior(
+          'newLineInDisplayMode',
+          'In LaTeX, \\\\ or \\newline '
+              'does nothing in display mode');
+  return CrNode(newLine: newLine, size: size);
 }

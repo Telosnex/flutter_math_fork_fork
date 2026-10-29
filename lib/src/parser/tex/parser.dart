@@ -186,7 +186,6 @@ class TexParser {
     '\\endgroup',
     '\$',
     '\\)',
-    '\\cr',
   };
 
   /// Line breaks outside arrays. KaTeX (src/functions/cr.ts) renders a
@@ -202,7 +201,7 @@ class TexParser {
     for (final node in body) {
       if (node is! CrNode) {
         line.add(node);
-      } else if (node.newLine || node.newRow) {
+      } else if (node.newLine) {
         rows.add(line.wrapWithEquationRow());
         spacings.add(node.size ?? Measurement.zero);
         line = [];
@@ -539,6 +538,11 @@ class TexParser {
   Measurement? parseArgSize({required bool optional}) {
     currArgParsingContext.newArgument(optional: optional);
     _returnFetchedToken();
+    return parseSizeGroup(optional: optional);
+  }
+
+  /// KaTeX: parseSizeGroup, outside an argument list.
+  Measurement? parseSizeGroup({required bool optional}) {
     macroExpander.consumeSpaces();
     Token? res;
     if (!optional && macroExpander.future().text != '{') {
@@ -702,8 +706,7 @@ class TexParser {
     if (endOfExpression.contains(text) ||
         text == breakOnTokenText ||
         text == 'EOF' ||
-        text == '\\cr' ||
-        text == '\\newline' ||
+        text == '\\\\' ||
         functions[text]?.infix == true) {
       return null;
     }
