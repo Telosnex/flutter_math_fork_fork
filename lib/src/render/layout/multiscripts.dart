@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:tuple/tuple.dart';
 
 import '../../ast/options.dart';
 import '../../ast/size.dart';
@@ -209,10 +208,10 @@ class MultiscriptsLayoutDelegate extends IntrinsicLayoutDelegate<_ScriptPos> {
       isBaseCharacterBox: isBaseCharacterBox,
     );
 
-    final subShift = postscriptRes.item2;
-    final supShift = postscriptRes.item1;
-    final presubShift = prescriptRes.item2;
-    final presupShift = prescriptRes.item1;
+    final subShift = postscriptRes.v;
+    final supShift = postscriptRes.u;
+    final presubShift = prescriptRes.v;
+    final presupShift = prescriptRes.u;
 
     // Rule 18f
     final height = [
@@ -258,7 +257,7 @@ class _ScriptUvConf {
   const _ScriptUvConf(this.fullHeight, this.baseline, this.options);
 }
 
-Tuple2<double, double> calculateUV({
+({double u, double v}) calculateUV({
   required _ScriptUvConf base,
   _ScriptUvConf? sub,
   _ScriptUvConf? sup,
@@ -324,5 +323,5 @@ Tuple2<double, double> calculateUV({
       }
     }
   }
-  return Tuple2(u, v);
+  return (u: u, v: v);
 }

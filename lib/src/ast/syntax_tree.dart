@@ -4,17 +4,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 import '../render/layout/line.dart';
-import '../render/layout/line_editable.dart';
 import '../utils/iterable_extensions.dart';
-import '../utils/num_extension.dart';
-import '../utils/wrapper.dart';
-import '../widgets/controller.dart';
-import '../widgets/mode.dart';
-import '../widgets/selectable.dart';
 import 'nodes/space.dart';
 import 'nodes/sqrt.dart';
 import 'options.dart';
@@ -558,82 +550,10 @@ class EquationRowNode extends ParentableNode<GreenNode>
       growable: false,
     );
 
-    final widget = Consumer<FlutterMathMode>(builder: (context, mode, child) {
-      if (mode == FlutterMathMode.view) {
-        return Line(
-          key: _key!,
-          children: lineChildren,
-        );
-      }
-      // Each EquationRow will filter out unrelated selection changes (changes
-      // happen entirely outside the range of this EquationRow)
-      return ProxyProvider<MathController, TextSelection>(
-        create: (_) => const TextSelection.collapsed(offset: -1),
-        update: (context, controller, _) {
-          final selection = controller.selection;
-          return selection.copyWith(
-            baseOffset:
-                selection.baseOffset.clampInt(range.start - 1, range.end + 1),
-            extentOffset:
-                selection.extentOffset.clampInt(range.start - 1, range.end + 1),
-          );
-        },
-        // Selector translates global cursor position to local caret index
-        // Will only update Line when selection range actually changes
-        child: Selector2<TextSelection, Tuple2<LayerLink, LayerLink>,
-            Tuple3<TextSelection, LayerLink?, LayerLink?>>(
-          selector: (context, selection, handleLayerLinks) {
-            final start = selection.start - this.pos;
-            final end = selection.end - this.pos;
-
-            final caretStart = caretPositions.slotFor(start).ceil();
-            final caretEnd = caretPositions.slotFor(end).floor();
-
-            final caretSelection = caretStart <= caretEnd
-                ? selection.baseOffset <= selection.extentOffset
-                    ? TextSelection(
-                        baseOffset: caretStart, extentOffset: caretEnd)
-                    : TextSelection(
-                        baseOffset: caretEnd, extentOffset: caretStart)
-                : const TextSelection.collapsed(offset: -1);
-
-            final startHandleLayerLink =
-                caretPositions.contains(start) ? handleLayerLinks.item1 : null;
-            final endHandleLayerLink =
-                caretPositions.contains(end) ? handleLayerLinks.item2 : null;
-            return Tuple3(
-              caretSelection,
-              startHandleLayerLink,
-              endHandleLayerLink,
-            );
-          },
-          builder: (context, conf, _) {
-            final value = Provider.of<SelectionStyle>(context);
-            return EditableLine(
-              key: _key,
-              children: lineChildren,
-              devicePixelRatio: MediaQuery.of(context).devicePixelRatio,
-              node: this,
-              preferredLineHeight: options.fontSize,
-              cursorBlinkOpacityController:
-                  Provider.of<Wrapper<AnimationController>>(context).value,
-              selection: conf.item1,
-              startHandleLayerLink: conf.item2,
-              endHandleLayerLink: conf.item3,
-              cursorColor: value.cursorColor,
-              cursorOffset: value.cursorOffset,
-              cursorRadius: value.cursorRadius,
-              cursorWidth: value.cursorWidth,
-              cursorHeight: value.cursorHeight,
-              hintingColor: value.hintingColor,
-              paintCursorAboveText: value.paintCursorAboveText,
-              selectionColor: value.selectionColor,
-              showCursor: value.showCursor,
-            );
-          },
-        ),
-      );
-    });
+    final widget = Line(
+      key: _key!,
+      children: lineChildren,
+    );
 
     return BuildResult(
       options: options,

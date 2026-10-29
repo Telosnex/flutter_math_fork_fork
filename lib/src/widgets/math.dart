@@ -1,5 +1,4 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:provider/provider.dart';
 
 import '../ast/options.dart';
 import '../ast/style.dart';
@@ -9,8 +8,6 @@ import '../parser/tex/parse_error.dart';
 import '../parser/tex/parser.dart';
 import '../parser/tex/settings.dart';
 import 'exception.dart';
-import 'mode.dart';
-import 'selectable.dart';
 
 typedef OnErrorFallback = Widget Function(FlutterMathException errmsg);
 
@@ -25,10 +22,6 @@ typedef OnErrorFallback = Widget Function(FlutterMathException errmsg);
 ///   textStyle: TextStyle(fontSize: 42),
 /// )
 /// ```
-///
-/// Compared to [SelectableMath], [Math] will offer a significant performance
-/// advantage. So if no selection capability is needed or the equation counts
-/// on the same screen is huge, it's preferable to use [Math].
 class Math extends StatelessWidget {
   /// Math widget default constructor
   ///
@@ -207,13 +200,10 @@ class Math extends StatelessWidget {
               'Please report this error with correponding input.'));
     }
 
-    return Provider.value(
-      value: FlutterMathMode.view,
-      child: child,
-    );
+    return child;
   }
 
-  /// Default fallback function for [Math], [SelectableMath]
+  /// Default fallback function for [Math]
   static Widget defaultOnErrorFallback(FlutterMathException error) =>
       SelectableText(error.messageWithType);
 

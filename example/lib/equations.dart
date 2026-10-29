@@ -44,7 +44,7 @@ class EquationsPage extends StatelessWidget {
                             ),
                             Container(
                               padding: const EdgeInsets.fromLTRB(1, 5, 1, 5),
-                              child: SelectableMath.tex(
+                              child: Math.tex(
                                 entry[1],
                                 textStyle: TextStyle(fontSize: 22),
                               ),
