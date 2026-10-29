@@ -36,9 +36,9 @@ Entry format:
 |--------|-------|------|
 | Workplan step | 16: Groups 1 and 2 done; Group 3 left (listed in divergences.json) | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | VM 551 pass / 1 skip; Chrome 323 pass / 62 skip | 2026-10-29 |
+| `flutter test` | VM 568 pass / 1 skip | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
-| Parse divergences | 92 (34 `not-ported`, 57 `trust`, 1 `setting`) | 2026-10-29 |
+| Parse divergences | 91 (33 `not-ported`, 57 `trust`, 1 `setting`) | 2026-10-29 |
 | Render failures | 2 of 1252 accepted cases (both test-view size) | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
@@ -285,3 +285,14 @@ Entry format:
 - Left (Group 3, 34 cases): `CD`, `\vcenter`, `\phase`, `\angl`,
   `\overbracket`/`\underbracket`, `\overgroup`, `\underlinesegment`,
   `\mathsfit`; one `unicodeSupOrSub.ts` case.
+
+## 2026-10-29 — step 16 — unicodeSupOrSub, equation numbers
+- unicodeSupOrSub.ts: x², x₁₀ are scripts. The Dart table is generated
+  from the KaTeX source. Divergences 92 -> 91.
+- Equation numbers: counts checked against KaTeX renderToString for 6
+  inputs (KaTeX numbers an empty last row after `\\`). Tags are a
+  right-aligned column on the row baselines; golden measured.
+- Dart divergences: numbers restart at 1 in each formula; the tag
+  column follows the rows, not the display's right edge.
+- Found: the image viewer showed the same picture for two different
+  files (md5 differs). Measure pixels; do not trust the viewer alone.
