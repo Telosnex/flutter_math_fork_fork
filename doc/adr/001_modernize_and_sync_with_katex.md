@@ -115,6 +115,10 @@ D10: Golden images are made on macOS and compared on macOS only. Other
      Because: R5
      Instead of: Windows goldens. Golden images differ between platforms,
      and development occurs on macOS.
+     Comparison ignores a difference of at most 32 per color channel
+     (test/flutter_test_config.dart). macOS 15 and the macOS 26 CI runner
+     antialias glyph edges differently: at most 13 per channel, on at most
+     61 pixels of an image. A moved glyph differs by up to 255.
 
 D11: CI is the telosnex_ci_tools workflows. unit.yml (Ubuntu, each push
      and pull request): lint, dart format check, flutter analyze
@@ -386,6 +390,7 @@ Phase 3: later syncs. Do these steps for each new KaTeX release.
 
 - 2026-10-29: First draft.
 - 2026-10-29: D12 cites the selection code in cmark-gfm-widget.
+- 2026-10-29: D10: golden channel tolerance.
 - 2026-10-29: NG6 (CD environment).
 - 2026-10-29: Section 5: throwOnError in settings; warning results are
   re-parsed; functions.json and katex_function_flags.dart.

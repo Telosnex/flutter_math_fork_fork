@@ -307,3 +307,11 @@ Entry format:
   `\underbracket`, `\overgroup`, `\overlinesegment`,
   `\underlinesegment`, `\mathsfit`. Divergences 91 -> 64; none
   `not-ported`.
+
+## 2026-10-29 — push; macOS golden tolerance
+- First CI run with macOS-compared goldens: 45 goldens failed on
+  macos-26 (made on macOS 15). Artifact diff: at most 13 per channel,
+  at most 61 pixels, all on glyph edges; no size changes.
+- Fix: test/flutter_test_config.dart ignores at most 32 per channel.
+  Checked: the CI images pass locally; a swapped golden still fails
+  (170 px). ADR D10 updated.
