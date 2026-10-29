@@ -38,7 +38,7 @@ Entry format:
 | `flutter analyze` issues | 0 | 2026-10-29 |
 | `flutter test` | VM 568 pass / 1 skip | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
-| Parse divergences | 91 (33 `not-ported`, 57 `trust`, 1 `setting`) | 2026-10-29 |
+| Parse divergences | 91 (27 `not-ported`, 57 `trust`, 6 `intentional` (CD, NG6), 1 `setting`) | 2026-10-29 |
 | Render failures | 2 of 1252 accepted cases (both test-view size) | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
@@ -296,3 +296,8 @@ Entry format:
   column follows the rows, not the display's right edge.
 - Found: the image viewer showed the same picture for two different
   files (md5 differs). Measure pixels; do not trust the viewer alone.
+
+## 2026-10-29 — decision: no CD
+- Decision (user): do not port `CD`. ADR NG6. The 6 corpus cases are
+  `intentional`. KaTeX issue #219 (still open) asks for TikZ/tikz-cd,
+  which `CD` does not replace.

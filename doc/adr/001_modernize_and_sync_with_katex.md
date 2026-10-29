@@ -271,6 +271,13 @@ NG4: Same error message text as KaTeX.
 NG5: Publication on pub.dev.
      Reopens when: a consumer outside Telosnex needs the package.
 
+NG6: The amscd CD environment (KaTeX src/environments/cd.ts). It needs its
+     own layout (stretched arrows, side labels) and covers only rectangular
+     diagrams. Most real diagrams need tikz-cd (diagonal and curved arrows,
+     arrow styles), which KaTeX does not support either. Corpus cases are
+     `intentional`.
+     Reopens when: models in Telosnex output \begin{CD} in practice.
+
 NG6: Math editing and UnicodeMath input.
      Reopens when: a consumer needs them.
 ```
@@ -379,6 +386,7 @@ Phase 3: later syncs. Do these steps for each new KaTeX release.
 
 - 2026-10-29: First draft.
 - 2026-10-29: D12 cites the selection code in cmark-gfm-widget.
+- 2026-10-29: NG6 (CD environment).
 - 2026-10-29: Section 5: throwOnError in settings; warning results are
   re-parsed; functions.json and katex_function_flags.dart.
 - 2026-10-29: D10 and D11 match the CI merged from origin/master
