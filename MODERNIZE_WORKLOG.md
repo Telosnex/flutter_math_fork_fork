@@ -148,3 +148,18 @@ Entry format:
 - Next (separate, high user impact): top-level `\\` and `\newline`
   parse but do not build (8 render failures). In Telosnex this shows raw
   LaTeX.
+
+## 2026-10-29 — blocked — local master and origin/master diverged
+- Found: `origin/master` has 16 commits (2026-10-28/29, `8547280` to
+  `5a83619`) that the local checkout did not have when this work began.
+  Local `master` is 16 ahead and 16 behind. Nothing is pushed.
+- Overlap: origin fixed SelectableMath (`8547280`); this branch removes
+  it (D12). Origin regenerated goldens on Windows with CI from
+  telosnex_ci_tools (`799a65c`, `8ad2698`); this branch makes goldens on
+  macOS (D10, D11). Both made the analyzer clean and made render-alike
+  tests compare in memory. `git merge-tree` lists conflicts in
+  analysis_options.yaml, helper.dart, parser.dart, math.dart,
+  syntax_tree.dart, style.dart, svg_string.dart, the selection files,
+  and all golden images.
+- Next: owner decides on D10, D11 and D12 given origin's direction, then
+  rebase this branch onto origin/master.
