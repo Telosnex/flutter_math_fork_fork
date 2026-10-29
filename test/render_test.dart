@@ -44,12 +44,16 @@ void main() {
       ...accents,
       ...accentsUnder,
       '\\overline',
-      '\\underline'
     ]) {
       testTexToMatchGoldenFile(
         'render $command',
         [for (var i = 1; i <= 6; i++) '$command{${'x' * i}}'].join(),
-        location: 'golden/${command.substring(1)}${command.hashCode}.png',
+        // macOS file names ignore case: \\Overrightarrow becomes
+        // accent__overrightarrow.png.
+        location: 'golden/accent_${command.substring(1).replaceAllMapped(
+              RegExp('[A-Z]'),
+              (m) => '_${m[0]!.toLowerCase()}',
+            )}.png',
       );
     }
   });

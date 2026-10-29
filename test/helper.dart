@@ -1,12 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_math_fork/src/parser/tex/parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
+/// Golden images are compared only on macOS. Font rasterization differs
+/// between platforms, and the images in test/golden were made on macOS.
+/// On other platforms, the test still checks that the expression parses,
+/// builds, and lays out.
+final bool compareGoldens = Platform.isMacOS;
+
+/// Renders [expression] and compares it with a golden image.
+///
+/// The default image path is `golden/<slug of description>_<hash>.png`.
 void testTexToMatchGoldenFile(
   String description,
   String expression, {
@@ -19,36 +30,63 @@ void testTexToMatchGoldenFile(
     addTearDown(tester.view.reset);
     final key = GlobalKey();
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Math.tex(
-                  expression,
-                  key: key,
-                  options: MathOptions(
-                    style: MathStyle.display,
-                    fontSize: scale * MathOptions.defaultFontSize,
-                  ),
-                  onErrorFallback: (e) => throw e,
-                ),
-              ),
+      _mathApp(
+        Math.tex(
+          expression,
+          key: key,
+          options: MathOptions(
+            style: MathStyle.display,
+            fontSize: scale * MathOptions.defaultFontSize,
+          ),
+          onErrorFallback: (e) => throw e,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    if (compareGoldens) {
+      await expectLater(
+        find.byKey(key),
+        matchesGoldenFile(
+          location ?? 'golden/${goldenFileName(description, expression)}',
+        ),
+      );
+    }
+  });
+}
+
+/// A file name for a golden image that does not change between runs.
+String goldenFileName(String description, String expression) {
+  final slug = description
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+      .replaceAll(RegExp(r'^_+|_+$'), '');
+  final shortSlug = slug.length > 60 ? slug.substring(0, 60) : slug;
+  return '${shortSlug}_${_fnv1a32('$description\u0000$expression')}.png';
+}
+
+String _fnv1a32(String input) {
+  var hash = 0x811c9dc5;
+  for (final unit in utf8.encode(input)) {
+    hash ^= unit;
+    hash = (hash * 0x01000193) & 0xFFFFFFFF;
+  }
+  return hash.toRadixString(16).padLeft(8, '0');
+}
+
+Widget _mathApp(Widget math) => MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: RepaintBoundary(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: math,
             ),
           ),
         ),
       ),
     );
-    await tester.pumpAndSettle();
-    if (Platform.isWindows) {
-      // Android-specific code
-      await expectLater(find.byKey(key),
-          matchesGoldenFile(location ?? 'golden/${description.hashCode}.png'));
-    }
-  });
-}
 
+/// Renders [expression] and fails on any parse, build, or layout error.
 void testTexToRender(
   String description,
   String expression, [
@@ -56,23 +94,14 @@ void testTexToRender(
 ]) {
   testWidgets(description, (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Math.tex(
-                  expression,
-                  options: MathOptions(
-                    fontSize: MathOptions.defaultFontSize,
-                    style: MathStyle.display,
-                  ),
-                  onErrorFallback: (e) => throw e,
-                ),
-              ),
-            ),
+      _mathApp(
+        Math.tex(
+          expression,
+          options: MathOptions(
+            fontSize: MathOptions.defaultFontSize,
+            style: MathStyle.display,
           ),
+          onErrorFallback: (e) => throw e,
         ),
       ),
     );
@@ -83,72 +112,78 @@ void testTexToRender(
   });
 }
 
+/// Renders [expression1] and [expression2] under [settings] and requires
+/// identical pixels. A parse error in either expression fails the test.
 void testTexToRenderLike(
-    String description, String expression1, String expression2,
-    [TexParserSettings settings = strictSettings]) {
+  String description,
+  String expression1,
+  String expression2, [
+  TexParserSettings settings = strictSettings,
+]) {
   testWidgets(description, (WidgetTester tester) async {
-    final key = GlobalKey();
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Math.tex(
-                  expression1,
-                  key: key,
-                  options: MathOptions(
-                    fontSize: MathOptions.defaultFontSize,
-                    style: MathStyle.display,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    final image1 = await _renderToPixels(tester, expression1, settings);
+    final image2 = await _renderToPixels(tester, expression2, settings);
+    expect(
+      (image1.width, image1.height),
+      (image2.width, image2.height),
+      reason: 'Size of "$expression1" differs from size of "$expression2".',
     );
-    await tester.pumpAndSettle();
-    if (Platform.isWindows) {
-      // Android-specific code
-      await expectLater(
-          find.byKey(key),
-          matchesGoldenFile(
-              'golden/temp/${(description + expression1 + expression2).hashCode}.png'));
-    }
+    expect(
+      image1.pixels,
+      orderedEquals(image2.pixels),
+      reason: 'Pixels of "$expression1" differ from pixels of '
+          '"$expression2".',
+    );
+  });
+}
 
-    final key2 = GlobalKey();
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Math.tex(
-                  expression2,
-                  key: key2,
-                  options: MathOptions(
-                    fontSize: MathOptions.defaultFontSize,
-                    style: MathStyle.display,
-                  ),
-                ),
-              ),
-            ),
+Future<({int width, int height, Uint8List pixels})> _renderToPixels(
+  WidgetTester tester,
+  String expression,
+  TexParserSettings settings,
+) async {
+  final key = GlobalKey();
+  await tester.pumpWidget(
+    _mathApp(
+      RepaintBoundary(
+        key: key,
+        child: Math.tex(
+          expression,
+          settings: settings,
+          options: MathOptions(
+            fontSize: MathOptions.defaultFontSize,
+            style: MathStyle.display,
           ),
+          onErrorFallback: (e) => throw e,
         ),
       ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  final boundary = tester.renderObject<RenderRepaintBoundary>(
+    find.byKey(key),
+  );
+  if (boundary.size.isEmpty) {
+    return (
+      width: boundary.size.width.round(),
+      height: boundary.size.height.round(),
+      pixels: Uint8List(0),
     );
-    await tester.pumpAndSettle();
-    if (Platform.isWindows) {
-      // Android-specific code
-      await expectLater(
-          find.byKey(key2),
-          matchesGoldenFile(
-              'golden/temp/${(description + expression1 + expression2).hashCode}.png'));
+  }
+  final result = await tester.runAsync(() async {
+    final image = await boundary.toImage();
+    try {
+      final bytes = await image.toByteData();
+      return (
+        width: image.width,
+        height: image.height,
+        pixels: bytes!.buffer.asUint8List(),
+      );
+    } finally {
+      image.dispose();
     }
   });
+  return result!;
 }
 
 const strictSettings = TexParserSettings(strict: Strict.error);
@@ -171,7 +206,7 @@ class ToParse extends Matcher {
 
   @override
   Description describe(Description description) =>
-      description.add('a TeX string can be parsed with default settings');
+      description.add('a TeX string that parses with the given settings');
 
   @override
   Description describeMismatch(dynamic item, Description mismatchDescription,
@@ -195,7 +230,7 @@ class ToParse extends Matcher {
     try {
       if (item is String) {
         // ignore: unused_local_variable
-        final res = TexParser(item, const TexParserSettings()).parse();
+        final res = TexParser(item, settings).parse();
         // print(prettyPrintJson(res.toJson()));
         return true;
       }

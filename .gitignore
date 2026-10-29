@@ -85,3 +85,4 @@ pubspec.lock
 # Flutter ephemeral build files
 **/ios/Flutter/ephemeral/
 **/macos/Flutter/ephemeral/
+test/failures/
