@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_math_fork/src/parser/tex/parser.dart';
@@ -89,70 +90,54 @@ void testTexToRender(
   });
 }
 
+/// Renders [expression1] and [expression2] and expects the same pixels.
+/// Compared in memory, on every platform but the web (no toImage there in
+/// tests). This used goldens under golden/temp/, which were stale.
 void testTexToRenderLike(
     String description, String expression1, String expression2,
     [TexParserSettings settings = strictSettings]) {
   testWidgets(description, (WidgetTester tester) async {
-    final key = GlobalKey();
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Math.tex(
-                  expression1,
-                  key: key,
-                  options: MathOptions(
-                    fontSize: MathOptions.defaultFontSize,
-                    style: MathStyle.display,
+    Future<(int, int, Uint8List)> render(String expression) async {
+      final key = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: RepaintBoundary(
+                key: key,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Math.tex(
+                    expression,
+                    options: MathOptions(
+                      fontSize: MathOptions.defaultFontSize,
+                      style: MathStyle.display,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    if (_compareGoldens) {
-      await expectLater(
-          find.byKey(key),
-          matchesGoldenFile(
-              'golden/temp/${(description + expression1 + expression2).hashCode}.png'));
+      );
+      await tester.pumpAndSettle();
+      final boundary =
+          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+      return (await tester.runAsync(() async {
+        final image = await boundary.toImage();
+        final bytes = await image.toByteData();
+        final result = (image.width, image.height, bytes!.buffer.asUint8List());
+        image.dispose();
+        return result;
+      }))!;
     }
 
-    final key2 = GlobalKey();
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: RepaintBoundary(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Math.tex(
-                  expression2,
-                  key: key2,
-                  options: MathOptions(
-                    fontSize: MathOptions.defaultFontSize,
-                    style: MathStyle.display,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    if (_compareGoldens) {
-      await expectLater(
-          find.byKey(key2),
-          matchesGoldenFile(
-              'golden/temp/${(description + expression1 + expression2).hashCode}.png'));
-    }
-  });
+    final first = await render(expression1);
+    final second = await render(expression2);
+    expect((second.$1, second.$2), (first.$1, first.$2),
+        reason: 'image sizes of $expression2 and $expression1');
+    expect(second.$3, first.$3, reason: '$expression2 renders as $expression1');
+  }, skip: kIsWeb);
 }
 
 const strictSettings = TexParserSettings(strict: Strict.error);
