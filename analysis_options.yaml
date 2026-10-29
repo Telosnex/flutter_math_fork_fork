@@ -6,6 +6,13 @@ analyzer:
     implicit-dynamic: false
   exclude:
     - lib/**.freezed.dart
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 linter:
   rules:
     - prefer_relative_imports
