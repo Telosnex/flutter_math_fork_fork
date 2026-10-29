@@ -28,14 +28,14 @@ jobs:
       - name: Normal run (failure diffs)
         continue-on-error: true
         run: flutter test test/render_test.dart test/render_sample_test.dart test/katex_spec_test.dart -r expanded
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: failures-before
           path: test/failures
           if-no-files-found: warn
       - name: Update goldens
         run: flutter test --update-goldens test/render_test.dart test/render_sample_test.dart test/katex_spec_test.dart -r expanded
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: goldens-after
           path: |
