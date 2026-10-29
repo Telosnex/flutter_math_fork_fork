@@ -32,7 +32,7 @@ void main() {
   group('macro arguments', () {
     test('an argument can come from a macro expansion', () {
       expect(() => parse(r'\def\a{{x}}\frac\a y'), parses);
-    }, skip: r'\def is not ported yet');
+    });
     test('an argument is one token without braces', () {
       final frac = parse(r'\frac ab').children.single as FracNode;
       expect(frac.numerator.children.single, isA<SymbolNode>());
@@ -112,10 +112,9 @@ void main() {
   });
 
   test('local macros are removed after a parse error (#3114)', () {
-    const settings = TexParserSettings(globalGroup: true);
-    expect(
-      () => TexParser(r'\gdef\foo{x} \frac', settings).parse(),
-      fails,
-    );
-  }, skip: r'\gdef is not ported yet');
+    // One parser, as in KaTeX's test: the error must not leave \foo.
+    final parser = TexParser(r'\def\foo{x} \frac', const TexParserSettings());
+    expect(parser.parse, fails);
+    expect(parser.macroExpander.macros.has(r'\foo'), isFalse);
+  });
 }

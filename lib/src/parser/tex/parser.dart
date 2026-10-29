@@ -1,4 +1,4 @@
-// katex-sync: src/parseTree.ts @ c2e5a289
+// katex-sync: src/parseTree.ts @ v0.19.1
 // katex-sync: src/Parser.ts @ v0.19.1
 // The MIT License (MIT)
 //
@@ -69,6 +69,9 @@ class TexParser {
 
   /// Get parse result
   EquationRowNode parse() {
+    // KaTeX parseTree: blank out any \df@tag to avoid spurious
+    // "Duplicate \tag" errors.
+    macroExpander.macros.current.remove('\\df@tag');
     if (!settings.globalGroup) {
       macroExpander.beginGroup();
     }
@@ -82,11 +85,34 @@ class TexParser {
       if (!settings.globalGroup) {
         macroExpander.endGroup();
       }
+      // KaTeX parseTree: \tag sets the \df@tag macro to the tag.
+      if (macroExpander.macros.get('\\df@tag') != null) {
+        if (!settings.displayMode) {
+          throw ParseException('\\tag works only in display equations');
+        }
+        // Dart divergence: no tag layout. KaTeX puts the tag at the right
+        // edge of the display; Dart puts it after the equation.
+        final tag = subparse([Token('\\df@tag'), Token('\\qquad')]);
+        return [...parse, ...tag].wrapWithEquationRow();
+      }
       return parse.wrapWithEquationRow();
     } finally {
       // Remove local macros after a parse error (KaTeX #3114).
       macroExpander.endGroups();
     }
+  }
+
+  /// Parses [tokens] (in stack order) as an expression. KaTeX: subparse.
+  List<GreenNode> subparse(List<Token> tokens) {
+    final oldToken = nextToken;
+    consume();
+    macroExpander
+      ..pushToken(Token('}'))
+      ..pushTokens(tokens);
+    final parse = parseExpression(breakOnInfix: false);
+    expect('}');
+    nextToken = oldToken;
+    return parse;
   }
 
   List<GreenNode> parseExpression({

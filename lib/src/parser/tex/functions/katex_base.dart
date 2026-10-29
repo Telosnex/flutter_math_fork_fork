@@ -25,9 +25,11 @@ import '../../../ast/types.dart';
 import '../define_environment.dart';
 import '../font.dart';
 import '../functions.dart';
+import '../macros.dart';
 import '../parse_error.dart';
 import '../parser.dart';
 import '../symbols.dart';
+import '../token.dart';
 
 part 'katex_base/accent.dart';
 part 'katex_base/accent_under.dart';
@@ -37,6 +39,7 @@ part 'katex_base/break.dart';
 part 'katex_base/char.dart';
 part 'katex_base/color.dart';
 part 'katex_base/cr.dart';
+part 'katex_base/def.dart';
 part 'katex_base/delimsizing.dart';
 part 'katex_base/enclose.dart';
 part 'katex_base/environment.dart';
@@ -67,6 +70,7 @@ const katexBaseFunctionEntries = {
   ..._charEntries,
   ..._colorEntries,
   ..._crEntries,
+  ..._defEntries,
   ..._delimSizingEntries,
   ..._encloseEntries,
   ..._environmentEntries,
