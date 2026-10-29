@@ -14,7 +14,7 @@ String svgStringFromPath(
     'viewBox='
     '"${viewBox.left} ${viewBox.top} ${viewBox.width} ${viewBox.height}" '
     '>'
-    '<path fill="rgb(${color.red},${color.green},${color.blue})" d="$path"></path>'
+    '<path fill="rgb(${_channel(color.r)},${_channel(color.g)},${_channel(color.b)})" d="$path"></path>'
     '</svg>';
 
 final _alignmentToString = {
@@ -62,3 +62,5 @@ Widget svgWidgetFromPath(
     ),
   );
 }
+
+int _channel(double c) => (c * 255.0).round().clamp(0, 255);

@@ -84,4 +84,3 @@ final Map<String, FunctionSpec> functions = <String, FunctionSpec>{}
   ..registerFunctions(katexBaseFunctionEntries)
   ..registerFunctions(katexExtFunctionEntries)
   ..registerFunctions(cursorEntries);
-

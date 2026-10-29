@@ -162,7 +162,6 @@ class RenderResetDimension extends RenderShiftedBox {
         dx = width - childWidth;
         break;
       case CrossAxisAlignment.center:
-      default:
         dx = (width - childWidth) / 2;
         break;
     }

@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../ast/syntax_tree.dart';
 import '../../utils/num_extension.dart';
@@ -296,7 +296,7 @@ class RenderEditableLine extends RenderLine {
 
   EquationRowNode node;
 
-  /// {@template flutter.rendering.editable.paintCursorOnTop}
+  /// Whether the cursor paints above the text.
   bool get paintCursorAboveText => _paintCursorAboveText;
   bool _paintCursorAboveText;
   set paintCursorAboveText(bool value) {
@@ -461,8 +461,8 @@ class RenderEditableLine extends RenderLine {
 
   void _paintCaret(Canvas canvas, Offset baselineOffset) {
     final paint = Paint()
-      ..color =
-          _cursorColor.withOpacity(_cursorBlinkOpacityController?.value ?? 0);
+      ..color = _cursorColor.withValues(
+          alpha: _cursorBlinkOpacityController?.value ?? 0);
 
     Rect _caretPrototype;
 

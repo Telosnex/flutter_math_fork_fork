@@ -3,6 +3,8 @@ import '../parser/tex/settings.dart';
 import '../utils/log.dart';
 import 'exception.dart';
 
+// Public API; subclasses implement stringify.
+// ignore: one_member_abstracts
 abstract class EncodeResult {
   const EncodeResult();
   String stringify(covariant EncodeConf conf);

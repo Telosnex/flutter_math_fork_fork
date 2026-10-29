@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/widgets.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../render/constants.dart';
 import '../../render/layout/custom_layout.dart';
@@ -195,7 +195,7 @@ class SqrtLayoutDelegate extends CustomLayoutDelegate<_SqrtPos> {
       minWidth: baseWidth,
       minHeight: minSqrtHeight,
     );
-    final Size surdSize = surd.getLayoutSize(surdConstraints, dry: dry);
+    final surdSize = surd.getLayoutSize(surdConstraints, dry: dry);
 
     final advanceWidth = getSqrtAdvanceWidth(minSqrtHeight, baseWidth, options);
 

@@ -87,12 +87,14 @@ mixin WebSelectionControlsManagerMixin<T extends StatefulWidget>
       );
       _textInputConnection!
         ..show()
-        ..setStyle(
-          fontSize: 10000, // An absurd size to cover all
-          fontWeight: FontWeight.normal,
-          fontFamily: 'KaTeX_Main',
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.ltr,
+        ..updateStyle(
+          const TextInputStyle(
+            fontSize: 10000, // An absurd size to cover all
+            fontWeight: FontWeight.normal,
+            fontFamily: 'KaTeX_Main',
+            textAlign: TextAlign.center,
+            textDirection: TextDirection.ltr,
+          ),
         )
         ..setEditingState(currentTextEditingValue);
       _updateSizeAndTransform();

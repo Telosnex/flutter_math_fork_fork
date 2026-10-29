@@ -117,9 +117,10 @@ class RenderEqnArray extends RenderBox
 
   @override
   double? computeDryBaseline(
-      covariant BoxConstraints constraints, TextBaseline baseline) => null;
-    // RenderEqnArray does not report a baseline
-    // (computeDistanceToActualBaseline is not overridden).
+          covariant BoxConstraints constraints, TextBaseline baseline) =>
+      null;
+  // RenderEqnArray does not report a baseline
+  // (computeDistanceToActualBaseline is not overridden).
 
   @override
   Size computeDryLayout(BoxConstraints constraints) =>
@@ -141,7 +142,7 @@ class RenderEqnArray extends RenderBox
     final colWidths = <double>[];
     final sizeMap = <RenderBox, Size>{};
     while (child != null) {
-      Size childSize = Size.zero;
+      var childSize = Size.zero;
       if (child is RenderLine) {
         child.alignColWidth = null;
         childSize = child.getLayoutSize(infiniteConstraint, dry: dry);

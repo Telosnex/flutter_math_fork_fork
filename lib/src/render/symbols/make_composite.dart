@@ -55,16 +55,15 @@ class _NegationOverlayDelegate extends IntrinsicLayoutDelegate<int> {
           (key, child) => MapEntry(key, child.getDryLayout(unconstrained)));
       final vertical = performVerticalIntrinsicLayout(
         childrenHeights: sizes.map((key, size) => MapEntry(key, size.height)),
-        childrenBaselines: childrenTable.map((key, child) => MapEntry(
-            key,
+        childrenBaselines: childrenTable.map((key, child) => MapEntry(key,
             child.getDryBaseline(unconstrained, TextBaseline.alphabetic) ?? 0)),
       );
       return Size(sizes[0]!.width, vertical.size);
     }
     final size = super.computeLayout(constraints, childrenTable, dry: false);
     _baseline = childrenTable.values
-        .map((child) => child.getDistanceToBaseline(
-            TextBaseline.alphabetic, onlyReal: true)!)
+        .map((child) => child.getDistanceToBaseline(TextBaseline.alphabetic,
+            onlyReal: true)!)
         .reduce((a, b) => a > b ? a : b);
     return size;
   }

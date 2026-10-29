@@ -266,16 +266,9 @@ class MathSelectionOverlay {
 
     final editingRegion = manager.getLocalEditingRegion();
 
-    final isMultiline = false; // TODO
-    // endpoints.last.point.dy - endpoints.first.point.dy >
-    // manager.preferredLineHeight / 2;
-
-    // If the selected text spans more than 1 line, horizontally center the
-    // toolbar.
-    // Derived from both iOS and Android.
-    final midX = isMultiline
-        ? editingRegion.width / 2
-        : (endpoint1.dx + endpoint2.dx) / 2;
+    // TODO: if the selection spans more than one line, center the toolbar
+    // horizontally in editingRegion (as iOS and Android do).
+    final midX = (endpoint1.dx + endpoint2.dx) / 2;
 
     final midpoint = Offset(
       midX,
@@ -289,6 +282,9 @@ class MathSelectionOverlay {
         link: toolbarLayerLink,
         showWhenUnlinked: false,
         offset: -editingRegion.topLeft,
+        // Deprecated in Flutter for contextMenuBuilder; this package's API
+        // still takes TextSelectionControls.
+        // ignore: deprecated_member_use
         child: selectionControls!.buildToolbar(
           context,
           editingRegion,
