@@ -34,11 +34,11 @@ Entry format:
 
 | Metric | Value | Date |
 |--------|-------|------|
-| Workplan step | 16: parser core done (Lexer, Namespace, MacroExpander, Parser); next: def.ts | 2026-10-29 |
+| Workplan step | 16: parser core, def.ts, smash.ts, lap.ts done; next: environments | 2026-10-29 |
 | `flutter analyze` issues | 0 | 2026-10-29 |
-| `flutter test` | VM 458 pass / 4 skip | 2026-10-29 |
+| `flutter test` | VM 487 pass / 2 skip | 2026-10-29 |
 | Corpus cases (KaTeX v0.19.1) | 1696 (1660 portable) | 2026-10-29 |
-| Parse divergences | 352 (295 `not-ported`, 57 `trust`) | 2026-10-29 |
+| Parse divergences | 247 (190 `not-ported`, 57 `trust`) | 2026-10-29 |
 | Render failures | 5 of 994 accepted cases | 2026-10-29 |
 
 ## 2026-10-29 — none — Baseline and ADR draft
@@ -243,3 +243,22 @@ Entry format:
 - Next: `src/functions/def.ts` (`\def`, `\gdef`, `\edef`, `\xdef`,
   `\let`, `\global`, `\long`, `\futurelet`: about 56 cases). Then
   `lap.ts`/`smash.ts`, then `src/macros.ts`.
+
+## 2026-10-29 — step 16 — def.ts, \tag, smash.ts, lap.ts
+- Done: `0d90805` def.ts (`\def`, `\gdef`, `\edef`, `\xdef`, `\let`,
+  `\futurelet`, `\global`, `\long`) and the parseTree `\tag` check.
+  Next commit: `\smash`, `\mathllap`/`rlap`/`clap`, `\llap`/`rlap`/`clap`
+  with new `SmashNode` and `LapNode` (public in ast.dart) and encoders.
+- Numbers: divergences 352 → 297 → 247. Render failures unchanged (5).
+- Found: with `\gdef` working, `\tag{hi}x+y` in inline mode parsed: the
+  `\tag` macros already did `\gdef\df@tag`, but the parseTree check was
+  missing. Ported it with `subparse`.
+- Dart divergence: `\tag` puts the tag after the equation with a
+  `\qquad`. KaTeX puts it at the right edge of the display.
+- Divergence (explained in divergences.json): the exponential `\def` case
+  that ends in `x⁺` needs `src/unicodeSupOrSub.ts`.
+- Found: my first `\futurelet` test was wrong, not the port.
+- Found: the image viewer returned a cached image for a rewritten file.
+  Write each review image to a new file name.
+- Next: environments (`align`, `CD`, starred matrices: 17+ cases), then
+  `src/macros.ts` (`\@binrel`, `\mathreflectbox`, `\pmb`, `\mapsfrom`).
