@@ -28,13 +28,11 @@ const _colorEntries = {
   ['\\textcolor']: FunctionSpec(
     numArgs: 2,
     allowedInText: true,
-    greediness: 3,
     handler: _textcolorHandler,
   ),
   ['\\color']: FunctionSpec(
     numArgs: 1,
     allowedInText: true,
-    greediness: 3,
     handler: _colorHandler,
   ),
 };

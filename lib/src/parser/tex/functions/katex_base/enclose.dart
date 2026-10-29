@@ -25,16 +25,10 @@
 part of '../katex_base.dart';
 
 const _encloseEntries = {
-  ['\\colorbox']: FunctionSpec(
-      numArgs: 2,
-      allowedInText: true,
-      greediness: 3,
-      handler: _colorboxHandler),
-  ['\\fcolorbox']: FunctionSpec(
-      numArgs: 3,
-      allowedInText: true,
-      greediness: 3,
-      handler: _fcolorboxHandler),
+  ['\\colorbox']:
+      FunctionSpec(numArgs: 2, allowedInText: true, handler: _colorboxHandler),
+  ['\\fcolorbox']:
+      FunctionSpec(numArgs: 3, allowedInText: true, handler: _fcolorboxHandler),
   ['\\fbox']:
       FunctionSpec(numArgs: 1, allowedInText: true, handler: _fboxHandler),
   ['\\cancel', '\\bcancel', '\\xcancel', '\\sout']:

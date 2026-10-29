@@ -157,7 +157,7 @@ MatrixNode parseArray(
       }
       break;
     } else if (next == '\\cr') {
-      final cr = assertNodeType<CrNode>(parser.parseFunction(null, null, null));
+      final cr = assertNodeType<CrNode>(parser.parseFunction(null, null));
       rowGaps.add(cr.size ?? Measurement.zero);
 
       // check for \hline(s) following the row separator

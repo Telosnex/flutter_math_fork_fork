@@ -1,4 +1,4 @@
-// katex-sync: src/defineFunction.ts @ c2e5a289
+// katex-sync: src/defineFunction.ts @ v0.19.1
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
@@ -26,6 +26,7 @@ import '../../../ast.dart';
 import 'functions/custom/cursor.dart';
 import 'functions/katex_base.dart';
 import 'functions/katex_ext.dart';
+import 'katex_function_flags.dart';
 import 'parser.dart';
 import 'token.dart';
 
@@ -47,7 +48,19 @@ typedef FunctionHandler<T extends GreenNode> = T Function(
 
 class FunctionSpec<T extends GreenNode> {
   final int numArgs;
-  final int greediness;
+
+  /// The function can be an argument without braces, as in `x^\frac12`.
+  /// KaTeX: allowedInArgument (#2134, replaces greediness).
+  final bool allowedInArgument;
+
+  /// TeX primitive: its arguments are parsed as groups, not as macro
+  /// arguments, and it does not expand. KaTeX: primitive.
+  final bool primitive;
+
+  /// The one argument is parsed as a group, not as a macro argument.
+  /// KaTeX: argTypes: ["primitive"].
+  final bool primitiveArg;
+
   final bool allowedInText;
   final bool allowedInMath;
   final int numOptionalArgs;
@@ -59,7 +72,9 @@ class FunctionSpec<T extends GreenNode> {
 
   const FunctionSpec({
     required this.numArgs,
-    this.greediness = 1,
+    this.allowedInArgument = false,
+    this.primitive = false,
+    this.primitiveArg = false,
     this.allowedInText = false,
     this.allowedInMath = true,
     this.numOptionalArgs = 0,
@@ -69,6 +84,19 @@ class FunctionSpec<T extends GreenNode> {
   });
 
   int get totalArgs => numArgs + numOptionalArgs;
+
+  FunctionSpec<T> withKatexFlags(int flags) => FunctionSpec<T>(
+        numArgs: numArgs,
+        allowedInArgument: flags & kfArgument != 0,
+        primitive: flags & kfPrimitive != 0,
+        primitiveArg: flags & kfPrimitiveArg != 0,
+        allowedInText: flags & kfText != 0,
+        allowedInMath: flags & kfMath != 0,
+        numOptionalArgs: numOptionalArgs,
+        infix: infix,
+        handler: handler,
+        argModes: argModes,
+      );
 }
 
 extension RegisterFunctionExt on Map<String, FunctionSpec> {
@@ -81,7 +109,14 @@ extension RegisterFunctionExt on Map<String, FunctionSpec> {
   }
 }
 
+/// All functions. For a name that KaTeX defines, the flags come from
+/// [katexFunctionFlags] (generated from KaTeX). Other names keep the flags
+/// of their FunctionSpec.
 final Map<String, FunctionSpec> functions = <String, FunctionSpec>{}
   ..registerFunctions(katexBaseFunctionEntries)
   ..registerFunctions(katexExtFunctionEntries)
-  ..registerFunctions(cursorEntries);
+  ..registerFunctions(cursorEntries)
+  ..updateAll((name, spec) {
+    final flags = katexFunctionFlags[name];
+    return flags == null ? spec : spec.withKatexFlags(flags);
+  });

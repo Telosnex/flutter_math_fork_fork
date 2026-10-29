@@ -33,9 +33,8 @@ GreenNode _operatorNameHandler(TexParser parser, FunctionContext context) {
   var name = parser.parseArgNode(mode: null, optional: false)!;
   final scripts = parser.parseScripts(
       allowLimits: context.funcName == '\\operatornamewithlimits');
-  final body = parser.parseGroup(context.funcName,
-          optional: false, greediness: 1, mode: null, consumeSpaces: true) ??
-      EquationRowNode.empty();
+  final body =
+      parser.parseOperand(context.breakOnTokenText) ?? EquationRowNode.empty();
 
   name = StyleNode(
     children: name.expandEquationRow(),

@@ -1,0 +1,3757 @@
+{
+ "functions": {
+  "$": {
+   "allowedInArgument": false,
+   "allowedInMath": false,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "styling"
+  },
+  "\\\"": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\'": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\(": {
+   "allowedInArgument": false,
+   "allowedInMath": false,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "styling"
+  },
+  "\\)": {
+   "allowedInArgument": false,
+   "allowedInMath": false,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\.": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\=": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\@binrel": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "mclass"
+  },
+  "\\@char": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "textord"
+  },
+  "\\Bbb": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\Big": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\Bigg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\Biggl": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\Biggm": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\Biggr": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\Bigl": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\Bigm": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\Bigr": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\H": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\Huge": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\LARGE": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\Large": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\Overrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\Pr": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\\\": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "cr"
+  },
+  "\\\\abovefrac": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "math",
+    "size",
+    "math"
+   ],
+   "infix": false,
+   "numArgs": 3,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\\\atopfrac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\\\bracefrac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\\\brackfrac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\\\cdleft": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "cdlabel"
+  },
+  "\\\\cdleftarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\\\cdlongequal": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\\\cdparent": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "cdlabelparent"
+  },
+  "\\\\cdright": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "cdlabel"
+  },
+  "\\\\cdrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\\\globalfuture": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\\\globallet": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\\\globallong": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "internal"
+  },
+  "\\]": {
+   "allowedInArgument": false,
+   "allowedInMath": false,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\^": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\`": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\above": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "size"
+   ],
+   "infix": true,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "infix"
+  },
+  "\\acute": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\angl": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "hbox"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\arccos": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\arcctg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\arcsin": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\arctan": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\arctg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\arg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\atop": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": true,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "infix"
+  },
+  "\\bar": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\bcancel": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\begin": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "environment"
+  },
+  "\\bf": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\big": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\bigcap": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\bigcup": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\bigg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\biggl": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\biggm": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\biggr": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\bigl": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\bigm": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\bigodot": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\bigoplus": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\bigotimes": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\bigr": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "delimsizing"
+  },
+  "\\bigsqcup": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\biguplus": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\bigvee": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\bigwedge": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\binom": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\bm": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "mclass"
+  },
+  "\\bold": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\boldsymbol": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "mclass"
+  },
+  "\\brace": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": true,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "infix"
+  },
+  "\\brack": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": true,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "infix"
+  },
+  "\\breve": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\c": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\cal": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\cancel": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\cfrac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\ch": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\check": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\choose": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": true,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "infix"
+  },
+  "\\color": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "color"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "color"
+  },
+  "\\colorbox": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "color",
+    "hbox"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\coprod": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\cos": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\cosec": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\cosh": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\cot": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\cotg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\coth": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\csc": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\ctg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\cth": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\dbinom": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\ddot": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\def": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\deg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\det": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\dfrac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\dim": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\displaystyle": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "styling"
+  },
+  "\\dot": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\edef": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\emph": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\end": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "environment"
+  },
+  "\\exp": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\fbox": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "hbox"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\fcolorbox": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "color",
+    "color",
+    "hbox"
+   ],
+   "infix": false,
+   "numArgs": 3,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\footnotesize": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\frac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\frak": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\futurelet": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\gcd": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\gdef": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\genfrac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "math",
+    "math",
+    "size",
+    "text",
+    "math",
+    "math"
+   ],
+   "infix": false,
+   "numArgs": 6,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\global": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "internal"
+  },
+  "\\grave": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\hat": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\hbox": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "hbox"
+  },
+  "\\hdashline": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\hline": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\hom": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\href": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "url",
+    "original"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "href"
+  },
+  "\\hskip": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "size"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "kern"
+  },
+  "\\html@mathml": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "htmlmathml"
+  },
+  "\\htmlClass": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "raw",
+    "original"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "html"
+  },
+  "\\htmlData": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "raw",
+    "original"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "html"
+  },
+  "\\htmlId": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "raw",
+    "original"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "html"
+  },
+  "\\htmlStyle": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "raw",
+    "original"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "html"
+  },
+  "\\huge": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\iiint": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\iint": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\includegraphics": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "raw",
+    "url"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "includegraphics"
+  },
+  "\\inf": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\int": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\intop": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\it": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\ker": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\kern": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "size"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "kern"
+  },
+  "\\large": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\left": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "leftright"
+  },
+  "\\let": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\lg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\lim": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\ln": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\log": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\long": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "internal"
+  },
+  "\\mathbb": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathbf": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathbin": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mclass"
+  },
+  "\\mathcal": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathchoice": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 4,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mathchoice"
+  },
+  "\\mathclap": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "lap"
+  },
+  "\\mathclose": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mclass"
+  },
+  "\\mathfrak": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathinner": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mclass"
+  },
+  "\\mathit": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathllap": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "lap"
+  },
+  "\\mathnormal": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathop": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "op"
+  },
+  "\\mathopen": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mclass"
+  },
+  "\\mathord": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mclass"
+  },
+  "\\mathpunct": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mclass"
+  },
+  "\\mathreflectbox": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "math"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "reflectbox"
+  },
+  "\\mathrel": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "mclass"
+  },
+  "\\mathring": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\mathrlap": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "lap"
+  },
+  "\\mathrm": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathscr": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathsf": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathsfit": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\mathtt": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\max": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\middle": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "middle"
+  },
+  "\\min": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\mkern": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "size"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "kern"
+  },
+  "\\mskip": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "size"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "kern"
+  },
+  "\\normalsize": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\oiiint": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\oiint": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\oint": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\operatorname@": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "operatorname"
+  },
+  "\\operatornamewithlimits": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "operatorname"
+  },
+  "\\over": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": true,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "infix"
+  },
+  "\\overbrace": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "horizBrace"
+  },
+  "\\overbracket": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "horizBrace"
+  },
+  "\\overgroup": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\overleftarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\overleftharpoon": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\overleftrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\overline": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "overline"
+  },
+  "\\overlinesegment": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\overrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\overrightharpoon": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\overset": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "mclass"
+  },
+  "\\phantom": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "phantom"
+  },
+  "\\phase": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\pmb": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "pmb"
+  },
+  "\\prod": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\r": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\raisebox": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "size",
+    "hbox"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "raisebox"
+  },
+  "\\reflectbox": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "hbox"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "reflectbox"
+  },
+  "\\relax": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "internal"
+  },
+  "\\right": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "leftright-right"
+  },
+  "\\rm": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\rule": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "size",
+    "size",
+    "size"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "rule"
+  },
+  "\\scriptscriptstyle": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "styling"
+  },
+  "\\scriptsize": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\scriptstyle": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "styling"
+  },
+  "\\sec": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\sf": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\sh": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\sin": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\sinh": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\sixptsize": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\small": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\smallint": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\smash": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "smash"
+  },
+  "\\sout": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\sqrt": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "sqrt"
+  },
+  "\\stackrel": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "mclass"
+  },
+  "\\sum": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\sup": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\tan": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\tanh": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\tbinom": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\text": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textbf": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textcircled": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\textcolor": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "color",
+    "original"
+   ],
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "color"
+  },
+  "\\textit": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textmd": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textnormal": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textrm": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textsf": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textstyle": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "styling"
+  },
+  "\\texttt": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\textup": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "text"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "text"
+  },
+  "\\tfrac": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "genfrac"
+  },
+  "\\tg": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\th": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "\\tilde": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\tiny": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "sizing"
+  },
+  "\\tt": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "font"
+  },
+  "\\u": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\underbrace": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "horizBrace"
+  },
+  "\\underbracket": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "horizBrace"
+  },
+  "\\undergroup": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accentUnder"
+  },
+  "\\underleftarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accentUnder"
+  },
+  "\\underleftrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accentUnder"
+  },
+  "\\underline": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "underline"
+  },
+  "\\underlinesegment": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accentUnder"
+  },
+  "\\underrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accentUnder"
+  },
+  "\\underset": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 2,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "mclass"
+  },
+  "\\url": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "url"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "href"
+  },
+  "\\utilde": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accentUnder"
+  },
+  "\\v": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\vcenter": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": [
+    "original"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "vcenter"
+  },
+  "\\vec": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\verb": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "verb"
+  },
+  "\\vphantom": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "vphantom"
+  },
+  "\\widecheck": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\widehat": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\widetilde": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "\\xLeftarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xLeftrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xRightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xcancel": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "enclose"
+  },
+  "\\xdef": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": true,
+   "type": "internal"
+  },
+  "\\xhookleftarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xhookrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xleftarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xleftequilibrium": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xleftharpoondown": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xleftharpoonup": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xleftrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xleftrightharpoons": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xlongequal": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xmapsto": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xrightequilibrium": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xrightharpoondown": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xrightharpoonup": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xrightleftarrows": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xrightleftharpoons": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xtofrom": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xtwoheadleftarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\xtwoheadrightarrow": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 1,
+   "primitive": false,
+   "type": "xArrow"
+  },
+  "\\~": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": true,
+   "argTypes": [
+    "primitive"
+   ],
+   "infix": false,
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "accent"
+  },
+  "∏": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∐": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∑": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∫": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∬": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∭": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∮": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∯": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "∰": {
+   "allowedInArgument": true,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⋀": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⋁": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⋂": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⋃": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⨀": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⨁": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⨂": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⨄": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  },
+  "⨆": {
+   "allowedInArgument": false,
+   "allowedInMath": true,
+   "allowedInText": false,
+   "argTypes": null,
+   "infix": false,
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "primitive": false,
+   "type": "op"
+  }
+ },
+ "environments": {
+  "Bmatrix": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "Bmatrix*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "CD": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "Vmatrix": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "Vmatrix*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "align": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "align*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "alignat": {
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "alignat*": {
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "aligned": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "alignedat": {
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "array": {
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "bmatrix": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "bmatrix*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "cases": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "darray": {
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "dcases": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "drcases": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "equation": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "equation*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "gather": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "gather*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "gathered": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "matrix": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "matrix*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "pmatrix": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "pmatrix*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "rcases": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "smallmatrix": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "split": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "subarray": {
+   "numArgs": 1,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "vmatrix": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  },
+  "vmatrix*": {
+   "numArgs": 0,
+   "numOptionalArgs": 0,
+   "type": "array"
+  }
+ }
+}

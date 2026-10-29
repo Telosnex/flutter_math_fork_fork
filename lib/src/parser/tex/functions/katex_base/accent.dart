@@ -163,6 +163,13 @@ const textUnicodeAccentMapping = {
   // '\\textcircled': '\u',
 };
 GreenNode _textAccentHandler(TexParser parser, FunctionContext context) {
+  if (parser.mode == Mode.math) {
+    parser.settings.reportNonstrict(
+      'mathVsTextAccents',
+      "LaTeX's accent ${context.funcName} works only in text mode",
+      context.token,
+    );
+  }
   final base = parser.parseArgNode(mode: null, optional: false)!;
   if (base is SymbolNode) {
     return base.withSymbol(

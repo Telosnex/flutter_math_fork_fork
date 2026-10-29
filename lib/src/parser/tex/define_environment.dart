@@ -41,13 +41,11 @@ class EnvContext {
 
 class EnvSpec {
   final int numArgs;
-  final int greediness;
   final bool allowedInText;
   final int numOptionalArgs;
   final GreenNode Function(TexParser parser, EnvContext context) handler;
   const EnvSpec({
     required this.numArgs,
-    this.greediness = 1,
     this.allowedInText = false,
     this.numOptionalArgs = 0,
     required this.handler,

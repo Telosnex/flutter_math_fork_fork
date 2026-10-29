@@ -34,7 +34,6 @@ const _textEntries = {
     '\\textit', '\\textup',
   ]: FunctionSpec(
     numArgs: 1,
-    greediness: 2,
     allowedInText: true,
     handler: _textHandler,
   )

@@ -1,5 +1,5 @@
 // katex-sync: src/parseTree.ts @ c2e5a289
-// katex-sync: src/Parser.ts @ c2e5a289
+// katex-sync: src/Parser.ts @ v0.19.1
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
@@ -76,14 +76,17 @@ class TexParser {
       macroExpander.macros
           .set('\\color', MacroDefinition.fromString('\\textcolor'));
     }
-    final parse = parseExpression(breakOnInfix: false);
-
-    expect('EOF');
-
-    if (!settings.globalGroup) {
-      macroExpander.endGroup();
+    try {
+      final parse = parseExpression(breakOnInfix: false);
+      expect('EOF');
+      if (!settings.globalGroup) {
+        macroExpander.endGroup();
+      }
+      return parse.wrapWithEquationRow();
+    } finally {
+      // Remove local macros after a parse error (KaTeX #3114).
+      macroExpander.endGroups();
     }
-    return parse.wrapWithEquationRow();
   }
 
   List<GreenNode> parseExpression({
@@ -135,6 +138,8 @@ class TexParser {
         final atom = parseAtom(breakOnTokenText);
         if (atom == null) {
           break;
+        } else if (atom is InternalNode) {
+          continue;
         }
         body.add(atom);
       }
@@ -219,10 +224,9 @@ class TexParser {
   }
 
   GreenNode? parseAtom(String? breakOnTokenText) {
-    final base = parseGroup('atom',
-        optional: false, greediness: null, breakOnTokenText: breakOnTokenText);
+    final base = parseGroup('atom', breakOnTokenText: breakOnTokenText);
 
-    if (mode == Mode.text) {
+    if (base is InternalNode || mode == Mode.text) {
       return base;
     }
 
@@ -334,19 +338,16 @@ class TexParser {
     final symbolToken = fetch();
     final symbol = symbolToken.text;
     consume();
-    final group = parseGroup(
-      symbol == '_' ? 'subscript' : 'superscript',
-      optional: false,
-      greediness: TexParser.supsubGreediness,
-      consumeSpaces: true,
-    );
+    consumeSpaces(); // ignore spaces before sup/subscript argument
+    GreenNode? group;
+    do {
+      group = parseGroup(symbol == '_' ? 'subscript' : 'superscript');
+    } while (group is InternalNode);
     if (group == null) {
       throw ParseException("Expected group after '$symbol'", symbolToken);
     }
     return group;
   }
-
-  static const supsubGreediness = 1;
 
   Token fetch() {
     final nextToken = this.nextToken;
@@ -360,64 +361,27 @@ class TexParser {
     nextToken = null;
   }
 
-  /// [parseGroup] Return a row if encounters \[\] or {}. Returns single function
-  /// node or a single symbol otherwise.
+  /// Parses an ordinary group: a single nucleus (like "x"), a function
+  /// with its arguments, or an expression in braces (like "{x+y}") or in
+  /// `\begingroup`...`\endgroup`. Returns a row for a braced group.
   ///
-  ///
-  /// If `optional` is false or absent, this parses an ordinary group,
-  /// which is either a single nucleus (like "x") or an expression
-  /// in braces (like "{x+y}") or an implicit group, a group that starts
-  /// at the current position, and ends right before a higher explicit
-  /// group ends, or at EOF.
-  /// If `optional` is true, it parses either a bracket-delimited expression
-  /// (like "[x+y]") or returns null to indicate the absence of a
-  /// bracket-enclosed group.
-  /// If `mode` is present, switches to that mode while parsing the group,
-  /// and switches back after.
-  GreenNode? parseGroup(
-    String name, {
-    required bool optional,
-    int? greediness,
-    String? breakOnTokenText,
-    Mode? mode,
-    bool consumeSpaces = false,
-  }) {
-    // Save current mode and restore after completion
-    final outerMode = this.mode;
-    if (mode != null) {
-      switchMode(mode);
-    }
-    // Consume spaces if requested, crucially *after* we switch modes,
-    // so that the next non-space token is parsed in the correct mode.
-    if (consumeSpaces == true) {
-      this.consumeSpaces();
-    }
-    // Get first token
+  /// [name] is for errors. Unless it is 'atom', a function without
+  /// allowedInArgument is an error (KaTeX #2134).
+  GreenNode? parseGroup(String name, {String? breakOnTokenText}) {
     final firstToken = fetch();
     final text = firstToken.text;
     GreenNode? result;
-    // Try to parse an open brace or \begingroup
-    if (optional ? text == '[' : text == '{' || text == '\\begingroup') {
+    if (text == '{' || text == '\\begingroup') {
       consume();
       final groupEnd = endOfGroup[text]!;
-      // Start a new group namespace
       macroExpander.beginGroup();
-      // If we get a brace, parse an expression
       final expression =
           parseExpression(breakOnInfix: false, breakOnTokenText: groupEnd);
-      // final lastToken = this.fetch();
-      // Check that we got a matching closing brace
       expect(groupEnd);
       macroExpander.endGroup();
       result = expression.wrapWithEquationRow();
-    } else if (optional) {
-      // Return nothing for an optional group
-      result = null;
     } else {
-      // If there exists a function with this name, parse the function.
-      // Otherwise, just return a nucleus
-      result =
-          parseFunction(breakOnTokenText, name, greediness) ?? _parseSymbol();
+      result = parseFunction(breakOnTokenText, name) ?? _parseSymbol();
       if (result == null &&
           text[0] == '\\' &&
           !implicitCommands.contains(text)) {
@@ -428,16 +392,12 @@ class TexParser {
         consume();
       }
     }
-    if (mode != null) {
-      switchMode(outerMode);
-    }
     return result;
   }
 
   ///Parses an entire function, including its base and all of its arguments.
 
-  GreenNode? parseFunction(
-      String? breakOnTokenText, String? name, int? greediness) {
+  GreenNode? parseFunction(String? breakOnTokenText, String? name) {
     final token = fetch();
     final func = token.text;
     final funcData = functions[func];
@@ -446,12 +406,9 @@ class TexParser {
     }
     consume();
 
-    if (greediness != null &&
-        // funcData.greediness != null &&
-        funcData.greediness <= greediness) {
+    if (name != null && name != 'atom' && !funcData.allowedInArgument) {
       throw ParseException(
-          '''Got function '$func' with no arguments ${name != null ? ' as $name' : ''}''',
-          token);
+          "Got function '$func' with no arguments as $name", token);
     } else if (mode == Mode.text && !funcData.allowedInText) {
       throw ParseException(
           '''Can't use function '$func' in text mode''', token);
@@ -495,68 +452,54 @@ class TexParser {
     argParsingContexts.removeLast();
   }
 
-  void _assertOptionalBeforeReturn(dynamic value, {required bool optional}) {
-    if (!optional && value == null) {
-      throw ParseException(
-          'Expected group after ${currArgParsingContext.funcName}', fetch());
+  /// Arguments are read from the gullet (KaTeX #2085). A handler can fetch
+  /// a token to look at it before it reads an argument. Give such a token
+  /// back to the gullet first. KaTeX handlers get their arguments before
+  /// they run, so KaTeX has no such step.
+  void _returnFetchedToken() {
+    final token = nextToken;
+    if (token != null) {
+      macroExpander.pushToken(token);
+      nextToken = null;
     }
   }
 
-  static final _parseColorRegex1 =
-      RegExp(r'^#([a-f0-9])([a-f0-9])([a-f0-9])$', caseSensitive: false);
-  static final _parseColorRegex2 = RegExp(
-      r'^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$',
-      caseSensitive: false);
-  static final _parseColorRegex3 = RegExp(r'^([a-z]+)$', caseSensitive: false);
+  /// KaTeX: parseColorGroup.
+  static final _colorRegex = RegExp(
+    r'^(#[a-f0-9]{3,4}|#[a-f0-9]{6}|#[a-f0-9]{8}|[a-f0-9]{6}|[a-z]+)$',
+    caseSensitive: false,
+  );
+  static final _hexColorRegex =
+      RegExp(r'^#?([a-f0-9]+)$', caseSensitive: false);
 
-  // static final _parseColorRegex =
-  //     RegExp(r'^(#[a-f0-9]{3}|#?[a-f0-9]{6}|[a-z]+)$', caseSensitive: false);
-  // static final _matchColorRegex =
-  //     RegExp(r'[0-9a-f]{6}', caseSensitive: false);
   Color? parseArgColor({required bool optional}) {
     currArgParsingContext.newArgument(optional: optional);
-    final i = currArgParsingContext.currArgNum;
-    final consumeSpaces =
-        (i > 0 && !optional) || (i == 0 && !optional && mode == Mode.math);
-    if (consumeSpaces) {
-      this.consumeSpaces();
-    }
-    // final res = this.parseColorGroup(optional: optional);
-    final res = _parseStringGroup('color', optional: optional);
+    _returnFetchedToken();
+    final res = _parseStringGroup(optional: optional);
     if (res == null) {
       _assertOptionalBeforeReturn(null, optional: optional);
       return null;
     }
-
-    final match3 = _parseColorRegex3.firstMatch(res.text);
-
-    if (match3 != null) {
-      final color = colorByName[match3[0]!.toLowerCase()];
-      if (color != null) {
-        return color;
-      }
+    if (!_colorRegex.hasMatch(res.text)) {
+      throw ParseException("Invalid color: '${res.text}'", res);
     }
-
-    final match2 = _parseColorRegex2.firstMatch(res.text);
-    if (match2 != null) {
-      return Color.fromARGB(
-        0xff,
-        int.parse(match2[1]!, radix: 16),
-        int.parse(match2[2]!, radix: 16),
-        int.parse(match2[3]!, radix: 16),
-      );
+    final hex = _hexColorRegex.firstMatch(res.text)?[1];
+    if (hex != null && (res.text.startsWith('#') || hex.length == 6)) {
+      return _hexColor(hex);
     }
+    final color = colorByName[res.text.toLowerCase()];
+    if (color != null) return color;
+    // Dart divergence: KaTeX accepts any name and leaves it to CSS.
+    throw ParseException("Invalid color: '${res.text}'", res);
+  }
 
-    final match1 = _parseColorRegex1.firstMatch(res.text);
-    if (match1 != null) {
-      return Color.fromARGB(
-        0xff,
-        int.parse(match1[1]! * 2, radix: 16),
-        int.parse(match1[2]! * 2, radix: 16),
-        int.parse(match1[3]! * 2, radix: 16),
-      );
-    }
-    throw ParseException("Invalid color: '${res.text}'");
+  /// `RGB`, `RGBA`, `RRGGBB` or `RRGGBBAA` (KaTeX #4090).
+  static Color _hexColor(String hex) {
+    final full = hex.length <= 4 ? hex.split('').map((c) => c * 2).join() : hex;
+    final rgb = int.parse(full.substring(0, 6), radix: 16);
+    final alpha =
+        full.length == 8 ? int.parse(full.substring(6), radix: 16) : 0xff;
+    return Color((alpha << 24) | rgb);
   }
 
   static final _parseSizeRegex =
@@ -564,74 +507,82 @@ class TexParser {
   static final _parseMeasurementRegex =
       RegExp(r'([-+]?) *(\d+(?:\.\d*)?|\.\d+) *([a-z]{2})');
 
+  /// KaTeX: parseSizeGroup. Returns null for an absent optional argument,
+  /// and for a blank required argument (KaTeX: isBlank, which \genfrac
+  /// reads as "default thickness" and \above as 0pt).
   Measurement? parseArgSize({required bool optional}) {
     currArgParsingContext.newArgument(optional: optional);
-    final i = currArgParsingContext.currArgNum;
-    final consumeSpaces =
-        (i > 0 && !optional) || (i == 0 && !optional && mode == Mode.math);
-    if (consumeSpaces) {
-      this.consumeSpaces();
-    }
-
-    // final res = this.parseSizeGroup(optional: optional);
+    _returnFetchedToken();
+    macroExpander.consumeSpaces();
     Token? res;
-    if (!optional && fetch().text != '{') {
+    if (!optional && macroExpander.future().text != '{') {
       res = _parseRegexGroup(_parseSizeRegex, 'size');
     } else {
-      res = _parseStringGroup('size', optional: optional);
+      res = _parseStringGroup(optional: optional);
     }
     if (res == null) {
       _assertOptionalBeforeReturn(null, optional: optional);
       return null;
     }
     if (!optional && res.text.isEmpty) {
-      // res.text = '0pt';
-      // This means default width for genfrac, and 0pt for above
       return null;
     }
     final match = _parseMeasurementRegex.firstMatch(res.text);
     if (match == null) {
       throw ParseException("Invalid size: '${res.text}'", res);
     }
-
     final unit = match[3]!.parseUnit();
     if (unit == null) {
       throw ParseException("Invalid unit: '${match[3]}'", res);
     }
-    final size =
-        Measurement(value: double.parse(match[1]! + match[2]!), unit: unit);
-    return size;
+    return Measurement(value: double.parse(match[1]! + match[2]!), unit: unit);
   }
 
   String parseArgUrl({required bool optional}) {
     currArgParsingContext.newArgument(optional: optional);
-    // final i = currArgParsingContext.currArgNum;
-    // final consumeSpaces =
-    //  (i > 0 && !optional) || (i == 0 && !optional && this.mode == Mode.math);
-    // if (consumeSpaces) {
-    //   this.consumeSpaces();
-    // }
-    // final res = this.parseUrlGroup(optional: optional);
+    // ADR 001 NG3: \href and \url are not supported.
     throw UnimplementedError();
   }
 
+  /// Parses an argument as math or text (KaTeX argTypes "math", "text",
+  /// "original", "primitive"). Returns a row, or a single node for a
+  /// primitive argument without braces.
   GreenNode? parseArgNode({required Mode? mode, required bool optional}) {
     currArgParsingContext.newArgument(optional: optional);
-    final i = currArgParsingContext.currArgNum;
-    final consumeSpaces =
-        (i > 0 && !optional) || (i == 0 && !optional && this.mode == Mode.math);
-    // if (consumeSpaces) {
-    //   this.consumeSpaces();
-    // }
-    final res = parseGroup(
-      currArgParsingContext.name,
-      optional: optional,
-      greediness: currArgParsingContext.funcData.greediness,
-      mode: mode,
-      consumeSpaces: consumeSpaces,
-    );
+    final funcData = currArgParsingContext.funcData;
+    if (!optional && (funcData.primitive || funcData.primitiveArg)) {
+      return parseArgPrimitive();
+    }
+    _returnFetchedToken();
+    final res = _parseArgumentGroup(optional: optional, mode: mode);
     _assertOptionalBeforeReturn(res, optional: optional);
     return res;
+  }
+
+  /// KaTeX argType "primitive": a group, not a macro argument. \sqrt reads
+  /// its body like this when it has no index.
+  GreenNode parseArgPrimitive() {
+    final name = currArgParsingContext.name;
+    final group = parseGroup(name);
+    if (group == null) {
+      throw ParseException('Expected group as $name', fetch());
+    }
+    return group;
+  }
+
+  /// KaTeX: parseArgumentGroup.
+  EquationRowNode? _parseArgumentGroup({required bool optional, Mode? mode}) {
+    final argToken = macroExpander.scanArgument(isOptional: optional);
+    if (argToken == null) return null;
+    final outerMode = this.mode;
+    if (mode != null) switchMode(mode);
+    macroExpander.beginGroup();
+    final expression =
+        parseExpression(breakOnInfix: false, breakOnTokenText: 'EOF');
+    expect('EOF');
+    macroExpander.endGroup();
+    if (mode != null) switchMode(outerMode);
+    return expression.wrapWithEquationRow();
   }
 
   GreenNode parseArgHbox({required bool optional}) {
@@ -651,72 +602,49 @@ class TexParser {
     }
   }
 
+  /// KaTeX argType "raw": the argument text, unexpanded by the parser,
+  /// with `%` as a normal character (#4307).
   String? parseArgRaw({required bool optional}) {
     currArgParsingContext.newArgument(optional: optional);
-    final i = currArgParsingContext.currArgNum;
-    final consumeSpaces =
-        (i > 0 && !optional) || (i == 0 && !optional && mode == Mode.math);
-    if (consumeSpaces) {
-      this.consumeSpaces();
-    }
-    if (optional && fetch().text == '{') {
-      return null;
-    }
-    final token = _parseStringGroup('raw', optional: optional);
-    if (token != null) {
-      return token.text;
-    } else {
-      throw ParseException('Expected raw group', fetch());
+    _returnFetchedToken();
+    macroExpander.consumeSpaces();
+    final catCodes = macroExpander.lexer.catCodes;
+    final percent = catCodes['%'];
+    catCodes['%'] = 12; // other character
+    try {
+      return _parseStringGroup(optional: optional)?.text;
+    } finally {
+      if (percent == null) {
+        catCodes.remove('%');
+      } else {
+        catCodes['%'] = percent;
+      }
     }
   }
 
-  static final _parseStringGroupRegex = RegExp('''[^{}[]]''');
-
-  Token? _parseStringGroup(String modeName,
-      {required bool optional, bool raw = false}) {
-    final groupBegin = optional ? '[' : '{';
-    final groupEnd = optional ? ']' : '}';
-    final beginToken = fetch();
-    if (beginToken.text != groupBegin) {
-      if (optional) {
-        return null;
-      } else if (raw &&
-          beginToken.text != 'EOF' &&
-          _parseStringGroupRegex.hasMatch(beginToken.text)) {
-        consume();
-        return beginToken;
-      }
+  void _assertOptionalBeforeReturn(Object? value, {required bool optional}) {
+    if (!optional && value == null) {
+      throw ParseException(
+          'Expected group after ${currArgParsingContext.funcName}', fetch());
     }
-    final outerMode = mode;
-    mode = Mode.text;
-    expect(groupBegin);
+  }
 
-    var str = '';
-    final firstToken = fetch();
-    var nested = 0;
-    var lastToken = firstToken;
-    Token nextToken;
-    while ((nextToken = fetch()).text != groupEnd || (raw && nested > 0)) {
-      if (nextToken.text == 'EOF') {
-        throw ParseException('Unexpected end of input in $modeName',
-            Token.range(firstToken, lastToken, str));
-      } else if (nextToken.text == groupBegin) {
-        nested++;
-      } else if (nextToken.text == groupEnd) {
-        nested--;
-      }
-      lastToken = nextToken;
-      str += lastToken.text;
+  /// KaTeX: parseStringGroup. The argument tokens, expanded, as one string.
+  Token? _parseStringGroup({required bool optional}) {
+    final argToken = macroExpander.scanArgument(isOptional: optional);
+    if (argToken == null) return null;
+    final str = StringBuffer();
+    Token next;
+    while ((next = fetch()).text != 'EOF') {
+      str.write(next.text);
       consume();
     }
-    expect(groupEnd);
-    mode = outerMode;
-    return Token.range(firstToken, lastToken, str);
+    consume(); // the end of the argument
+    return Token(str.toString(), argToken.loc);
   }
 
+  /// KaTeX: parseRegexGroup.
   Token _parseRegexGroup(RegExp regex, String modeName) {
-    final outerMode = mode;
-    mode = Mode.text;
     final firstToken = fetch();
     var lastToken = firstToken;
     var str = '';
@@ -731,8 +659,27 @@ class TexParser {
       throw ParseException(
           "Invalid $modeName: '${firstToken.text}'", firstToken);
     }
-    mode = outerMode;
     return Token.range(firstToken, lastToken, str);
+  }
+
+  /// The operand of a Dart operator node (`\sin x`, `\sum_i x`,
+  /// `\operatorname{f} x`). KaTeX has no operand: the next atom simply
+  /// follows. Line breaks, infix commands, and the end of a group are not
+  /// operands.
+  GreenNode? parseOperand(String? breakOnTokenText) {
+    consumeSpaces();
+    final token = fetch();
+    final text = token.text;
+    if (endOfExpression.contains(text) ||
+        text == breakOnTokenText ||
+        text == 'EOF' ||
+        text == '\\cr' ||
+        text == '\\newline' ||
+        functions[text]?.infix == true) {
+      return null;
+    }
+    final atom = parseAtom(breakOnTokenText);
+    return atom is InternalNode ? null : atom;
   }
 
   static final _parseVerbRegex = RegExp(r'^\\verb[^a-zA-Z]');
@@ -860,7 +807,7 @@ class ArgumentParsingContext {
     _optional = value;
   }
 
-  String get name => 'argument to $funcName';
+  String get name => "argument to '$funcName'";
 
   ArgumentParsingContext({
     required this.funcData,

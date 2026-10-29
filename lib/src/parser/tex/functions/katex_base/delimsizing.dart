@@ -220,7 +220,7 @@ GreenNode _leftHandler(TexParser parser, FunctionContext context) {
   // Check the next token
   parser.expect('\\right', consume: false);
   // Use parseArgNode instead of parseFunction like KaTeX
-  final rightArg = parser.parseFunction(null, null, null);
+  final rightArg = parser.parseFunction(null, null);
   final right = assertNodeType<_LeftRightRightNode>(rightArg);
 
   final splittedBody = [<GreenNode>[]];

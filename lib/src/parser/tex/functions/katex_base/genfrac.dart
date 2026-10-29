@@ -32,7 +32,6 @@ const _genfracEntries = {
     '\\\\bracefrac', '\\\\brackfrac', // ditto
   ]: FunctionSpec<GreenNode>(
     numArgs: 2,
-    greediness: 2,
     handler: _fracHandler,
   ),
 
@@ -47,7 +46,6 @@ const _genfracEntries = {
 
   ['\\genfrac']: FunctionSpec<GreenNode>(
     numArgs: 6,
-    greediness: 6,
     handler: _genfracHandler,
   ),
 

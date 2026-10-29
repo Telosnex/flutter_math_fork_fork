@@ -45,7 +45,10 @@ class CrNode extends TemporaryNode {
 }
 
 GreenNode _crHandler(TexParser parser, FunctionContext context) {
-  final size = parser.parseArgSize(optional: true);
+  // KaTeX: a size only if `[` follows at once. `\\ [x]` is a line
+  // break before "[x]".
+  final next = parser.nextToken ?? parser.macroExpander.future();
+  final size = next.text == '[' ? parser.parseArgSize(optional: true) : null;
   final newRow = context.funcName == '\\cr';
   var newLine = false;
   if (!newRow) {

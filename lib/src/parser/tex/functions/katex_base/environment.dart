@@ -52,8 +52,8 @@ GreenNode _enviromentHandler(TexParser parser, FunctionContext context) {
     );
     parser.expect('\\end', consume: false);
     final endNameToken = parser.nextToken;
-    final end = assertNodeType<_EndEnvironmentNode>(
-        parser.parseFunction(null, null, null));
+    final end =
+        assertNodeType<_EndEnvironmentNode>(parser.parseFunction(null, null));
     if (end.name != envName) {
       throw ParseException(
           'Mismatch: \\begin{$envName} matched by \\end{${end.name}}',

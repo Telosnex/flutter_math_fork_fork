@@ -891,7 +891,8 @@ void main() {
     final customColorExpression2 = r'\textcolor{#fA6fA6}{x}';
     final customColorExpression3 = r'\textcolor{fA6fA6}{x}';
     final badCustomColorExpression1 = r'\textcolor{bad-color}{x}';
-    final badCustomColorExpression2 = r'\textcolor{#fA6f}{x}';
+    final badCustomColorExpression2 =
+        r'\textcolor{#fA6f1}{x}'; // KaTeX v0.19.1 (#4090)
     final badCustomColorExpression3 = r'\textcolor{#gA6}{x}';
     final oldColorExpression = r'\color{#fA6}xy';
 

@@ -35,13 +35,7 @@ import 'token.dart';
 
 // List of commands that act like macros but aren't defined as a macro,
 // function, or symbol.  Used in `isDefined`.
-//
-// Dart divergence: KaTeX v0.19.1 defines \relax as a function
-// (src/functions/relax.ts) that returns an "internal" node, which the
-// Parser drops. The Dart parser has no internal nodes yet, so
-// expandNextToken drops \relax and \relax stays an implicit command.
 const implicitCommands = {
-  '\\relax', // MacroExpander.js
   '^', // Parser.js
   '_', // Parser.js
   '\\limits', // Parser.js
@@ -341,8 +335,6 @@ class MacroExpander implements MacroContext {
         if (token.treatAsRelax) {
           token.text = '\\relax';
         }
-        // Dart divergence: drop \relax here. See implicitCommands.
-        if (token.text == '\\relax') continue;
         return token;
       }
     }
@@ -413,14 +405,12 @@ class MacroExpander implements MacroContext {
       implicitCommands.contains(name);
 
   /// Whether a command is expandable.
-  ///
-  /// Dart divergence: KaTeX also requires `!functions[name].primitive`.
-  /// FunctionSpec has no primitive flag yet.
   @override
   bool isExpandable(String name) {
     final macro = macros.get(name);
     if (macro != null) return macro.expandable;
-    return functions.containsKey(name);
+    final function = functions[name];
+    return function != null && !function.primitive;
   }
 
   @override

@@ -50,6 +50,7 @@ part 'katex_base/op.dart';
 part 'katex_base/operator_name.dart';
 part 'katex_base/phantom.dart';
 part 'katex_base/raise_box.dart';
+part 'katex_base/relax.dart';
 part 'katex_base/rule.dart';
 part 'katex_base/sizing.dart';
 part 'katex_base/sqrt.dart';
@@ -79,6 +80,7 @@ const katexBaseFunctionEntries = {
   ..._operatorNameEntries,
   ..._phantomEntries,
   ..._raiseBoxEntries,
+  ..._relaxEntries,
   ..._ruleEntries,
   ..._sizingEntries,
   ..._sqrtEntries,

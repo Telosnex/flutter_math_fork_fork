@@ -127,7 +127,48 @@ function wrapped(toParse, settings) {
 
 parseTreeModule.default = wrapped;
 
+// The KaTeX function and environment tables, for the Dart FunctionSpec
+// flag test. Every test process writes the same content; rename makes the
+// write atomic.
+function writeFunctionTable() {
+  const root = process.cwd();
+  require(path.join(root, 'src', 'functions'));
+  require(path.join(root, 'src', 'environments'));
+  const functions = require(path.join(root, 'src', 'defineFunction'))._functions;
+  const environments =
+    require(path.join(root, 'src', 'defineEnvironment'))._environments;
+  const table = {functions: {}, environments: {}};
+  for (const name of Object.keys(functions).sort()) {
+    const f = functions[name];
+    table.functions[name] = {
+      allowedInArgument: Boolean(f.allowedInArgument),
+      allowedInMath: f.allowedInMath !== false,
+      allowedInText: Boolean(f.allowedInText),
+      argTypes: f.argTypes || null,
+      infix: Boolean(f.infix),
+      numArgs: f.numArgs,
+      numOptionalArgs: f.numOptionalArgs || 0,
+      primitive: Boolean(f.primitive),
+      type: f.type,
+    };
+  }
+  for (const name of Object.keys(environments).sort()) {
+    const e = environments[name];
+    table.environments[name] = {
+      numArgs: e.numArgs,
+      numOptionalArgs: e.numOptionalArgs || 0,
+      type: e.type,
+    };
+  }
+  const target = path.join(recordDir, 'functions.json');
+  const temp = target + '.' + process.pid;
+  fs.mkdirSync(recordDir, {recursive: true});
+  fs.writeFileSync(temp, JSON.stringify(table, null, 1) + '\n');
+  fs.renameSync(temp, target);
+}
+
 afterAll(() => {
+  writeFunctionTable();
   const testPath = expect.getState().testPath || 'unknown';
   const name = path.basename(testPath).replace(/\.[jt]s$/, '');
   fs.mkdirSync(recordDir, {recursive: true});

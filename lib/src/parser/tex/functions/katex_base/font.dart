@@ -35,9 +35,9 @@ const _fontEntries = {
 
     // aliases, except \bm defined below
     '\\Bbb', '\\bold', '\\frak',
-  ]: FunctionSpec(numArgs: 1, greediness: 2, handler: _fontHandler),
+  ]: FunctionSpec(numArgs: 1, handler: _fontHandler),
   ['\\boldsymbol', '\\bm']:
-      FunctionSpec(numArgs: 1, greediness: 2, handler: _boldSymbolHandler),
+      FunctionSpec(numArgs: 1, handler: _boldSymbolHandler),
   ['\\rm', '\\sf', '\\tt', '\\bf', '\\it', '\\cal']:
       FunctionSpec(numArgs: 0, allowedInText: true, handler: _textFontHandler),
 };

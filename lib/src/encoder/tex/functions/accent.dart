@@ -11,8 +11,13 @@ EncodeResult _accentEncoder(GreenNode node) {
   final textCommandCandidates = commandCandidates
       .where((candidate) => functions[candidate]?.allowedInText == true);
 
-  final mathCommandCandidates = commandCandidates
-      .where((candidate) => functions[candidate]?.allowedInMath == true);
+  // Text accents (\' \" ...) work in math mode only with a strict
+  // warning, so they are not math commands for the encoder.
+  final mathCommandCandidates = commandCandidates.where(
+    (candidate) =>
+        functions[candidate]?.allowedInMath == true &&
+        !textUnicodeAccentMapping.containsKey(candidate),
+  );
 
   if (commandCandidates.isEmpty) {
     return NonStrictEncodeResult(
