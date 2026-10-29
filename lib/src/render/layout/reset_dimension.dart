@@ -1,6 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+import '../constants.dart';
 import '../utils/render_box_layout.dart';
 import '../utils/render_box_offset.dart';
 
@@ -140,10 +141,14 @@ class RenderResetDimension extends RenderShiftedBox {
     bool dry = true,
   }) {
     final child = this.child!;
-    final childSize = child.getLayoutSize(constraints, dry: dry);
+    // The child keeps its natural size: this box sets its own dimensions and
+    // aligns the child inside them. Passing the parent's constraints on would
+    // stretch the child to a minimum width, as an accent's base width.
+    final childSize = child.getLayoutSize(infiniteConstraint, dry: dry);
 
     final childHeight = dry
-        ? (child.getDryBaseline(constraints, TextBaseline.alphabetic) ?? 0.0)
+        ? (child.getDryBaseline(infiniteConstraint, TextBaseline.alphabetic) ??
+            0.0)
         : child.getDistanceToBaseline(TextBaseline.alphabetic)!;
     final childDepth = childSize.height - childHeight;
     final childWidth = childSize.width;
