@@ -1,4 +1,4 @@
-// katex-sync: src/Namespace.ts @ c2e5a289
+// katex-sync: src/Namespace.ts @ v0.19.1
 // The MIT License (MIT)
 //
 // Copyright (c) 2013-2019 Khan Academy and other contributors
@@ -24,23 +24,26 @@
 
 import 'parse_error.dart';
 
-class Namespace<T> {
+class Namespace<T extends Object> {
   Namespace(this.builtins, Map<String, T> current)
       : current = Map.from(current);
   final Map<String, T> current;
   final Map<String, T> builtins;
+
+  /// For each open group, the values to restore at its end. A null value
+  /// means "not defined before the group".
   final undefStack = <Map<String, T?>>[];
 
-  T? get(String name) {
-    final currentRes = current[name];
-    if (currentRes != null) {
-      return currentRes;
-    }
-    return builtins[name];
-  }
+  T? get(String name) => current[name] ?? builtins[name];
 
-  void set(String name, T value, {bool global = false}) {
+  /// Sets [name] to [value]. A null [value] removes the local definition.
+  /// [global] sets the value in all groups.
+  void set(String name, T? value, {bool global = false}) {
     if (global) {
+      // Global set is equivalent to setting in all groups. Simulate this by
+      // destroying any undos currently scheduled for this name, and adding
+      // an undo with the *new* value (in case it later gets locally reset
+      // within this environment).
       for (final undef in undefStack) {
         undef.remove(name);
       }
@@ -48,11 +51,18 @@ class Namespace<T> {
         undefStack.last[name] = value;
       }
     } else {
-      if (undefStack.isNotEmpty) {
-        undefStack.last[name] = current[name];
+      // Undo this set at the end of this group, unless an undo is already
+      // in place, in which case that older value is the correct one.
+      final top = undefStack.isEmpty ? null : undefStack.last;
+      if (top != null && !top.containsKey(name)) {
+        top[name] = current[name];
       }
     }
-    current[name] = value;
+    if (value == null) {
+      current.remove(name);
+    } else {
+      current[name] = value;
+    }
   }
 
   bool has(String name) =>
@@ -75,5 +85,12 @@ class Namespace<T> {
         current[key] = value;
       }
     });
+  }
+
+  /// Ends all open groups, restoring the global namespace.
+  void endGroups() {
+    while (undefStack.isNotEmpty) {
+      endGroup();
+    }
   }
 }
