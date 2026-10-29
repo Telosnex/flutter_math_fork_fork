@@ -18,6 +18,7 @@ void testTexToMatchGoldenFile(
   String expression, {
   String? location,
   double scale = 1,
+  String? skip,
 }) {
   testWidgets(description, (WidgetTester tester) async {
     // Web tests draw the square glyphs of the test font, much wider than
@@ -53,7 +54,7 @@ void testTexToMatchGoldenFile(
       await expectLater(find.byKey(key),
           matchesGoldenFile(location ?? 'golden/${description.hashCode}.png'));
     }
-  });
+  }, skip: skip);
 }
 
 void testTexToRender(
