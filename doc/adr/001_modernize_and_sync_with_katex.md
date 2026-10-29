@@ -116,7 +116,7 @@ D10: Golden images are made on macOS and compared on macOS only. Other
      Instead of: Windows goldens. Golden images differ between platforms,
      and development occurs on macOS.
      Comparison ignores a difference of at most 32 per color channel
-     (test/flutter_test_config.dart). macOS 15 and the macOS 26 CI runner
+     (test/golden_tolerance/golden_tolerance_io.dart). macOS 15 and the macOS 26 CI runner
      antialias glyph edges differently: at most 13 per channel, on at most
      61 pixels of an image. A moved glyph differs by up to 255.
 
