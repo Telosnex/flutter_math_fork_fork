@@ -1,9 +1,12 @@
 // AMS environments from KaTeX v0.19.1 src/environments/array.ts: align,
 // align*, split, gather, gather*, gathered, alignat, alignat*, equation,
 // equation*, and the starred matrices.
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_math_fork/ast.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_math_fork/src/parser/tex/parser.dart';
+import 'package:flutter_math_fork/src/render/layout/eqn_array.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'helper.dart';
@@ -18,6 +21,7 @@ Matcher get fails => throwsA(isA<ParseException>());
 
 void main() {
   setUpAll(loadKaTeXFonts);
+  equationNumberTests();
 
   group('display mode only', () {
     for (final env in [
@@ -114,6 +118,98 @@ void main() {
     r'\begin{align*}a&=b+c\\d+e&=f\end{align*}\quad'
         r'\begin{gather*}x=1\\y+z=22\end{gather*}\quad'
         r'\begin{pmatrix*}[r]1&-1\\-10&2\end{pmatrix*}',
+    settings: display,
+  );
+}
+
+String symbolsOf(GreenNode node) => node is SymbolNode
+    ? node.symbol
+    : node.children.map((c) => c == null ? '' : symbolsOf(c)).join();
+
+// Counts measured with KaTeX v0.19.1 renderToString (".eqn-num" spans).
+void equationNumberTests() {
+  List<String?> tags(String tex) {
+    final node = TexParser(tex, display).parse().children.single;
+    final array = node is EquationArrayNode
+        ? node
+        : (node as EquationRowNode).children.single as EquationArrayNode;
+    return [
+      for (final tag in array.tags) tag == null ? null : symbolsOf(tag),
+    ];
+  }
+
+  group('equation numbers', () {
+    for (final (tex, expected) in [
+      (r'\begin{align}a\\b\end{align}', ['(1)', '(2)']),
+      // KaTeX keeps a numbered empty last row.
+      (r'\begin{align}a\\b\\\end{align}', ['(1)', '(2)', '(3)']),
+      (
+        r'\begin{align}a\nonumber\\b\tag{x}\\c\end{align}',
+        [null, '(x)', '(1)']
+      ),
+      (r'\begin{gather}\end{gather}', ['(1)']),
+      (r'\begin{equation}x\end{equation}', ['(1)']),
+      (r'\begin{align*}a\\b\end{align*}', <String?>[]),
+      (r'\begin{aligned}a\\b\end{aligned}', <String?>[]),
+      (
+        r'\begin{gather}a\\b\end{gather}\begin{gather}c\end{gather}',
+        ['(1)', '(2)']
+      ),
+    ]) {
+      test(tex, () {
+        if (tex.contains('end{gather}\\begin')) {
+          // Two environments in one formula: numbers continue.
+          final arrays = TexParser(tex, display)
+              .parse()
+              .children
+              .whereType<EquationArrayNode>()
+              .toList();
+          expect(symbolsOf(arrays.last.tags.single!), '(3)');
+          return;
+        }
+        expect(tags(tex), expected);
+      });
+    }
+  });
+
+  testWidgets('the numbers form one right-aligned column on the row baselines',
+      (tester) async {
+    await tester.pumpWidget(Directionality(
+      textDirection: TextDirection.ltr,
+      child: Center(
+        child: Math.tex(
+          r'\begin{align}a&=b+c+d\\x&=y\end{align}',
+          settings: display,
+          onErrorFallback: (e) => throw e,
+        ),
+      ),
+    ));
+    final eqn = tester.renderObject<RenderBox>(find.byType(EqnArray));
+    final rows = <RenderBox>[];
+    eqn.visitChildren((c) => rows.add(c as RenderBox));
+    final row1 = rows[0], row2 = rows[1], tag1 = rows[2], tag2 = rows[3];
+    double left(RenderBox b) => (b.parentData! as BoxParentData).offset.dx;
+    // Read cached baselines after layout (Flutter allows it only then).
+    double base(RenderBox b) {
+      RenderObject.debugCheckingIntrinsics = true;
+      try {
+        return (b.parentData! as BoxParentData).offset.dy +
+            b.getDistanceToBaseline(TextBaseline.alphabetic)!;
+      } finally {
+        RenderObject.debugCheckingIntrinsics = false;
+      }
+    }
+
+    double right(RenderBox b) => left(b) + b.size.width;
+    expect(right(tag1), right(tag2)); // right-aligned, as KaTeX
+    expect(left(tag1), greaterThan(right(row1)));
+    expect(base(tag1), closeTo(base(row1), 0.01));
+    expect(base(tag2), closeTo(base(row2), 0.01));
+  });
+
+  testTexToMatchGoldenFile(
+    'equation numbers',
+    r'\begin{align}a&=b+c\\d+e&=f\nonumber\\g&=h\tag{*}\\i&=j\end{align}',
     settings: display,
   );
 }

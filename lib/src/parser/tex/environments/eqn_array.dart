@@ -199,26 +199,16 @@ EquationArrayNode parseEqnArray(
     strictColumns: strictColumns,
     maxNumCols: maxNumCols,
   );
-  final rows = <EquationRowNode>[];
-  for (var i = 0; i < res.body.length; i++) {
-    final cells = res.body[i];
-    final tag = res.tags?[i];
-    // Dart divergence: the tag follows the last cell of its row after a
-    // \qquad. KaTeX puts it at the right edge of the display.
-    if (tag != null && cells.isNotEmpty) {
-      cells.last = EquationRowNode(children: [
-        ...cells.last.children,
-        SpaceNode(height: Measurement.zero, width: 2.0.em, mode: Mode.math),
-        ...tag,
-      ]);
-    }
-    rows.add(concatRow(cells));
-  }
+  final rows = [for (final cells in res.body) concatRow(cells)];
   return EquationArrayNode(
     arrayStretch: res.arrayStretch,
     hlines: res.hLines,
     rowSpacings: res.rowGaps,
     addJot: addJot,
     body: rows,
+    tags: [
+      for (final tag in res.tags ?? const <List<GreenNode>?>[])
+        tag?.wrapWithEquationRow(),
+    ],
   );
 }

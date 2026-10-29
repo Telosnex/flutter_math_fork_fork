@@ -19,6 +19,12 @@ class EqnArray extends MultiChildRenderObjectWidget {
   final List<MatrixSeparatorStyle> hlines;
   final List<double> rowSpacings;
 
+  /// Whether the second half of [children] is a tag for each row.
+  final bool hasTags;
+
+  /// The space between the widest row and the tags.
+  final double tagGap;
+
   const EqnArray({
     super.key,
     required this.ruleThickness,
@@ -26,6 +32,8 @@ class EqnArray extends MultiChildRenderObjectWidget {
     required this.arrayskip,
     required this.hlines,
     required this.rowSpacings,
+    this.hasTags = false,
+    this.tagGap = 0,
     required super.children,
   });
 
@@ -36,7 +44,20 @@ class EqnArray extends MultiChildRenderObjectWidget {
         arrayskip: arrayskip,
         hlines: hlines,
         rowSpacings: rowSpacings,
+        hasTags: hasTags,
+        tagGap: tagGap,
       );
+
+  @override
+  void updateRenderObject(BuildContext context, RenderEqnArray renderObject) =>
+      renderObject
+        ..ruleThickness = ruleThickness
+        ..jotSize = jotSize
+        ..arrayskip = arrayskip
+        ..hlines = hlines
+        ..rowSpacings = rowSpacings
+        ..hasTags = hasTags
+        ..tagGap = tagGap;
 }
 
 class RenderEqnArray extends RenderBox
@@ -51,7 +72,11 @@ class RenderEqnArray extends RenderBox
     required double arrayskip,
     required List<MatrixSeparatorStyle> hlines,
     required List<double> rowSpacings,
-  })  : _ruleThickness = ruleThickness,
+    bool hasTags = false,
+    double tagGap = 0,
+  })  : _hasTags = hasTags,
+        _tagGap = tagGap,
+        _ruleThickness = ruleThickness,
         _jotSize = jotSize,
         _arrayskip = arrayskip,
         _hlines = hlines,
@@ -104,6 +129,24 @@ class RenderEqnArray extends RenderBox
     }
   }
 
+  bool get hasTags => _hasTags;
+  bool _hasTags;
+  set hasTags(bool value) {
+    if (_hasTags != value) {
+      _hasTags = value;
+      markNeedsLayout();
+    }
+  }
+
+  double get tagGap => _tagGap;
+  double _tagGap;
+  set tagGap(double value) {
+    if (_tagGap != value) {
+      _tagGap = value;
+      markNeedsLayout();
+    }
+  }
+
   @override
   void setupParentData(RenderObject child) {
     if (child.parentData is! EqnArrayParentData) {
@@ -136,12 +179,14 @@ class RenderEqnArray extends RenderBox
     bool dry = true,
   }) {
     final nonAligningSizes = <Size>[];
+    final rowCount = hasTags ? childCount ~/ 2 : childCount;
     // First pass, calculate width for each column.
     var child = firstChild;
+    var rowIndex = 0;
     var width = 0.0;
     final colWidths = <double>[];
     final sizeMap = <RenderBox, Size>{};
-    while (child != null) {
+    while (child != null && rowIndex++ < rowCount) {
       var childSize = Size.zero;
       if (child is RenderLine) {
         child.alignColWidth = null;
@@ -185,7 +230,8 @@ class RenderEqnArray extends RenderBox
     }
     index++;
     child = firstChild;
-    while (child != null) {
+    final baselines = <double>[];
+    while (child != null && index <= rowCount) {
       final childParentData = child.parentData as EqnArrayParentData;
       var hPos = 0.0;
       final childSize = sizeMap[child] ?? Size.zero;
@@ -205,6 +251,7 @@ class RenderEqnArray extends RenderBox
       final layoutDepth = dry ? childSize.height : child.layoutDepth;
 
       vPos += math.max(layoutHeight, 0.7 * arrayskip);
+      baselines.add(vPos);
       if (!dry) {
         childParentData.offset = Offset(
           hPos,
@@ -227,7 +274,29 @@ class RenderEqnArray extends RenderBox
       this.width = width;
     }
 
-    return Size(width, vPos);
+    // The tags: one right-aligned column after the rows (KaTeX puts them
+    // at the right edge), each on its row's baseline.
+    final tags = <RenderBox, Size>{};
+    var tagWidth = 0.0;
+    for (var i = 0; child != null && i < baselines.length; i++) {
+      final tagSize = child.getLayoutSize(infiniteConstraint, dry: dry);
+      tags[child] = tagSize;
+      tagWidth = math.max(tagWidth, tagSize.width);
+      child = (child.parentData! as EqnArrayParentData).nextSibling;
+    }
+    if (tagWidth == 0) return Size(width, vPos);
+    if (!dry) {
+      var i = 0;
+      for (final MapEntry(key: tag, value: tagSize) in tags.entries) {
+        final tagBaseline =
+            tag.getDistanceToBaseline(TextBaseline.alphabetic) ?? 0.0;
+        (tag.parentData! as EqnArrayParentData).offset = Offset(
+          width + tagGap + tagWidth - tagSize.width,
+          baselines[i++] - tagBaseline,
+        );
+      }
+    }
+    return Size(width + tagGap + tagWidth, vPos);
   }
 
   @override

@@ -91,10 +91,12 @@ class TexParser {
         if (!settings.displayMode) {
           throw ParseException('\\tag works only in display equations');
         }
-        // Dart divergence: no tag layout. KaTeX puts the tag at the right
-        // edge of the display; Dart puts it after the equation.
-        final tag = subparse([Token('\\df@tag'), Token('\\qquad')]);
-        return [...parse, ...tag].wrapWithEquationRow();
+        // One row with its tag, as the rows of {align}.
+        final tag = subparse([Token('\\df@tag')]);
+        return EquationArrayNode(
+          body: [parse.wrapWithEquationRow()],
+          tags: [tag.wrapWithEquationRow()],
+        ).wrapWithEquationRow();
       }
       return parse.wrapWithEquationRow();
     } finally {
@@ -102,6 +104,10 @@ class TexParser {
       macroExpander.endGroups();
     }
   }
+
+  /// The next automatic equation number. KaTeX counts with a CSS counter
+  /// over the whole page; Dart counts from 1 in each formula.
+  int nextEquationNumber = 1;
 
   /// Parses [tokens] (in stack order) as an expression. KaTeX: subparse.
   List<GreenNode> subparse(List<Token> tokens) {

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import '../../render/layout/eqn_array.dart';
 import '../../render/layout/shift_baseline.dart';
 import '../../utils/iterable_extensions.dart';
@@ -31,13 +33,21 @@ class EquationArrayNode extends SlotableNode<EquationRowNode?> {
   /// Spacings between rows;
   final List<Measurement> rowSpacings;
 
+  /// For each row, its tag (`\tag` or an automatic number), or null.
+  /// Empty if no row has a tag. The tags form a column right of the rows.
+  final List<EquationRowNode?> tags;
+
   EquationArrayNode({
     this.addJot = false,
     required this.body,
     this.arrayStretch = 1.0,
     List<MatrixSeparatorStyle>? hlines,
     List<Measurement>? rowSpacings,
-  })  : hlines = (hlines ?? [])
+    List<EquationRowNode?>? tags,
+  })  : tags = tags == null || tags.every((tag) => tag == null)
+            ? const []
+            : tags.extendToByFill(body.length, null),
+        hlines = (hlines ?? [])
             .extendToByFill(body.length + 1, MatrixSeparatorStyle.none),
         rowSpacings =
             (rowSpacings ?? []).extendToByFill(body.length, Measurement.zero);
@@ -59,18 +69,24 @@ class EquationArrayNode extends SlotableNode<EquationRowNode?> {
             rowSpacings: rowSpacings
                 .map((e) => e.toLpUnder(options))
                 .toList(growable: false),
-            children:
-                childBuildResults.map((e) => e!.widget).toList(growable: false),
+            // KaTeX puts the tags at the right edge of the display. Dart
+            // has no display width here: the tags follow the rows.
+            tagGap: 2.0.cssEm.toLpUnder(options),
+            hasTags: tags.isNotEmpty,
+            children: [
+              for (final result in childBuildResults)
+                result?.widget ?? const SizedBox.shrink(),
+            ],
           ),
         ),
       );
 
   @override
   List<MathOptions> computeChildOptions(MathOptions options) =>
-      List.filled(body.length, options, growable: false);
+      List.filled(body.length + tags.length, options, growable: false);
 
   @override
-  List<EquationRowNode> computeChildren() => body;
+  List<EquationRowNode?> computeChildren() => [...body, ...tags];
 
   @override
   AtomType get leftType => AtomType.ord;
@@ -83,8 +99,11 @@ class EquationArrayNode extends SlotableNode<EquationRowNode?> {
       false;
 
   @override
-  EquationArrayNode updateChildren(List<EquationRowNode> newChildren) =>
-      copyWith(body: newChildren);
+  EquationArrayNode updateChildren(List<EquationRowNode?> newChildren) =>
+      copyWith(
+        body: newChildren.sublist(0, body.length).cast<EquationRowNode>(),
+        tags: newChildren.sublist(body.length),
+      );
 
   @override
   Map<String, Object?> toJson() => super.toJson()
@@ -93,7 +112,8 @@ class EquationArrayNode extends SlotableNode<EquationRowNode?> {
       'body': body.map((e) => e.toJson()),
       if (arrayStretch != 1.0) 'arrayStretch': arrayStretch,
       'hlines': hlines.map((e) => e.toString()),
-      'rowSpacings': rowSpacings.map((e) => e.toString())
+      'rowSpacings': rowSpacings.map((e) => e.toString()),
+      if (tags.isNotEmpty) 'tags': tags.map((e) => e?.toJson()),
     });
 
   EquationArrayNode copyWith({
@@ -102,6 +122,7 @@ class EquationArrayNode extends SlotableNode<EquationRowNode?> {
     List<EquationRowNode>? body,
     List<MatrixSeparatorStyle>? hlines,
     List<Measurement>? rowSpacings,
+    List<EquationRowNode?>? tags,
   }) =>
       EquationArrayNode(
         arrayStretch: arrayStretch ?? this.arrayStretch,
@@ -109,5 +130,6 @@ class EquationArrayNode extends SlotableNode<EquationRowNode?> {
         body: body ?? this.body,
         hlines: hlines ?? this.hlines,
         rowSpacings: rowSpacings ?? this.rowSpacings,
+        tags: tags ?? this.tags,
       );
 }

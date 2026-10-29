@@ -34,6 +34,7 @@ import '../../../ast/options.dart';
 import '../../../ast/size.dart';
 import '../../../ast/style.dart';
 import '../../../ast/syntax_tree.dart';
+import '../../../ast/types.dart';
 import '../define_environment.dart';
 import '../macros.dart';
 import '../parse_error.dart';
@@ -119,11 +120,25 @@ class ArrayBody {
   final double arrayStretch;
 }
 
+/// The tag of an automatically numbered row.
+List<GreenNode> _autoNumber(TexParser parser) {
+  final number = parser.nextEquationNumber++;
+  return [
+    StyleNode(
+      optionsDiff: const OptionsDiff(),
+      children: [
+        for (final char in '($number)'.split(''))
+          SymbolNode(symbol: char, mode: Mode.text),
+      ],
+    ),
+  ];
+}
+
 /// Parses rows delimited by `\\` and columns delimited by `&`.
 ///
 /// [autoTag]: null for no tags; false for manual tags only; true for
-/// automatic numbering (amsmath `align`, `gather`, `equation`). Dart keeps
-/// the `\@eqnsw` bookkeeping but shows only manual tags.
+/// automatic numbering (amsmath `align`, `gather`, `equation`). A numbered
+/// row gets the tag `\text{(n)}`, as KaTeX's `.eqn-num` shows.
 ArrayBody parseArrayBody(
   TexParser parser, {
   double? arrayStretch,
@@ -163,8 +178,6 @@ ArrayBody parseArrayBody(
   final rowGaps = <Measurement>[];
   final hLinesBeforeRow = <MatrixSeparatorStyle>[];
   final tags = autoTag != null ? <List<GreenNode>?>[] : null;
-  // Per row: an automatic number (true), not shown in Dart.
-  var autoNumbered = false;
 
   // amsmath uses \global\@eqnswtrue and \global\@eqnswfalse to represent
   // whether this row should have an equation number. Simulate this with
@@ -181,11 +194,10 @@ ArrayBody parseArrayBody(
     if (gullet.macros.get('\\df@tag') != null) {
       tags.add(parser.subparse([Token('\\df@tag')]));
       gullet.macros.set('\\df@tag', null, global: true);
-      autoNumbered = false;
     } else {
-      tags.add(null);
-      autoNumbered =
+      final numbered =
           autoTag == true && gullet.expandMacroAsText('\\@eqnsw') == '1';
+      tags.add(numbered ? _autoNumber(parser) : null);
     }
   }
 
@@ -234,8 +246,8 @@ ArrayBody parseArrayBody(
       if (row.length == 1 &&
           cellBody.isEmpty &&
           (body.length > 1 || !emptySingleRow) &&
-          tags?.lastOrNull == null &&
-          !autoNumbered) {
+          // Neither a manual tag nor an automatic number.
+          tags?.lastOrNull == null) {
         body.removeLast();
         if (tags != null) tags.removeLast();
       }
