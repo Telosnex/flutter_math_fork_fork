@@ -1,3 +1,8 @@
+## 0.7.3
+
+- Published as flutter_math_fork_fork, the Telosnex fork of flutter_math_fork.
+- The example's pubspec.lock is no longer checked in (.gitignore ignores it).
+
 ## 0.7.2
 
 * Fix: add missing import to gesture_detector_builder_selectable.dart (#87)
