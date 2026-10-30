@@ -3,10 +3,10 @@
 // equation*, and the starred matrices.
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_math_fork/ast.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:flutter_math_fork/src/parser/tex/parser.dart';
-import 'package:flutter_math_fork/src/render/layout/eqn_array.dart';
+import 'package:flutter_math_fork_fork/ast.dart';
+import 'package:flutter_math_fork_fork/flutter_math.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/parser.dart';
+import 'package:flutter_math_fork_fork/src/render/layout/eqn_array.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'helper.dart';

@@ -3,7 +3,7 @@
 // cmark-gfm-widget lib/src/render/{inline,block}_renderers.dart and
 // lib/src/render/math_parser_settings.dart. Keep only public imports here.
 import 'package:flutter/widgets.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
+import 'package:flutter_math_fork_fork/flutter_math.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'load_fonts.dart';

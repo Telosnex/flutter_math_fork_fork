@@ -41,7 +41,7 @@ dependencies:
 ## Usage
 
 ```dart
-import 'package:flutter_math_fork/flutter_math.dart';
+import 'package:flutter_math_fork_fork/flutter_math.dart';
 
 // Display style (the default).
 Math.tex(r'\frac a b', mathStyle: MathStyle.display)

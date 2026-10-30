@@ -1,9 +1,9 @@
 // Parser behavior from KaTeX v0.19.1 src/Parser.ts: argument parsing
 // (#2085), allowedInArgument (#2134), \relax (#4045), colors (#4090).
 import 'package:flutter/widgets.dart';
-import 'package:flutter_math_fork/ast.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:flutter_math_fork/src/parser/tex/parser.dart';
+import 'package:flutter_math_fork_fork/ast.dart';
+import 'package:flutter_math_fork_fork/flutter_math.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'load_fonts.dart';

@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_math_fork:
+  flutter_math_fork_fork:
     path: ../
 
   provider: any
