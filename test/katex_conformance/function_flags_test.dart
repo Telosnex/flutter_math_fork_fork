@@ -7,7 +7,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_math_fork/src/parser/tex/functions.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/functions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Flags that differ from KaTeX on purpose. Name → reason.

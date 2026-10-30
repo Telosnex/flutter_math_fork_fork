@@ -2,10 +2,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_math_fork/ast.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:flutter_math_fork/src/parser/tex/macros.dart';
-import 'package:flutter_math_fork/src/parser/tex/parser.dart';
+import 'package:flutter_math_fork_fork/ast.dart';
+import 'package:flutter_math_fork_fork/flutter_math.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/macros.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/parser.dart';
 
 const casesPath = 'test/katex_conformance/cases.json';
 const divergencesPath = 'test/katex_conformance/divergences.json';

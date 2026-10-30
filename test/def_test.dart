@@ -1,9 +1,9 @@
 // \def, \gdef, \edef, \xdef, \let, \futurelet, \global, \long: KaTeX
 // v0.19.1 src/functions/def.ts. Also \tag (KaTeX parseTree.ts).
 import 'package:flutter/widgets.dart';
-import 'package:flutter_math_fork/ast.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:flutter_math_fork/src/parser/tex/parser.dart';
+import 'package:flutter_math_fork_fork/ast.dart';
+import 'package:flutter_math_fork_fork/flutter_math.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'load_fonts.dart';

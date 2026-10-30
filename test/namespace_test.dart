@@ -1,5 +1,5 @@
 // Namespace behavior from KaTeX v0.19.1 src/Namespace.ts.
-import 'package:flutter_math_fork/src/parser/tex/namespace.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/namespace.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

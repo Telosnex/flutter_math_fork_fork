@@ -1,7 +1,7 @@
 // Lexer behavior from KaTeX v0.19.1 src/Lexer.ts.
-import 'package:flutter_math_fork/flutter_math.dart';
-import 'package:flutter_math_fork/src/parser/tex/lexer.dart';
-import 'package:flutter_math_fork/src/parser/tex/parser.dart';
+import 'package:flutter_math_fork_fork/flutter_math.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/lexer.dart';
+import 'package:flutter_math_fork_fork/src/parser/tex/parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 List<String> lexAll(String input) {
