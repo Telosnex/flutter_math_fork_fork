@@ -1,3 +1,7 @@
+## 1.0.0
+
+- First stable release.
+
 ## 0.7.3
 
 - Published as flutter_math_fork_fork, the Telosnex fork of flutter_math_fork.
