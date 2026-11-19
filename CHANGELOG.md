@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Flutter 3.50 compatability
+
 ## 1.0.0
 
 - First stable release.
