@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_math_fork_fork/ast.dart';
 import 'package:flutter_math_fork_fork/flutter_math.dart';
 import 'package:flutter_math_fork_fork/src/encoder/tex/encoder.dart';
 import 'package:flutter_math_fork_fork/src/parser/tex/parser.dart';
 import 'package:flutter_math_fork_fork/src/render/layout/custom_layout.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'load_fonts.dart';
 
